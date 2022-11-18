@@ -1,9 +1,14 @@
 name: MortisBank
-version: '1.1'
+version: '2.1'
 main: me.none030.mortisbank.MortisBank
 api-version: 1.13
-depend: [Vault]
-softdepend: [Essentials]
+depend:
+  - Vault
+softdepend:
+  - ProtocolLib
+  - Essentials
+  - PlaceholderAPI
 commands:
   bank:
-    aliases: [mortisbank, banker]
+    aliases:
+      - mortisbank

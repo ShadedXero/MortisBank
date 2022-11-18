@@ -62,17 +62,18 @@ bank-upgrades:
       max-interest: 300000
     requirements:
       money: 5000000 #Money required to purchase this bank upgrade
-      item: #Item required to purchase this bank upgrade
-        material: GOLD_BLOCK
-        data: 0
-        amount: 1
-        name: "&9Enchanted Gold Block"
-        lore:
-          - "&f&lCOMMON"
-        enchants:
-          - PROTECTION_ENVIRONMENTAL:4
-        flags:
-          - HIDE_ENCHANTS
+# Remove "#" if you want to use this feature.
+#      item: #Item required to purchase this bank upgrade
+#        material: GOLD_BLOCK
+#        data: 0
+#        amount: 1
+#        name: "&9Enchanted Gold Block"
+#        lore:
+#          - "&f&lCOMMON"
+#        enchants:
+#          - PROTECTION_ENVIRONMENTAL:4
+#        flags:
+#          - HIDE_ENCHANTS
     item:
       slot: 11
       material: GOLD_NUGGET
@@ -94,7 +95,8 @@ bank-upgrades:
         - ""
         - "&7Cost"
         - "&65,000,000 Coins"
-        - "&9Enchanted Gold Block"
+# Remove "#" if you want to use this feature.
+#        - "&9Enchanted Gold Block"
         - ""
         - "%account_status%"
   2:
@@ -117,19 +119,21 @@ bank-upgrades:
       max-interest: 350000
     requirements:
       money: 10000000
-      permissions: #Permissions required to purchase this bank upgrade
-        - museum.rank.wealthy
-      item:
-        material: GOLD_BLOCK
-        data: 0
-        amount: 5
-        name: "&9Enchanted Gold Block"
-        lore:
-          - "&f&lCOMMON"
-        enchants:
-         - PROTECTION_ENVIRONMENTAL:4
-        flags:
-         - HIDE_ENCHANTS
+#Permissions required to purchase this bank upgrade.
+# Remove "#" if you want to use this feature.
+#      permissions:
+#        - museum.rank.wealthy
+#      item:
+#        material: GOLD_BLOCK
+#        data: 0
+#        amount: 5
+#        name: "&9Enchanted Gold Block"
+#        lore:
+#          - "&f&lCOMMON"
+#        enchants:
+#         - PROTECTION_ENVIRONMENTAL:4
+#        flags:
+#         - HIDE_ENCHANTS
     item:
       slot: 12
       material: GOLD_INGOT
@@ -152,7 +156,8 @@ bank-upgrades:
         - ""
         - "&7Cost"
         - "&610,000,000 Coins"
-        - "&9Enchanted Gold Block &8x5"
+# Remove "#" if you want to use this feature.
+#        - "&9Enchanted Gold Block &8x5"
         - ""
         - "%account_status%"
   3:
@@ -215,7 +220,8 @@ bank-upgrades:
         - ""
         - "&7Cost"
         - "&625,000,000 Coins"
-        - "&9Enchanted Gold Block &8x20"
+# Remove "#" if you want to use this feature.
+#        - "&9Enchanted Gold Block &8x20"
         - ""
         - "%account_status%"
   4:
@@ -246,20 +252,21 @@ bank-upgrades:
       max-interest: 500000
     requirements:
       money: 50000000
-      permissions:
-        - museum.rank.gilded
-        - collections.gold.1000000
-      item:
-        material: GOLD_BLOCK
-        data: 0
-        amount: 50
-        name: "&9Enchanted Gold Block"
-        lore:
-          - "&f&lCOMMON"
-        enchants:
-          - PROTECTION_ENVIRONMENTAL:4
-        flags:
-          - HIDE_ENCHANTS
+# Remove "#" if you want to use this feature.
+#      permissions:
+#        - museum.rank.gilded
+#        - collections.gold.1000000
+#      item:
+#        material: GOLD_BLOCK
+#        data: 0
+#        amount: 50
+#        name: "&9Enchanted Gold Block"
+#        lore:
+#          - "&f&lCOMMON"
+#        enchants:
+#          - PROTECTION_ENVIRONMENTAL:4
+#        flags:
+#          - HIDE_ENCHANTS
     item:
       slot: 14
       material: GOLDEN_HORSE_ARMOR
@@ -284,7 +291,8 @@ bank-upgrades:
         - ""
         - "&7Cost"
         - "&650,000,000 Coins"
-        - "&9Enchanted Gold Block &8x50"
+# Remove "#" if you want to use this feature.
+#        - "&9Enchanted Gold Block &8x50"
         - ""
         - "%account_status%"
   5:
@@ -319,20 +327,21 @@ bank-upgrades:
       max-interest: 1000000
     requirements:
       money: 100000000
-      permissions:
-        - museum.rank.affluent
-        - collections.gold.2000000
-      item:
-        material: GOLD_BLOCK
-        data: 0
-        amount: 100
-        name: "&9Enchanted Gold Block"
-        lore:
-          - "&f&lCOMMON"
-        enchants:
-          - PROTECTION_ENVIRONMENTAL:4
-        flags:
-          - HIDE_ENCHANTS
+# Remove "#" if you want to use this feature.
+#      permissions:
+#        - museum.rank.affluent
+#        - collections.gold.2000000
+#      item:
+#        material: GOLD_BLOCK
+#        data: 0
+#        amount: 100
+#        name: "&9Enchanted Gold Block"
+#        lore:
+#          - "&f&lCOMMON"
+#        enchants:
+#          - PROTECTION_ENVIRONMENTAL:4
+#        flags:
+#          - HIDE_ENCHANTS
     item:
       slot: 15
       material: PLAYER_HEAD
@@ -359,7 +368,8 @@ bank-upgrades:
         - ""
         - "&7Cost"
         - "&6100,000,000 Coins"
-        - "&9Enchanted Gold Block &8x100"
+# Remove "#" if you want to use this feature.
+#        - "&9Enchanted Gold Block &8x100"
         - ""
         - "%account_status%"
   6:
@@ -398,20 +408,21 @@ bank-upgrades:
       max-interest: 1500000
     requirements:
       money: 200000000
-      permissions:
-        - museum.rank.palatial
-        - collections.gold.3000000
-      item:
-        material: GOLD_BLOCK
-        data: 0
-        amount: 200
-        name: "&9Enchanted Gold Block"
-        lore:
-          - "&f&lCOMMON"
-        enchants:
-          - PROTECTION_ENVIRONMENTAL:4
-        flags:
-          - HIDE_ENCHANTS
+# Remove "#" if you want to use this feature.
+#      permissions:
+#        - museum.rank.palatial
+#        - collections.gold.3000000
+#      item:
+#        material: GOLD_BLOCK
+#        data: 0
+#        amount: 200
+#        name: "&9Enchanted Gold Block"
+#        lore:
+#          - "&f&lCOMMON"
+#        enchants:
+#          - PROTECTION_ENVIRONMENTAL:4
+#        flags:
+#          - HIDE_ENCHANTS
     item:
       slot: 16
       material: PLAYER_HEAD
@@ -439,6 +450,7 @@ bank-upgrades:
         - ""
         - "&7Cost"
         - "&6200,000,000 Coins"
-        - "&9Enchanted Gold Block &8x200"
+# Remove "#" if you want to use this feature.
+#        - "&9Enchanted Gold Block &8x200"
         - ""
         - "%account_status%"
