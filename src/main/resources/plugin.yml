@@ -1,9 +1,0 @@
-name: MortisBank
-version: '${project.version}'
-main: me.none030.mortisbank.MortisBank
-api-version: 1.13
-depend: [Vault]
-softdepend: [Essentials]
-commands:
-  bank:
-    aliases: [mortisbank, banker]
