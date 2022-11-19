@@ -10,7 +10,7 @@ bank-upgrades:
       name: "&aGo Back"
       lore:
         - "&7To Personal Bank Account"
-  DEFAULT: #Don't add any requirements to STARTER_ACCOUNT as it's the default account
+  DEFAULT: #Don't add any requirements to DEFAULT as it's the default account
     name: "&aStarter"
     upgrades:
       max-balance: 50000000 #Max money that can be stored in the bank

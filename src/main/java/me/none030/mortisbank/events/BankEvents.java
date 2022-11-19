@@ -21,11 +21,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static me.none030.mortisbank.methods.DataMethods.*;
 import static me.none030.mortisbank.methods.Interests.GiveInterest;
+import static me.none030.mortisbank.methods.ItemsCreation.CreateUpgradeItem;
 import static me.none030.mortisbank.methods.Menus.*;
-import static me.none030.mortisbank.methods.StoringMenuItems.BankUpgradesItems;
 import static me.none030.mortisbank.methods.Upgrades.AddRequirements;
 import static me.none030.mortisbank.methods.Upgrades.onUpgrade;
 
@@ -39,8 +41,22 @@ public class BankEvents implements Listener {
 
         if (inv.getHolder() instanceof BankUpgradesInventory) {
 
-            for (UpgradeItem upgradeItem : BankUpgradesItems) {
-                ItemStack item = AddRequirements(player, upgradeItem.getItem(), upgradeItem.getBankAccount());
+            File file = new File("plugins/MortisBank/", "upgrades.yml");
+            FileConfiguration upgrades = YamlConfiguration.loadConfiguration(file);
+            ConfigurationSection section = upgrades.getConfigurationSection("bank-upgrades");
+            assert section != null;
+            List<String> keys = new ArrayList<>(section.getKeys(false));
+            keys.remove("OPTIONS");
+            keys.remove("DEFAULT");
+            keys.add("0");
+
+            for (String key : keys) {
+                ConfigurationSection upgradeSection = section.getConfigurationSection(key);
+                assert upgradeSection != null;
+
+                UpgradeItem upgradeItem = CreateUpgradeItem(Integer.parseInt(key));
+                ItemStack item = AddRequirements(player, upgradeItem.getItem(), Integer.parseInt(key));
+
                 inv.setItem(upgradeItem.getSlot(), item);
             }
 

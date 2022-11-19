@@ -5,6 +5,7 @@ me\none030\mortisbank\MortisBank.class
 me\none030\mortisbank\methods\StoringDatabaseData.class
 me\none030\mortisbank\utils\UpgradeItem.class
 me\none030\mortisbank\inventories\BankUpgradesInventory.class
+me\none030\mortisbank\api\MortisBankAPI.class
 me\none030\mortisbank\utils\TransactionType.class
 me\none030\mortisbank\methods\ReloadingMethod.class
 me\none030\mortisbank\methods\TransactionsRecords.class
@@ -16,6 +17,7 @@ me\none030\mortisbank\inventories\PersonalBankInventory.class
 me\none030\mortisbank\commands\BankCommand.class
 me\none030\mortisbank\methods\Interests.class
 me\none030\mortisbank\methods\SignGUIAPI$SignGUIAPIBuilder.class
+me\none030\mortisbank\api\BankTransactionEvent.class
 me\none030\mortisbank\inventories\DepositInventory.class
 me\none030\mortisbank\inventories\WithdrawInventory.class
 me\none030\mortisbank\methods\Depositing.class
@@ -28,6 +30,7 @@ me\none030\mortisbank\methods\StoringMenuItems.class
 me\none030\mortisbank\methods\Menus.class
 me\none030\mortisbank\events\SignCompleteHandler.class
 me\none030\mortisbank\methods\StoringFiles.class
+me\none030\mortisbank\api\AbstractMortisBankAPI.class
 me\none030\mortisbank\methods\Interests$1.class
 me\none030\mortisbank\events\BankEvents.class
 me\none030\mortisbank\methods\SignGUIAPI.class

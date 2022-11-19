@@ -67,7 +67,7 @@ public class Upgrades {
 
         DecimalFormat value = new DecimalFormat("#,###.#");
         int bankAccount = getBankAccount(player.getUniqueId());
-        double purse = getPurse(player.getUniqueId());
+        double purse = getBankPurse(player.getUniqueId());
         File file = new File("plugins/MortisBank/", "upgrades.yml");
         FileConfiguration upgrades = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section;
@@ -197,7 +197,7 @@ public class Upgrades {
 
         int bankAccount = getBankAccount(player.getUniqueId());
         Economy economy = MortisBank.getEconomy();
-        double purse = getPurse(player.getUniqueId());
+        double purse = getBankPurse(player.getUniqueId());
         File file = new File("plugins/MortisBank/", "upgrades.yml");
         FileConfiguration upgrades = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection upgradesSection = upgrades.getConfigurationSection("bank-upgrades");
@@ -280,7 +280,7 @@ public class Upgrades {
                     }
 
                     if (permissions && items && money) {
-                        ChangeAccount(player.getUniqueId(), bankAccount + 1);
+                        ChangeBankAccount(player.getUniqueId(), bankAccount + 1);
                         if (requireSection.contains("money")) {
                             economy.withdrawPlayer(player.getName(), requireSection.getDouble("money"));
                         }

@@ -33,26 +33,31 @@ public class BankCommand implements TabExecutor {
             }
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
-                    System.out.println("---------------------------------------");
+                    System.out.println("Mortis Bank");
                     System.out.println("/bank help - Shows the commands");
-                    System.out.println("/bank §8- Opens the bank");
-                    System.out.println("/bank open <player_name> Opens the bank for the specified player");
+                    System.out.println("/bank - Opens the bank");
+                    System.out.println("/bank open <player_name> - Opens the bank for the specified player");
                     System.out.println("/bank admin - Shows the admin commands");
-                    System.out.println("---------------------------------------");
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("admin")) {
-                    System.out.println("§7§m---------------------------------------");
-                    System.out.println("§c/bank admin §8- Shows the admin commands");
-                    System.out.println("§c/bank admin reload §8- Reloads the plugin");
-                    System.out.println("§7§m---------------------------------------");
+                    System.out.println("Mortis Bank");
+                    System.out.println("/bank admin - Shows the admin commands");
+                    System.out.println("/bank admin reload - Reloads the plugin");
+                    System.out.println("/bank admin balance set <player_name|uuid> <balance> - Sets the player's bank balance");
+                    System.out.println("/bank admin balance add <player_name|uuid> <balance> - Adds the amount to the player's bank balance");
+                    System.out.println("/bank admin balance remove <player_name|uuid> <balance> - Removes the amount from the player's bank balance");
+                    System.out.println("/bank admin account set <player_name|uuid> <account-id> - Sets the account of the player");
+                    System.out.println("/bank admin interest give <player_name|uuid> - Gives interest to the player");
+                    System.out.println("/bank admin deposit <player_name|uuid> <amount> - Make the player deposit the amount of money");
+                    System.out.println("/bank admin withdraw <player_name|uuid> <amount> - Make the player withdraw the amount of money");
                     return true;
                 }
             }
             if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("reload")) {
                     Reload();
-                    System.out.println("§aReloaded");
+                    System.out.println("Reloaded");
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("open")) {
@@ -76,6 +81,7 @@ public class BankCommand implements TabExecutor {
                         account = getBankAccount(target.getUniqueId());
                         double amount = getInterest(balance, account);
                         GiveBankInterestMoney(target.getName(), amount);
+                        System.out.println("Admin Command Executed");
                     } else {
                         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                         if (offlineTarget != null) {
@@ -83,8 +89,9 @@ public class BankCommand implements TabExecutor {
                             account = getBankAccount(offlineTarget.getUniqueId());
                             double amount = getInterest(balance, account);
                             GiveBankInterestMoney(offlineTarget.getName(), amount);
+                            System.out.println("Admin Command Executed");
                         } else {
-                            System.out.println("§cInvalid Player");
+                            System.out.println("Invalid Player");
                         }
                     }
                     return true;
@@ -94,8 +101,9 @@ public class BankCommand implements TabExecutor {
                     double amount = Double.parseDouble(args[3]);
                     if (target != null) {
                         onDeposit(target, amount);
+                        System.out.println("Admin Command Executed");
                     } else {
-                        System.out.println("§cInvalid Player");
+                        System.out.println("Invalid Player");
                     }
                     return true;
                 }
@@ -104,8 +112,9 @@ public class BankCommand implements TabExecutor {
                     double amount = Double.parseDouble(args[3]);
                     if (target != null) {
                         onWithdraw(target, amount);
+                        System.out.println("Admin Command Executed");
                     } else {
-                        System.out.println("§cInvalid Player");
+                        System.out.println("Invalid Player");
                     }
                     return true;
                 }
@@ -116,12 +125,14 @@ public class BankCommand implements TabExecutor {
                     double amount = Double.parseDouble(args[4]);
                     if (target != null) {
                         ChangeBankBalance(target.getUniqueId(), amount);
+                        System.out.println("Admin Command Executed");
                     } else {
                         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                         if (offlineTarget != null) {
                             ChangeBankBalance(offlineTarget.getUniqueId(), amount);
+                            System.out.println("Admin Command Executed");
                         } else {
-                            System.out.println("§cInvalid Player");
+                            System.out.println("Invalid Player");
                         }
                     }
                     return true;
@@ -138,8 +149,9 @@ public class BankCommand implements TabExecutor {
                         limit = getLimit(account);
                         if (balance + amount <= limit) {
                             ChangeBankBalance(target.getUniqueId(), balance + amount);
+                            System.out.println("Admin Command Executed");
                         } else {
-                            System.out.println("§cCould not process this command.");
+                            System.out.println("Could not process this command.");
                         }
                     } else {
                         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
@@ -149,11 +161,12 @@ public class BankCommand implements TabExecutor {
                             limit = getLimit(account);
                             if (balance + amount <= limit) {
                                 ChangeBankBalance(offlineTarget.getUniqueId(), balance + amount);
+                                System.out.println("Admin Command Executed");
                             } else {
-                                System.out.println("§cCould not process this command.");
+                                System.out.println("Could not process this command.");
                             }
                         } else {
-                            System.out.println("§cInvalid Player");
+                            System.out.println("Invalid Player");
                         }
                     }
                     return true;
@@ -169,6 +182,7 @@ public class BankCommand implements TabExecutor {
                         } else {
                             ChangeBankBalance(target.getUniqueId(), 0);
                         }
+                        System.out.println("Admin Command Executed");
                     } else {
                         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                         if (offlineTarget != null) {
@@ -178,8 +192,9 @@ public class BankCommand implements TabExecutor {
                             } else {
                                 ChangeBankBalance(offlineTarget.getUniqueId(), 0);
                             }
+                            System.out.println("Admin Command Executed");
                         } else {
-                            System.out.println("§cInvalid Player");
+                            System.out.println("Invalid Player");
                         }
                     }
                     return true;
@@ -190,17 +205,19 @@ public class BankCommand implements TabExecutor {
                     if (account <= getMaxAccount()) {
                         if (target != null) {
                             ChangeBankAccount(target.getUniqueId(), account);
+                            System.out.println("Admin Command Executed");
                         } else {
                             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                             if (offlineTarget != null) {
                                 ChangeBankAccount(offlineTarget.getUniqueId(), account);
+                                System.out.println("Admin Command Executed");
                             } else {
-                                System.out.println("§cInvalid Player");
+                                System.out.println("Invalid Player");
                             }
                         }
                         return true;
                     } else {
-                        System.out.println("§cCould not process this command.");
+                        System.out.println("Could not process this command.");
                     }
                 }
             }
@@ -220,12 +237,11 @@ public class BankCommand implements TabExecutor {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
                     if (player.hasPermission("bank.help")) {
-                        player.sendMessage("§7§m---------------------------------------");
-                        player.sendMessage("§c/bank help §8- Shows the commands");
-                        player.sendMessage("§c/bank §8- Opens the bank");
-                        player.sendMessage("§c/bank open <player_name> §8Opens the bank for the specified player");
-                        player.sendMessage("§c/bank admin §8- Shows the admin commands");
-                        player.sendMessage("§7§m---------------------------------------");
+                        player.sendMessage("§eMortis Bank");
+                        player.sendMessage("§e/bank help §7- Shows the commands");
+                        player.sendMessage("§e/bank §7- Opens the bank");
+                        player.sendMessage("§e/bank open <player_name> §7- Opens the bank for the specified player");
+                        player.sendMessage("§e/bank admin §7- Shows the admin commands");
                         return true;
                     } else {
                         player.sendMessage("§cYou don't have permission to use this");
@@ -233,10 +249,16 @@ public class BankCommand implements TabExecutor {
                 }
                 if (args[0].equalsIgnoreCase("admin")) {
                     if (player.hasPermission("bank.admin")) {
-                        player.sendMessage("§7§m---------------------------------------");
-                        player.sendMessage("§c/bank admin §8- Shows the admin commands");
-                        player.sendMessage("§c/bank admin reload §8- Reloads the plugin");
-                        player.sendMessage("§7§m---------------------------------------");
+                        player.sendMessage("§eMortis Bank");
+                        player.sendMessage("§e/bank admin §7- Shows the admin commands");
+                        player.sendMessage("§e/bank admin reload §7- Reloads the plugin");
+                        player.sendMessage("§e/bank admin balance set <player_name|uuid> <balance> §7- Sets the player's bank balance");
+                        player.sendMessage("§e/bank admin balance add <player_name|uuid> <balance> §7- Adds the amount to the player's bank balance");
+                        player.sendMessage("§e/bank admin balance remove <player_name|uuid> <balance> §7- Removes the amount from the player's bank balance");
+                        player.sendMessage("§e/bank admin account set <player_name|uuid> <account-id> §7- Sets the account of the player");
+                        player.sendMessage("§e/bank admin interest give <player_name|uuid> §7- Gives interest to the player");
+                        player.sendMessage("§e/bank admin deposit <player_name|uuid> <amount> §7- Make the player deposit the amount of money");
+                        player.sendMessage("§e/bank admin withdraw <player_name|uuid> <amount> §7- Make the player withdraw the amount of money");
                         return true;
                     } else {
                         player.sendMessage("§cYou don't have permission to use this");
@@ -279,6 +301,7 @@ public class BankCommand implements TabExecutor {
                             account = getBankAccount(target.getUniqueId());
                             double amount = getInterest(balance, account);
                             GiveBankInterestMoney(target.getName(), amount);
+                            player.sendMessage("§aAdmin Command Executed");
                         } else {
                             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                             if (offlineTarget != null) {
@@ -286,6 +309,7 @@ public class BankCommand implements TabExecutor {
                                 account = getBankAccount(offlineTarget.getUniqueId());
                                 double amount = getInterest(balance, account);
                                 GiveBankInterestMoney(offlineTarget.getName(), amount);
+                                player.sendMessage("§aAdmin Command Executed");
                             } else {
                                 player.sendMessage("§cInvalid Player");
                             }
@@ -301,6 +325,7 @@ public class BankCommand implements TabExecutor {
                         double amount = Double.parseDouble(args[3]);
                         if (target != null) {
                             onDeposit(target, amount);
+                            player.sendMessage("§aAdmin Command Executed");
                         } else {
                             player.sendMessage("§cInvalid Player");
                         }
@@ -315,6 +340,7 @@ public class BankCommand implements TabExecutor {
                         double amount = Double.parseDouble(args[3]);
                         if (target != null) {
                             onWithdraw(target, amount);
+                            player.sendMessage("§aAdmin Command Executed");
                         } else {
                             player.sendMessage("§cInvalid Player");
                         }
@@ -331,10 +357,12 @@ public class BankCommand implements TabExecutor {
                         double amount = Double.parseDouble(args[4]);
                         if (target != null) {
                             ChangeBankBalance(target.getUniqueId(), amount);
+                            player.sendMessage("§aAdmin Command Executed");
                         } else {
                             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                             if (offlineTarget != null) {
                                 ChangeBankBalance(offlineTarget.getUniqueId(), amount);
+                                player.sendMessage("§aAdmin Command Executed");
                             } else {
                                 player.sendMessage("§cInvalid Player");
                             }
@@ -355,8 +383,10 @@ public class BankCommand implements TabExecutor {
                             balance = getBankBalance(target.getUniqueId());
                             account = getBankAccount(target.getUniqueId());
                             limit = getLimit(account);
-                            if (balance + amount <= limit) {
+                            double spaceInBank = limit - balance;
+                            if (balance + amount < spaceInBank) {
                                 ChangeBankBalance(target.getUniqueId(), balance + amount);
+                                player.sendMessage("§aAdmin Command Executed");
                             } else {
                                 player.sendMessage("§cCould not process this command.");
                             }
@@ -366,8 +396,10 @@ public class BankCommand implements TabExecutor {
                                 balance = getBankBalance(offlineTarget.getUniqueId());
                                 account = getBankAccount(offlineTarget.getUniqueId());
                                 limit = getLimit(account);
-                                if (balance + amount <= limit) {
+                                double spaceInBank = limit - balance;
+                                if (balance + amount < spaceInBank) {
                                     ChangeBankBalance(offlineTarget.getUniqueId(), balance + amount);
+                                    player.sendMessage("§aAdmin Command Executed");
                                 } else {
                                     player.sendMessage("§cCould not process this command.");
                                 }
@@ -389,8 +421,10 @@ public class BankCommand implements TabExecutor {
                             balance = getBankBalance(target.getUniqueId());
                             if (amount <= balance) {
                                 ChangeBankBalance(target.getUniqueId(), balance - amount);
+                                player.sendMessage("§aAdmin Command Executed");
                             } else {
                                 ChangeBankBalance(target.getUniqueId(), 0);
+                                player.sendMessage("§aAdmin Command Executed");
                             }
                         } else {
                             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
@@ -398,8 +432,10 @@ public class BankCommand implements TabExecutor {
                                 balance = getBankBalance(offlineTarget.getUniqueId());
                                 if (amount <= balance) {
                                     ChangeBankBalance(offlineTarget.getUniqueId(), balance - amount);
+                                    player.sendMessage("§aAdmin Command Executed");
                                 } else {
                                     ChangeBankBalance(offlineTarget.getUniqueId(), 0);
+                                    player.sendMessage("§aAdmin Command Executed");
                                 }
                             } else {
                                 player.sendMessage("§cInvalid Player");
@@ -417,10 +453,12 @@ public class BankCommand implements TabExecutor {
                         if (account <= getMaxAccount()) {
                             if (target != null) {
                                 ChangeBankAccount(target.getUniqueId(), account);
+                                player.sendMessage("§aAdmin Command Executed");
                             } else {
                                 OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(UUID.fromString(args[3]));
                                 if (offlineTarget != null) {
                                     ChangeBankAccount(offlineTarget.getUniqueId(), account);
+                                    player.sendMessage("§aAdmin Command Executed");
                                 } else {
                                     player.sendMessage("§cInvalid Player");
                                 }

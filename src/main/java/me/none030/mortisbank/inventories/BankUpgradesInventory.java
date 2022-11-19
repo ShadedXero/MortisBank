@@ -2,7 +2,6 @@ package me.none030.mortisbank.inventories;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import me.none030.mortisbank.utils.UpgradeItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,8 +20,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static me.none030.mortisbank.methods.StoringMenuItems.BankUpgradesItems;
 
 public class BankUpgradesInventory implements InventoryHolder {
 
@@ -125,9 +122,6 @@ public class BankUpgradesInventory implements InventoryHolder {
 
         inv.setItem(section.getInt("back-item.slot"), item);
 
-        for (UpgradeItem upgradeItem : BankUpgradesItems) {
-            inv.setItem(upgradeItem.getSlot(), upgradeItem.getItem());
-        }
     }
 
     @Override

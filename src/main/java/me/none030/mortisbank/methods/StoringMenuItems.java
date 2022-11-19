@@ -3,7 +3,6 @@ package me.none030.mortisbank.methods;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.none030.mortisbank.utils.MenuItem;
-import me.none030.mortisbank.utils.UpgradeItem;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,14 +20,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static me.none030.mortisbank.methods.ItemsCreation.CreateUpgradeItem;
-
 public class StoringMenuItems {
 
     public static List<MenuItem> PersonalBankItems = new ArrayList<>();
     public static List<MenuItem> BankDepositItems = new ArrayList<>();
     public static List<MenuItem> BankWithdrawItems = new ArrayList<>();
-    public static List<UpgradeItem> BankUpgradesItems = new ArrayList<>();
 
     public static void StoreMenuItems(String menu) {
 
@@ -95,37 +91,14 @@ public class StoringMenuItems {
         }
     }
 
-    public static void StoreUpgradesItems() {
-
-        File file = new File("plugins/MortisBank/", "upgrades.yml");
-        FileConfiguration upgrades = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection section = upgrades.getConfigurationSection("bank-upgrades");
-        assert section != null;
-        List<String> keys = new ArrayList<>(section.getKeys(false));
-        keys.remove("OPTIONS");
-        keys.remove("DEFAULT");
-        keys.add("0");
-
-        for (String key : keys) {
-            ConfigurationSection upgradeSection = section.getConfigurationSection(key);
-            assert upgradeSection != null;
-
-            UpgradeItem item = CreateUpgradeItem(Integer.parseInt(key));
-
-            BankUpgradesItems.add(item);
-        }
-    }
-
     public static void StoreAllMenusItems() {
 
         PersonalBankItems.clear();
         BankDepositItems.clear();
         BankWithdrawItems.clear();
-        BankUpgradesItems.clear();
         StoreMenuItems("Personal-Bank");
         StoreMenuItems("Bank-Deposit");
         StoreMenuItems("Bank-Withdrawal");
-        StoreUpgradesItems();
 
     }
 }

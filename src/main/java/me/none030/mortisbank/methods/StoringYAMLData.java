@@ -111,7 +111,8 @@ public class StoringYAMLData {
         try {
             File file = new File("plugins/MortisBank/", "data.yml");
             FileConfiguration data = YamlConfiguration.loadConfiguration(file);
-            data.set(player.toString(), time);
+            ConfigurationSection section = data.getConfigurationSection("interests");
+            section.set(player.toString(), time.toString());
             data.save(file);
         }catch (IOException exp) {
             exp.printStackTrace();
