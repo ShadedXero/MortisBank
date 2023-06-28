@@ -1,0 +1,101 @@
+#  __  __            _   _       ____              _
+# |  \/  |          | | (_)     |  _ \            | |
+# | \  / | ___  _ __| |_ _ ___  | |_) | __ _ _ __ | | __
+# | |\/| |/ _ \| '__| __| / __| |  _ < / _` | '_ \| |/ /
+# | |  | | (_) | |  | |_| \__ \ | |_) | (_| | | | |   <
+# |_|  |_|\___/|_|   \__|_|___/ |____/ \__,_|_| |_|_|\_\
+#=======================================================
+# Mortis Bank Plugin Configuration FREE VERSION
+# Spigot https://www.spigotmc.org/resources/✨mortis-bank✨-advanced-upgrades-bank-interests-customizable.106180/
+# Github https://github.com/None030/Mortis-Bank
+# Discord https://discord.com/invite/cftU47UjyP
+# Join discord for support
+#======================================================#
+#               DATABASE SETTINGS                      #
+#======================================================#
+
+database:
+  type: H2 #
+  host: localhost # host of your database
+  port: 3306 # default port for MariaDB and MySQL
+  database: data # name of your database. A database server can contain multiple databases
+  username: user
+  password: pass
+
+#======================================================#
+#               SETTINGS                               #
+#======================================================#
+
+input-mode: ANVIL # SIGN | ANVIL
+sign-input-slot: 0
+anvil-item: ANVIL_ITEM
+leaderboard: true
+transaction-limit: 10
+
+#======================================================#
+#               INTEREST SETTINGS                      #
+#======================================================#
+
+interests:
+  enabled: true
+  # ONLINE -
+  # ALL -
+  mode: ONLINE
+  # SINGLE -
+  # MULTIPLE -
+  display-mode: SINGLE
+  interval: 31h # in hours
+
+#======================================================#
+#               PERSONAL MENU                          #
+#======================================================#
+
+personal:
+  menu:
+    title: "Personal Bank Account"
+    deposit: DEPOSIT
+    withdraw: WITHDRAW
+    recent-transactions: RECENT_TRANSACTIONS
+    information: INFORMATION
+    upgrades: UPGRADES
+    close: CLOSE
+  sound:
+    enabled: true
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 1
+    pitch: 1
+
+#======================================================#
+#               DEPOSIT MENU                           #
+#======================================================#
+
+deposit:
+  menu:
+    title: "Bank Deposit"
+    whole: DEPOSIT_WHOLE
+    half: DEPOSIT_HALF
+    specific-amount: DEPOSIT_SPECIFIC_AMOUNT
+    back: BACK
+  sound:
+    enabled: true
+    sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 1
+    pitch: 1
+
+#======================================================#
+#               WITHDRAWAL MENU                          #
+#======================================================#
+
+withdrawal:
+  menu:
+    title: "Bank Withdrawal"
+    everything: WITHDRAW_EVERYTHING
+    half: WITHDRAW_HALF
+    20-percent: WITHDRAW_20
+    specific-amount: WITHDRAW_SPECIFIC_AMOUNT
+    back: BACK
+  sound:
+    enabled: true
+    sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 1
+    pitch: 1
