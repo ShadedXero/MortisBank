@@ -21,11 +21,33 @@ prefix: "&e[&bMortis Bank&e]"
 #======================================================#
 
 account-messages:
-  your-account: "%prefix% &aThis is your account!"
-  better-account: "%prefix% &cYou have a better account!"
-  need-previous-account: "%prefix% &cNeed previous upgrade!"
+  your-account: "&aThis is your account!"
+  better-account: "&cYou have a better account!"
+  need-previous-account: "&cNeed previous upgrade!"
+  upgrade-account: "&eClick to upgrade your account to %account_name%"
+  required-permission: "&cYou need %permission% permission to upgrade"
+  required-money: "&cYou need %amount% coins to upgrade"
+  required-item: "&cYou need %item_amount% %item_name% to upgrade"
+  required-permission-message: "%prefix% &cYou need %permission% permission to upgrade"
+  required-money-message: "%prefix% &cYou need %amount% coins to upgrade"
+  required-item-message: "%prefix% &cYou need %item_amount% %item_name% to upgrade"
+  removed-money: "%prefix% &aRemoved %amount% coins from your balance"
+  removed-item: "%prefix% &aRemoved %item_amount% %item_name% from your inventory"
   upgraded: "%prefix% &aUpgraded your account to %account_name%"
   no-requirements: "%prefix% &cYou don't have the requirements to upgrade this!"
+
+#======================================================#
+#               PERSONAL MESSAGES                      #
+#======================================================#
+
+personal-messages:
+  transaction: "%transaction-type% &6%amount%&7, &e%time% &7by %transactor%"
+  seconds: "second(s) ago"
+  minutes: "minute(s) ago"
+  hours: "hour(s) ago"
+  days: "day(s) ago"
+  months: "month(s) ago"
+  years: "year(s) ago"
 
 #======================================================#
 #               DEPOSIT MESSAGES                       #
@@ -35,6 +57,12 @@ deposit-messages:
   deposit: "%prefix% &aDeposited &6%amount% coins&a! There's now &6%mortisbank_balance% coins &ain the account!"
   full: "%prefix% &cYou already have the maximum amount of Coins in your bank!"
   little: "%prefix% &cYou cannot deposit this little amount"
+  anvil-title: "&aEnter the amount to deposit"
+  anvil-text: ""
+  sign-1: ""
+  sign-2: "^^^^^^^^^^^^^^^"
+  sign-3: "Enter the amount"
+  sign-4: "to deposit"
 
 #======================================================#
 #               WITHDRAWAL MESSAGES                    #
@@ -45,6 +73,12 @@ withdrawal-messages:
   little: "%prefix% &cYou cannot withdraw this little amount"
   greater-than-zero: "%prefix% &cYou need to enter a number greater than 0!"
   no-money: "%prefix% &cYou don't have any Coins in your bank account!"
+  anvil-title: "&aEnter the amount to withdraw"
+  anvil-text: ""
+  sign-1: ""
+  sign-2: "^^^^^^^^^^^^^^^"
+  sign-3: "Enter the amount"
+  sign-4: "to withdraw"
 
 #======================================================#
 #               INTEREST MESSAGES                      #
@@ -52,12 +86,12 @@ withdrawal-messages:
 
 interest-messages:
   interest: "%prefix% &aYou have just received &6%amount% &aas interest in your personal bank account!"
-  seconds: "&asecond(s)"
-  minutes: "&aminute(s)"
-  hours: "&ahour(s)"
-  days: "&aday(s)"
-  months: "&amonth(s)"
-  years: "&ayear(s)"
+  seconds: "second(s)"
+  minutes: "minute(s)"
+  hours: "hour(s)"
+  days: "day(s)"
+  months: "month(s)"
+  years: "year(s)"
 
 #======================================================#
 #               PLACEHOLDER MESSAGES                   #
@@ -84,9 +118,9 @@ command-messages:
   admin-usage: "%prefix% &aAdmin\n&a/bank admin reload - Reloads the plugin\n&a/bank admin deposit <player_name|uuid> <amount> - Deposits the amount to the target's bank account\n&a/bank admin withdraw <player_name|uuid> <amount> - Withdraws the amount to the target's bank account\n&a/bank admin balance - Shows the admin balance commands\n&a/bank admin account - Shows the admin account commands\n&a/bank admin transaction - Shows the admin transaction commands\n&a/bank admin interest - Shows the admin interest commands"
   reloaded: "%prefix% &aReloaded"
   admin-deposit-usage: "%prefix% &cUsage: /bank admin deposit <player_name|uuid> <amount>"
-  admin-deposit: "%prefix% &aDeposited &6%amount% coins from the target's bank&a! There's now &6%balance% coins &ain the target's account!"
+  admin-deposit: "%prefix% &aDeposited &6%amount% coins from the target's bank&a! There's now &6%mortisbank_balance% coins &ain the target's account!"
   admin-withdraw-usage: "%prefix% &cUsage: /bank admin withdraw <player_name|uuid> <amount>"
-  admin-withdraw: "%prefix% &aWithdrew &6%amount% coins from the target's bank&a! There's now &6%balance% coins &ain the target's account!"
+  admin-withdraw: "%prefix% &aWithdrew &6%amount% coins from the target's bank&a! There's now &6%mortisbank_balance% coins &ain the target's account!"
   admin-balance-usage: "%prefix% &aAdmin Balance\n&a/bank admin balance get <player_name|uuid> - Shows you the target's bank balance\n&a/bank admin balance set <player_name|uuid> <amount> - Sets the target's bank balance to the specified amount\n&a/bank admin balance add <player_name|uuid> <amount> - Adds the specified amount to the target's bank account\n&a/bank admin balance remove <player_name|uuid> <amount> - Removes the specified amount from the target's bank account"
   admin-balance-get-usage: "%prefix% &cUsage: /bank admin balance get <player_name|uuid>"
   admin-balance-get: "%prefix% &aTarget has %mortisbank_balance% balance in their bank account"
@@ -121,7 +155,7 @@ command-messages:
   admin-interest-give: "%prefix% &aSent the bank interest to the target's bank"
   admin-interest-time-usage: "%prefix% &aAdmin Interest Time\n&a/bank admin interest time get <player_name|uuid> - Shows when the target is going to get interest\n&a/bank admin interest time reset <player_name|uuid> - Resets the interest time for the target's bank"
   admin-interest-time-get-usage: "%prefix% &cUsage: /bank admin interest time get <player_name|uuid>"
-  admin-interest-time-get: "%prefix% &aYour target's bank interest time is %mortisbank_interest_time_single%"
+  admin-interest-time-get: "%prefix% &aYour target's bank interest time is %mortisbank_interest_time%"
   admin-interest-time-reset-usage: "%prefix% &cUsage: /bank admin interest time reset <player_name|uuid>"
   admin-interest-time-reset: "%prefix% &aReset the target's interest time"
   

@@ -11,6 +11,7 @@ public class AccountListener implements Listener {
         if (e.getClickedInventory() == null || !(e.getClickedInventory().getHolder() instanceof AccountMenu)) {
             return;
         }
+        e.setCancelled(true);
         AccountMenu menu = (AccountMenu) e.getClickedInventory().getHolder();
         menu.click(e.getRawSlot());
     }

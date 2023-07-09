@@ -36,21 +36,32 @@ public class AccountMenu implements InventoryHolder {
         if (playerAccount == null) {
             return;
         }
+        Account nextAccount = accountManager.getNextAccount(playerAccount.getPriority());
         for (Account account : accountManager.getAccounts()) {
             ItemEditor editor = new ItemEditor(account.getIcon());
-            editor.setPlaceholders(player);
-            menu.setItem(account.getIconSlot(), editor.getItem());
+            String status = " ";
             if (playerAccount.getPriority() == account.getPriority()) {
-                editor.setPlaceholder("%account_status%", accountManager.getMessage("YOUR_ACCOUNT"));
-                continue;
+                status = accountManager.getMessage("YOUR_ACCOUNT", player);
             }
             if (playerAccount.getPriority() > account.getPriority()) {
-                editor.setPlaceholder("%account_status%", accountManager.getMessage("BETTER_ACCOUNT"));
-                continue;
+                status = accountManager.getMessage("BETTER_ACCOUNT", player);
             }
             if (playerAccount.getPriority() < account.getPriority()) {
-                editor.setPlaceholder("%account_status%", accountManager.getMessage("NEED_PREVIOUS_ACCOUNT"));
+                status = accountManager.getMessage("NEED_PREVIOUS_ACCOUNT", player);
             }
+            if (nextAccount != null && nextAccount.getPriority() == account.getPriority()) {
+                if (account.hasRequirements(player)) {
+                    MessageUtils utils = new MessageUtils(accountManager.getMessage("UPGRADE_ACCOUNT", player));
+                    utils.replace("%account_name%", account.getName());
+                    utils.replace("%account_priority%", String.valueOf(account.getPriority()));
+                    status = utils.getMessage();
+                }else {
+                    status = nextAccount.getRequirementStatus(accountManager, player);
+                }
+            }
+            editor.setPlaceholder("%account_status%", status);
+            editor.setPlaceholders(player);
+            menu.setItem(account.getIconSlot(), editor.getItem());
         }
     }
 
@@ -69,15 +80,18 @@ public class AccountMenu implements InventoryHolder {
             return;
         }
         Account nextAccount = accountManager.getNextAccount(playerAccount.getPriority());
-        if (nextAccount == null || !nextAccount.equals(account) || !account.hasRequirements(player)) {
+        if (nextAccount == null || !nextAccount.equals(account) || !account.hasRequirements(accountManager, player)) {
             accountManager.sendMessage("NO_REQUIREMENTS", player);
             return;
         }
-        account.removeRequirements(player);
+        account.removeRequirements(accountManager, player);
         accountManager.getBankManager().getDataManager().setAccount(player.getUniqueId(), account.getPriority());
         MessageUtils utils = new MessageUtils(accountManager.getMessage("UPGRADED", player));
         utils.replace("%account_name%", account.getName());
+        utils.replace("%account_priority%", String.valueOf(account.getPriority()));
         player.sendMessage(utils.getMessage());
+        PersonalMenu menu = new PersonalMenu(accountManager.getBankManager().getPersonalManager(), player);
+        menu.open();
     }
 
     public void open() {

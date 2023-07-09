@@ -12,6 +12,7 @@ public class PersonalListener implements Listener {
         if (e.getClickedInventory() == null || !(e.getClickedInventory().getHolder() instanceof PersonalMenu)) {
             return;
         }
+        e.setCancelled(true);
         PersonalMenu menu = (PersonalMenu) e.getClickedInventory().getHolder();
         menu.click(slot);
     }

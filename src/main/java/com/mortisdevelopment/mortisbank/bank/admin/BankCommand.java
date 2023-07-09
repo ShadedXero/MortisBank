@@ -3,6 +3,8 @@ package com.mortisdevelopment.mortisbank.bank.admin;
 import com.mortisdevelopment.mortisbank.bank.personal.PersonalMenu;
 import com.mortisdevelopment.mortisbank.bank.personal.PersonalTransaction;
 import com.mortisdevelopment.mortisbank.bank.personal.TransactionType;
+import com.mortisdevelopment.mortiscorespigot.utils.MessageUtils;
+import com.mortisdevelopment.mortiscorespigot.utils.MoneyUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -53,6 +56,7 @@ public class BankCommand implements TabExecutor {
     }
 
     private boolean checkTransaction(@NotNull CommandSender sender, @NotNull String[] args, @NotNull TransactionType type) {
+        DecimalFormat formatter = new DecimalFormat("#,###.#");
         OfflinePlayer target = getTarget(args[2]);
         if (target == null) {
             sender.sendMessage(manager.getMessage("INVALID_TARGET"));
@@ -68,7 +72,11 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
-            sender.sendMessage(manager.getMessage("ADMIN_DEPOSIT", target));
+            MessageUtils utils = new MessageUtils(manager.getMessage("ADMIN_DEPOSIT", target));
+            utils.replace("%amount%", formatter.format(amount));
+            utils.replace("%amount_raw%", String.valueOf(amount));
+            utils.replace("%amount_formatted%", MoneyUtils.getMoney(amount));
+            sender.sendMessage(utils.getMessage());
             return true;
         }
         if (type.equals(TransactionType.WITHDRAW)) {
@@ -76,14 +84,19 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
-            sender.sendMessage(manager.getMessage("ADMIN_WITHDRAW", target));
+            MessageUtils utils = new MessageUtils(manager.getMessage("ADMIN_WITHDRAW", target));
+            utils.replace("%amount%", formatter.format(amount));
+            utils.replace("%amount_raw%", String.valueOf(amount));
+            utils.replace("%amount_formatted%", MoneyUtils.getMoney(amount));
+            sender.sendMessage(utils.getMessage());
             return true;
         }
         return false;
     }
 
     private boolean checkBalance(@NotNull CommandSender sender, @NotNull String[] args, @NotNull BalanceType type) {
-        OfflinePlayer target = getTarget(args[2]);
+        DecimalFormat formatter = new DecimalFormat("#,###.#");
+        OfflinePlayer target = getTarget(args[3]);
         if (target == null) {
             sender.sendMessage(manager.getMessage("INVALID_TARGET"));
             return false;
@@ -92,7 +105,7 @@ public class BankCommand implements TabExecutor {
             sender.sendMessage(manager.getMessage("ADMIN_BALANCE_GET", target));
             return true;
         }
-        double amount = getAmount(args[3]);
+        double amount = getAmount(args[4]);
         if (amount <= 0) {
             sender.sendMessage(manager.getMessage("INVALID_NUMBER"));
             return false;
@@ -110,7 +123,11 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
-            sender.sendMessage(manager.getMessage("ADMIN_BALANCE_ADD", target));
+            MessageUtils utils = new MessageUtils(manager.getMessage("ADMIN_BALANCE_ADD", target));
+            utils.replace("%amount%", formatter.format(amount));
+            utils.replace("%amount_raw%", String.valueOf(amount));
+            utils.replace("%amount_formatted%", MoneyUtils.getMoney(amount));
+            sender.sendMessage(utils.getMessage());
             return true;
         }
         if (type.equals(BalanceType.REMOVE)) {
@@ -118,14 +135,18 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
-            sender.sendMessage(manager.getMessage("ADMIN_BALANCE_REMOVE", target));
+            MessageUtils utils = new MessageUtils(manager.getMessage("ADMIN_BALANCE_REMOVE", target));
+            utils.replace("%amount%", formatter.format(amount));
+            utils.replace("%amount_raw%", String.valueOf(amount));
+            utils.replace("%amount_formatted%", MoneyUtils.getMoney(amount));
+            sender.sendMessage(utils.getMessage());
             return true;
         }
         return false;
     }
 
     private boolean checkAccount(@NotNull CommandSender sender, @NotNull String[] args, @NotNull AccountType type) {
-        OfflinePlayer target = getTarget(args[2]);
+        OfflinePlayer target = getTarget(args[3]);
         if (target == null) {
             sender.sendMessage(manager.getMessage("INVALID_TARGET"));
             return false;
@@ -153,7 +174,7 @@ public class BankCommand implements TabExecutor {
         if (type.equals(AccountType.SET)) {
             short priority;
             try {
-                priority = Short.parseShort(args[3]);
+                priority = Short.parseShort(args[4]);
             }catch (NumberFormatException exp) {
                 sender.sendMessage(manager.getMessage("INVALID_NUMBER"));
                 return false;
@@ -169,7 +190,7 @@ public class BankCommand implements TabExecutor {
     }
 
     private boolean checkTransaction(@NotNull CommandSender sender, @NotNull String[] args, @NotNull TransactionMode mode) {
-        OfflinePlayer target = getTarget(args[2]);
+        OfflinePlayer target = getTarget(args[3]);
         if (target == null) {
             sender.sendMessage(manager.getMessage("INVALID_TARGET"));
             return false;
@@ -179,6 +200,7 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
+            sender.sendMessage(manager.getMessage("ADMIN_TRANSACTION_CLEARALL"));
             return true;
         }
         if (mode.equals(TransactionMode.GET)) {
@@ -195,7 +217,7 @@ public class BankCommand implements TabExecutor {
         if (mode.equals(TransactionMode.CLEAR)) {
             int position;
             try {
-                position = Integer.parseInt(args[3]);
+                position = Integer.parseInt(args[4]);
             }catch (NumberFormatException exp) {
                 sender.sendMessage(manager.getMessage("INVALID_NUMBER"));
                 return false;
@@ -204,35 +226,37 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
+            sender.sendMessage(manager.getMessage("ADMIN_TRANSACTION_CLEAR"));
             return true;
         }
         if (mode.equals(TransactionMode.ADD)) {
             TransactionType type;
             try {
-                type = TransactionType.valueOf(args[3]);
+                type = TransactionType.valueOf(args[4]);
             }catch (IllegalArgumentException exp) {
                 sender.sendMessage(manager.getMessage("INVALID_TRANSACTION_TYPE"));
                 return false;
             }
-            String amount = args[4];
-            String transactor = args[5];
+            String amount = args[5];
+            String transactor = args[6];
             if (!manager.addTransaction(target, type, amount, transactor)) {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
+            sender.sendMessage(manager.getMessage("ADMIN_TRANSACTION_ADD"));
             return true;
         }
         return false;
     }
 
     private boolean checkInterest(@NotNull CommandSender sender, @NotNull String[] args, @NotNull InterestType type) {
-        OfflinePlayer target = getTarget(args[2]);
+        OfflinePlayer target = getTarget(args[3]);
         if (target == null) {
             sender.sendMessage(manager.getMessage("INVALID_TARGET"));
             return false;
         }
         if (type.equals(InterestType.GET)) {
-            sender.sendMessage(manager.getMessage("ADMIN_ACCOUNT_GET", target));
+            sender.sendMessage(manager.getMessage("ADMIN_INTEREST_GET", target));
             return true;
         }
         if (type.equals(InterestType.GIVE)) {
@@ -240,13 +264,14 @@ public class BankCommand implements TabExecutor {
                 sender.sendMessage(manager.getMessage("COULD_NOT_PROCESS"));
                 return false;
             }
+            sender.sendMessage(manager.getMessage("ADMIN_INTEREST_GIVE", target));
            return true;
         }
         return false;
     }
 
     private boolean checkInterestTime(@NotNull CommandSender sender, @NotNull String[] args, @NotNull InterestTimeType type) {
-        OfflinePlayer target = getTarget(args[2]);
+        OfflinePlayer target = getTarget(args[4]);
         if (target == null) {
             sender.sendMessage(manager.getMessage("INVALID_TARGET"));
             return false;
@@ -500,6 +525,10 @@ public class BankCommand implements TabExecutor {
                         sender.sendMessage(manager.getMessage("NO_PERMISSION"));
                         return false;
                     }
+                    if (args.length < 4) {
+                        sender.sendMessage(manager.getMessage("ADMIN_TRANSACTION_CLEARALL_USAGE"));
+                        return false;
+                    }
                     return checkTransaction(sender, args, TransactionMode.CLEARALL);
                 }
             }
@@ -585,6 +614,8 @@ public class BankCommand implements TabExecutor {
             if (args.length == 2) {
                 List<String> arguments = new ArrayList<>();
                 arguments.add("reload");
+                arguments.add("deposit");
+                arguments.add("withdraw");
                 arguments.add("balance");
                 arguments.add("account");
                 arguments.add("transaction");
@@ -630,10 +661,12 @@ public class BankCommand implements TabExecutor {
                     return arguments;
                 }
                 if (args[2].equalsIgnoreCase("time")) {
-                    List<String> arguments = new ArrayList<>();
-                    arguments.add("get");
-                    arguments.add("reset");
-                    return arguments;
+                    if (args.length == 4) {
+                        List<String> arguments = new ArrayList<>();
+                        arguments.add("get");
+                        arguments.add("reset");
+                        return arguments;
+                    }
                 }
             }
         }

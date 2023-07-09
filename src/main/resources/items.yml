@@ -29,7 +29,7 @@ items:
     amount: 1
     name: "&aDeposit Coins"
     lore:
-      - "&7Current balance: &6%bank_balance%"
+      - "&7Current balance: &6%mortisbank_balance%"
       - ""
       - "&7Store coins in the bank to keep"
       - "&7them safe while you go on"
@@ -39,27 +39,33 @@ items:
       - "&7season for your first &610 million"
       - "&7banked coins"
       - ""
-      - "&7Until interest: &b%interest_time%"
+      - "&7Until interest: &b%mortisbank_interest_time%"
       - ""
       - "&eClick to make a deposit!"
-  WITHDRAW:
+  WITHDRAWAL:
     material: DROPPER
     amount: 1
     name: "&aWithdraw Coins"
     lore:
-      - "&7Current balance: &6%bank_balance%"
+      - "&7Current balance: &6%mortisbank_balance%"
       - ""
       - "&7Take your coins out of the bank"
       - "&7in order to spend them."
       - ""
       - "&eClick to withdraw coins!"
-  RECENT_TRANSACTIONS:
+  TRANSACTIONS:
     material: MAP
     amount: 1
     name: "&aRecent transactions"
     lore:
       - ""
-      - "%recent_transactions%"
+  NO_TRANSACTIONS:
+    material: MAP
+    amount: 1
+    name: "&aRecent transactions"
+    lore:
+      - "&7There are no recent"
+      - "&7transactions!"
   INFORMATION:
     material: REDSTONE_TORCH
     amount: 1
@@ -69,18 +75,18 @@ items:
       - "&7You lose half the coins in your"
       - "&7purse when dying in combat."
       - ""
-      - "&7Balance limit: &6%bank_limit%"
+      - "&7Balance limit: &6%mortisbank_max_balance%"
       - ""
       - "&7The banker rewards you every 31"
       - "&7hours with &binterest &7for the"
       - "&7coins in your bank balance."
       - ""
-      - "&7Interest in: &b%interest_time%"
+      - "&7Interest in: &b%mortisbank_interest_time%"
   CLOSE:
     material: BARRIER
     amount: 1
     name: "&cClose"
-  UPGRADES:
+  ACCOUNTS:
     material: GOLD_BLOCK
     amount: 1
     name: "&6Bank Upgrades"
@@ -88,8 +94,8 @@ items:
       - "&7Are you so rich that you can't"
       - "&7even store your coins?"
       - ""
-      - "&7Current account: %bank_account%"
-      - "&7Bank limit: &6%bank_limit%"
+      - "&7Current account: %mortisbank_account%"
+      - "&7Bank limit: &6%mortisbank_max_balance%"
       - ""
       - "&eClick to view upgrades!"
   DEPOSIT_WHOLE:
@@ -99,8 +105,8 @@ items:
     lore:
       - "&8Bank deposit"
       - ""
-      - "&7Current balance: &6%bank_balance%"
-      - "&7Amount to deposit: &6%deposit_whole_purse%"
+      - "&7Current balance: &6%mortisbank_balance%"
+      - "&7Amount to deposit: &6%mortisbank_deposit_whole%"
   DEPOSIT_HALF:
     material: CHEST
     amount: 32
@@ -108,14 +114,14 @@ items:
     lore:
       - "&8Bank deposit"
       - ""
-      - "&7Current balance: &6%bank_balance%"
-      - "&7Amount to deposit: &6%deposit_half_purse%"
+      - "&7Current balance: &6%mortisbank_balance%"
+      - "&7Amount to deposit: &6%mortisbank_deposit_half%"
   DEPOSIT_SPECIFIC_AMOUNT:
     material: OAK_SIGN
     amount: 1
     name: "&aSpecific amount"
     lore:
-      - "&7Current balance: &6%bank_balance%"
+      - "&7Current balance: &6%mortisbank_balance%"
       - ""
       - "&eClick to deposit coins!"
   WITHDRAW_EVERYTHING:
@@ -125,8 +131,8 @@ items:
     lore:
       - "&8Bank withdrawal"
       - ""
-      - "&7Current balance: &6%bank_balance%"
-      - "&7Amount to withdraw: &6%withdraw_everything_in_account%"
+      - "&7Current balance: &6%mortisbank_balance%"
+      - "&7Amount to withdraw: &6%mortisbank_withdraw_everything%"
   WITHDRAW_HALF:
     material: DROPPER
     amount: 32
@@ -134,23 +140,23 @@ items:
     lore:
       - "&8Bank withdrawal"
       - ""
-      - "&7Current balance: &6%bank_balance%"
-      - "&7Amount to withdraw: &6%withdraw_half_the_account%"
-  WITHDRAW_20:
+      - "&7Current balance: &6%mortisbank_balance%"
+      - "&7Amount to withdraw: &6%mortisbank_withdraw_half%"
+  WITHDRAW_TWENTY:
     material: DROPPER
     amount: 1
     name: "&aWithdraw 20%"
     lore:
       - "&8Bank withdrawal"
       - ""
-      - "&7Current balance: &6%bank_balance%"
-      - "&7Amount to withdraw: &6%withdraw_20_the_account%"
+      - "&7Current balance: &6%mortisbank_balance%"
+      - "&7Amount to withdraw: &6%mortisbank_withdraw_twenty%"
   WITHDRAW_SPECIFIC_AMOUNT:
     material: OAK_SIGN
     amount: 1
     name: "&aSpecific amount"
     lore:
-      - "&7Current balance: &6%bank_balance%"
+      - "&7Current balance: &6%mortisbank_balance%"
       - ""
       - "&eClick to withdraw coins!"
   DIAMOND:
@@ -167,17 +173,17 @@ items:
       - " &eFirst &610M &ecoins yields &b2% &einterest."
       - " &eFrom &610M &eto &615M &ecoins yields &b1% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6250,000"
+      - "  &8(With 15,000,000 balance)"
       - "&a>&a&m-------------------------------&a<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &650 Million Coins"
       - ""
       - "&7Cost: &aComplimentary"
       - ""
       - "%account_status%"
   COPPER_ACCOUNT:
-    material: COPPER
+    material: GOLD_INGOT
     amount: 1
     name: "&6Copper Account"
     lore:
@@ -187,11 +193,11 @@ items:
       - " &eFirst &610M &ecoins yields &b2% &einterest."
       - " &eFrom &610M &eto &620M &ecoins yields &b1% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6300,000"
+      - "  &8(With 20,000,000 balance)"
       - "&6>&6&m-------------------------------&6<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &6100 Million Coins"
       - ""
       - "&7Cost"
       - "&65,000,000 Coins"
@@ -209,11 +215,11 @@ items:
       - " &eFrom &610M &eto &620M &ecoins yields &b1% &einterest."
       - " &eFrom &620M &eto &630M &ecoins yields &b0.5% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6350,000"
+      - "  &8(With 30,000,000 balance)"
       - "&d>&d&m-------------------------------&d<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &6250 Million Coins"
       - ""
       - "&7Cost"
       - "&610,000,000 Coins"
@@ -233,11 +239,11 @@ items:
       - " &eFrom &620M &eto &630M &ecoins yields &b0.5% &einterest."
       - " &eFrom &630M &eto &650M &ecoins yields &b0.2% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6390,000"
+      - "  &8(With 50,000,000 balance)"
       - "&5>&5&m-------------------------------&5<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &6500 Million Coins"
       - ""
       - "&7Cost"
       - "&625,000,000 Coins"
@@ -258,11 +264,11 @@ items:
       - " &eFrom &630M &eto &650M &ecoins yields &b0.2% &einterest."
       - " &eFrom &630M &eto &6160M &ecoins yields &b0.1% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6500,000"
+      - "  &8(With 160,000,000 balance)"
       - "&c>&c&m-------------------------------&c<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &61 Billion Coins"
       - ""
       - "&7Cost"
       - "&650,000,000 Coins"
@@ -283,11 +289,11 @@ items:
       - " &eFrom &630M &eto &6160M &ecoins yields &b0.1% &einterest."
       - " &eFrom &6160M &eto &65.1B &ecoins yields &b0.01% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &61,000,000"
+      - "  &8(With 5,160,000,000 balance)"
       - "&3>&3&m-------------------------------&3<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &66 Billion Coins"
       - ""
       - "&7Cost"
       - "&6100,000,000 Coins"
@@ -309,11 +315,11 @@ items:
       - " &eFrom &6160M &eto &65.1B &ecoins yields &b0.01% &einterest."
       - " &eFrom &65.1B &eto &655B &ecoins yields &b0.001% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &61,500,000"
+      - "  &8(With 55,160,000,000 balance)"
       - "&4>&4&m-------------------------------&4<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &660 Billion Coins"
       - ""
       - "&7Cost"
       - "&6200,000,000 Coins"
@@ -331,11 +337,11 @@ items:
       - " &eFirst &610M &ecoins yields &b2% &einterest."
       - " &eFrom &610M &eto &615M &ecoins yields &b1% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6250,000"
+      - "  &8(With 15,000,000 balance)"
       - "&a>&a&m-------------------------------&a<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &650 Million Coins"
       - ""
       - "&7Cost: &aComplimentary"
       - ""
@@ -351,11 +357,11 @@ items:
       - " &eFirst &610M &ecoins yields &b2% &einterest."
       - " &eFrom &610M &eto &620M &ecoins yields &b1% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6300,000"
+      - "  &8(With 20,000,000 balance)"
       - "&6>&6&m-------------------------------&6<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &6100 Million Coins"
       - ""
       - "&7Cost"
       - "&65,000,000 Coins"
@@ -375,11 +381,11 @@ items:
       - " &eFrom &610M &eto &620M &ecoins yields &b1% &einterest."
       - " &eFrom &620M &eto &630M &ecoins yields &b0.5% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6350,000"
+      - "  &8(With 30,000,000 balance)"
       - "&d>&d&m-------------------------------&d<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &6250 Million Coins"
       - ""
       - "&7Cost"
       - "&610,000,000 Coins"
@@ -399,11 +405,11 @@ items:
       - " &eFrom &620M &eto &630M &ecoins yields &b0.5% &einterest."
       - " &eFrom &630M &eto &650M &ecoins yields &b0.2% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6390,000"
+      - "  &8(With 50,000,000 balance)"
       - "&5>&5&m-------------------------------&5<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &6500 Million Coins"
       - ""
       - "&7Cost"
       - "&625,000,000 Coins"
@@ -424,11 +430,11 @@ items:
       - " &eFrom &630M &eto &650M &ecoins yields &b0.2% &einterest."
       - " &eFrom &630M &eto &6160M &ecoins yields &b0.1% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &6500,000"
+      - "  &8(With 160,000,000 balance)"
       - "&c>&c&m-------------------------------&c<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &61 Billion Coins"
       - ""
       - "&7Cost"
       - "&650,000,000 Coins"
@@ -451,11 +457,11 @@ items:
       - " &eFrom &630M &eto &6160M &ecoins yields &b0.1% &einterest."
       - " &eFrom &6160M &eto &65.1B &ecoins yields &b0.01% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &61,000,000"
+      - "  &8(With 5,160,000,000 balance)"
       - "&3>&3&m-------------------------------&3<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &66 Billion Coins"
       - ""
       - "&7Cost"
       - "&6100,000,000 Coins"
@@ -479,11 +485,11 @@ items:
       - " &eFrom &6160M &eto &65.1B &ecoins yields &b0.01% &einterest."
       - " &eFrom &65.1B &eto &655B &ecoins yields &b0.001% &einterest."
       - ""
-      - " &7Max interest: &6%max_interest%"
-      - "  &8(With %max_interest_bank%)"
+      - " &7Max interest: &61,500,000"
+      - "  &8(With 55,160,000,000 balance)"
       - "&4>&4&m-------------------------------&4<"
       - ""
-      - "&7Max balance: &6%max_balance%"
+      - "&7Max balance: &660 Billion Coins"
       - ""
       - "&7Cost"
       - "&6200,000,000 Coins"
@@ -497,6 +503,10 @@ items:
     lore:
       - "&f&lCOMMON"
     enchants:
-      - PROTECTION_ENVIRONMENTAL:4
+      - protection:4
     flags:
       - HIDE_ENCHANTS
+  ANVIL_ITEM:
+    material: PAPER
+    amount: 1
+    name: "&aEnter the amount"

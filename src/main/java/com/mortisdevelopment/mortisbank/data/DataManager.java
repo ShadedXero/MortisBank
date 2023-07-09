@@ -1,5 +1,7 @@
 package com.mortisdevelopment.mortisbank.data;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.bank.personal.PersonalTransaction;
 import com.mortisdevelopment.mortiscorespigot.databases.Database;
@@ -15,6 +17,7 @@ import java.util.*;
 public class DataManager {
 
     private final MortisBank plugin = MortisBank.getInstance();
+    private final Gson gson = new Gson();
     private final Database database;
     private final boolean leaderboard;
     private final int transactionLimit;
@@ -39,7 +42,7 @@ public class DataManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uuid varchar(36) primary key, balance double, account short, interest varchar(50), transactions varchar(5000))");
+                database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uuid varchar(36) primary key, balance double, account smallint, interest tinytext, transactions mediumtext)");
             }
         }.runTask(plugin);
     }
@@ -79,28 +82,29 @@ public class DataManager {
             return transactions;
         }
         int amount = transactions.size() - transactionLimit;
-        for (int i = 1; i < amount; i++) {
-            transactions.remove(0);
+        if (amount > 0) {
+            transactions.subList(0, amount).clear();
         }
         return transactions;
     }
 
-    private String getTransactions(@NotNull List<PersonalTransaction> transactions) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < transactions.size(); i++) {
-            PersonalTransaction transaction = transactions.get(i);
-            builder.append(transaction);
-            if (i != (transactions.size() - 1)) {
-                builder.append(",");
-            }
+    private List<String> getRawTransactions(@NotNull List<PersonalTransaction> transactions) {
+        List<String> rawTransactions = new ArrayList<>();
+        for (PersonalTransaction transaction : transactions) {
+            rawTransactions.add(transaction.getRawTransaction());
         }
-        return builder.toString();
+        return rawTransactions;
     }
 
-    private List<PersonalTransaction> getTransactions(@NotNull String transactions) {
+    private String getTransactions(@NotNull List<PersonalTransaction> transactions) {
+        List<String> rawTransactions = getRawTransactions(transactions);
+        return gson.toJson(rawTransactions);
+    }
+
+    private List<PersonalTransaction> getTransactions(@NotNull String raw) {
         List<PersonalTransaction> transactionList = new ArrayList<>();
-        String[] raw = transactions.split(",");
-        for (String rawTransaction : raw) {
+        List<String> rawTransactions = gson.fromJson(raw, new TypeToken<List<String>>(){}.getType());
+        for (String rawTransaction : rawTransactions) {
             PersonalTransaction transaction = new PersonalTransaction(rawTransaction);
             if (!transaction.isValid()) {
                 continue;

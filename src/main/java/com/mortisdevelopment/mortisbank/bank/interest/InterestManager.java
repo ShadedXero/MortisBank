@@ -68,7 +68,7 @@ public class InterestManager extends Manager {
             accountManager.getBankManager().getDataManager().setInterest(player.getUniqueId(), LocalDateTime.now().plusSeconds(settings.getInterval()));
             return;
         }
-        if (time.isBefore(LocalDateTime.now())) {
+        if (time.isAfter(LocalDateTime.now())) {
             return;
         }
         if (!giveInterest(player)) {
@@ -102,9 +102,9 @@ public class InterestManager extends Manager {
         }
         accountManager.getBankManager().getDataManager().setBalance(player.getUniqueId(), amount);
         MessageUtils utils = new MessageUtils(getMessage("INTEREST", player));
-        utils.replace("%money%", formatter.format(amount));
-        utils.replace("%money_raw%", String.valueOf(amount));
-        utils.replace("%money_formatted%", MoneyUtils.getMoney(amount));
+        utils.replace("%amount%", formatter.format(amount));
+        utils.replace("%amount_raw%", String.valueOf(amount));
+        utils.replace("%amount_formatted%", MoneyUtils.getMoney(amount));
         sendMessage(player, utils.getMessage());
         return true;
     }
@@ -133,11 +133,11 @@ public class InterestManager extends Manager {
         }
         return TimeUtils.getTime(LocalDateTime.now(), interestTime,
                 " " + getMessage("YEARS"),
-                "" + getMessage("MONTHS"),
-                "" + getMessage("DAYS"),
-                "" + getMessage("HOURS"),
-                "" + getMessage("MINUTES"),
-                "" + getMessage("SECONDS"));
+                " " + getMessage("MONTHS"),
+                " " + getMessage("DAYS"),
+                " " + getMessage("HOURS"),
+                " " + getMessage("MINUTES"),
+                " " + getMessage("SECONDS"));
     }
 
     public String getInterestTimeMultiple(@NotNull OfflinePlayer player) {
@@ -147,11 +147,11 @@ public class InterestManager extends Manager {
         }
         return TimeUtils.getTimeMultiple(LocalDateTime.now(), interestTime,
                 " " + getMessage("YEARS"),
-                "" + getMessage("MONTHS"),
-                "" + getMessage("DAYS"),
-                "" + getMessage("HOURS"),
-                "" + getMessage("MINUTES"),
-                "" + getMessage("SECONDS"));
+                " " + getMessage("MONTHS"),
+                " " + getMessage("DAYS"),
+                " " + getMessage("HOURS"),
+                " " + getMessage("MINUTES"),
+                " " + getMessage("SECONDS"));
     }
 
     public AccountManager getAccountManager() {

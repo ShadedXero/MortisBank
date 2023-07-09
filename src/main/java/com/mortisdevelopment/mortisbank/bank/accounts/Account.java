@@ -6,6 +6,7 @@ import com.mortisdevelopment.mortisbank.bank.accounts.upgrades.InterestUpgrade;
 import com.mortisdevelopment.mortisbank.bank.accounts.requirements.ItemRequirement;
 import com.mortisdevelopment.mortisbank.bank.accounts.requirements.PermissionRequirement;
 import com.mortisdevelopment.mortiscorespigot.utils.MessageUtils;
+import com.mortisdevelopment.mortiscorespigot.utils.MoneyUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -62,6 +63,23 @@ public class Account {
         return interest;
     }
 
+    public double getMaxInterest() {
+        double interest = 0;
+        for (InterestUpgrade upgrade : interests) {
+            interest += upgrade.getInterest();
+        }
+        return interest;
+    }
+
+    public String getRequirementStatus(@NotNull AccountManager accountManager, @NotNull Player player) {
+        for (AccountRequirement requirement : requirements) {
+            if (!requirement.hasRequirement(player)) {
+                return requirement.getRequirementStatus(accountManager);
+            }
+        }
+        return null;
+    }
+
     public boolean hasRequirements(@NotNull Player player) {
         for (AccountRequirement requirement : requirements) {
             if (!requirement.hasRequirement(player)) {
@@ -76,19 +94,23 @@ public class Account {
         for (AccountRequirement requirement : requirements) {
             if (!requirement.hasRequirement(player)) {
                 if (requirement instanceof MoneyRequirement) {
-                    double money = ((MoneyRequirement) requirement).getMoney();
-                    player.sendMessage(accountManager.getMessage("REQUIRE_MONEY").replace("%amount%", formatter.format(money)));
+                    MessageUtils utils = new MessageUtils(accountManager.getMessage("REQUIRED_MONEY_MESSAGE"));
+                    utils.replace("%amount%", formatter.format(((MoneyRequirement) requirement).getMoney()));
+                    utils.replace("%amount_raw%", String.valueOf(((MoneyRequirement) requirement).getMoney()));
+                    utils.replace("%amount_formatted%", MoneyUtils.getMoney(((MoneyRequirement) requirement).getMoney()));
+                    player.sendMessage(utils.getMessage());
                     return false;
                 }
                 if (requirement instanceof PermissionRequirement) {
-                    String permission = ((PermissionRequirement) requirement).getPermission();
-                    player.sendMessage(accountManager.getMessage("REQUIRE_PERMISSION").replace("%permission%", permission));
+                    MessageUtils utils = new MessageUtils(accountManager.getMessage("REQUIRED_PERMISSION_MESSAGE"));
+                    utils.replace("%permission%", ((PermissionRequirement) requirement).getPermission());
+                    player.sendMessage(utils.getMessage());
                     return false;
                 }
                 if (requirement instanceof ItemRequirement) {
                     ItemStack item = ((ItemRequirement) requirement).getItem();
                     int amount = ((ItemRequirement) requirement).getAmount();
-                    MessageUtils utils = new MessageUtils(accountManager.getMessage("REQUIRE_ITEM"));
+                    MessageUtils utils = new MessageUtils(accountManager.getMessage("REQUIRED_ITEM_MESSAGE"));
                     utils.replace("%material%", item.getType().name());
                     utils.replace("%amount%", String.valueOf(amount));
                     ItemMeta meta = item.getItemMeta();
@@ -145,7 +167,7 @@ public class Account {
     }
 
     public ItemStack getIcon() {
-        return icon;
+        return icon.clone();
     }
 
     public int getIconSlot() {

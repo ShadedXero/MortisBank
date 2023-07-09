@@ -34,7 +34,7 @@ upgrades:
   STARTER: #Don't add any requirements to DEFAULT as it's the default account
     name: "&aStarter"
     icon: STARTER_ACCOUNT
-    icon-slot: 24
+    icon-slot: 10
     max-balance: 50000000 #Max money that can be stored in the bank
     upgrades:
     interests: #Keep This in a sequence from low value to high value
@@ -49,7 +49,7 @@ upgrades:
   GOLD:
     name: "&6Gold"
     icon: GOLD_ACCOUNT
-    icon-slot: 24
+    icon-slot: 11
     max-balance: 100000000
     upgrades:
       interests:
@@ -68,7 +68,7 @@ upgrades:
   DELUXE:
     name: "&dDeluxe"
     icon: DELUXE_ACCOUNT
-    icon-slot: 24
+    icon-slot: 12
     max-balance: 250000000
     upgrades:
       interests:
@@ -93,7 +93,7 @@ upgrades:
   SUPER_DELUXE:
     name: "&5Super Deluxe"
     icon: SUPER_DELUXE_ACCOUNT
-    icon-slot: 24
+    icon-slot: 13
     max-balance: 500000000
     upgrades:
       interests:
@@ -122,7 +122,7 @@ upgrades:
   PREMIER:
     name: "&cPremier"
     icon: PREMIER
-    icon-slot: 24
+    icon-slot: 14
     max-balance: 1000000000
     upgrades:
       interests:
@@ -156,7 +156,7 @@ upgrades:
   LUXURIOUS:
     name: "&3Luxurious"
     icon: LUXURIOUS_ACCOUNT
-    icon-slot: 24
+    icon-slot: 15
     max-balance: 6000000000
     upgrades:
       interests:
@@ -194,7 +194,7 @@ upgrades:
   PALATIAL:
     name: "&4Palatial"
     icon: PALATIAL_ACCOUNT
-    icon-slot: 24
+    icon-slot: 16
     max-balance: 60000000000
     upgrades:
       interests:

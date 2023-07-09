@@ -1,5 +1,6 @@
 package com.mortisdevelopment.mortisbank.bank.accounts;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.bank.Manager;
 import com.mortisdevelopment.mortiscorespigot.menus.Menu;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class AccountManager extends Manager {
 
+    private final MortisBank plugin = MortisBank.getInstance();
     private final BankManager bankManager;
     private final Menu menu;
     private final AccountSettings settings;
@@ -21,6 +23,7 @@ public class AccountManager extends Manager {
         this.menu = menu;
         this.settings = settings;
         this.accounts = new ArrayList<>();
+        plugin.getServer().getPluginManager().registerEvents(new AccountListener(), plugin);
     }
 
     public Account getAccount(@NotNull OfflinePlayer player) {

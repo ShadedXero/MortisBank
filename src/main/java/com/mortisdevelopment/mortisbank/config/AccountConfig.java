@@ -83,8 +83,8 @@ public class AccountConfig extends Config {
             if (upgradeSection != null) {
                 ConfigurationSection interests = upgradeSection.getConfigurationSection("interests");
                 if (interests != null) {
-                    for (String ignored : interests.getKeys(false)) {
-                        ConfigurationSection interestSection = interests.getConfigurationSection(id);
+                    for (String interestId : interests.getKeys(false)) {
+                        ConfigurationSection interestSection = interests.getConfigurationSection(interestId);
                         if (interestSection == null) {
                             continue;
                         }
@@ -97,7 +97,7 @@ public class AccountConfig extends Config {
                 }
             }
             List<AccountRequirement> requirements = new ArrayList<>();
-            ConfigurationSection requirementSection = section.getConfigurationSection("requirement");
+            ConfigurationSection requirementSection = section.getConfigurationSection("requirements");
             if (requirementSection != null) {
                 if (requirementSection.contains("money")) {
                     double money = requirementSection.getDouble("money");

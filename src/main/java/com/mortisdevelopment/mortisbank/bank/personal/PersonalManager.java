@@ -1,5 +1,6 @@
 package com.mortisdevelopment.mortisbank.bank.personal;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.bank.Manager;
 import com.mortisdevelopment.mortiscorespigot.menus.Menu;
@@ -16,6 +17,8 @@ public class PersonalManager extends Manager {
     public PersonalManager(@NotNull BankManager bankManager, @NotNull Menu menu) {
         this.bankManager = bankManager;
         this.menu = menu;
+        MortisBank plugin = MortisBank.getInstance();
+        plugin.getServer().getPluginManager().registerEvents(new PersonalListener(), plugin);
     }
 
     public PersonalTransaction getTransaction(@NotNull OfflinePlayer player, int position) {

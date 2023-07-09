@@ -24,8 +24,8 @@ public class BankManager {
     private DepositManager depositManager;
     private WithdrawalManager withdrawalManager;
     private InterestManager interestManager;
-    private AdminManager adminManager;
     private PlaceholderManager placeholderManager;
+    private AdminManager adminManager;
     private ConfigManager configManager;
 
     public BankManager() {
@@ -98,20 +98,20 @@ public class BankManager {
         this.interestManager = interestManager;
     }
 
-    public AdminManager getAdminManager() {
-        return adminManager;
-    }
-
-    public void setAdminManager(AdminManager adminManager) {
-        this.adminManager = adminManager;
-    }
-
     public PlaceholderManager getPlaceholderManager() {
         return placeholderManager;
     }
 
     public void setPlaceholderManager(PlaceholderManager placeholderManager) {
         this.placeholderManager = placeholderManager;
+    }
+
+    public AdminManager getAdminManager() {
+        return adminManager;
+    }
+
+    public void setAdminManager(AdminManager adminManager) {
+        this.adminManager = adminManager;
     }
 
     public ConfigManager getConfigManager() {

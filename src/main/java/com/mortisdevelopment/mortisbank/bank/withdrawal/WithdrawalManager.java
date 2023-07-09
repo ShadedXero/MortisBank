@@ -7,6 +7,8 @@ import com.mortisdevelopment.mortisbank.bank.personal.PersonalTransaction;
 import com.mortisdevelopment.mortisbank.bank.personal.TransactionType;
 import com.mortisdevelopment.mortisbank.utils.GuiSettings;
 import com.mortisdevelopment.mortiscorespigot.menus.Menu;
+import com.mortisdevelopment.mortiscorespigot.utils.MessageUtils;
+import com.mortisdevelopment.mortiscorespigot.utils.MoneyUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -26,6 +28,7 @@ public class WithdrawalManager extends Manager {
         this.bankManager = bankManager;
         this.menu = menu;
         this.guiSettings = guiSettings;
+        plugin.getServer().getPluginManager().registerEvents(new WithdrawalListener(), plugin);
     }
 
     private void sendMessage(@NotNull OfflinePlayer offlinePlayer, String message) {
@@ -46,7 +49,7 @@ public class WithdrawalManager extends Manager {
         }else {
             transactor = offlinePlayer.getUniqueId().toString();
         }
-        PersonalTransaction transaction = new PersonalTransaction(TransactionType.DEPOSIT, amount, transactor);
+        PersonalTransaction transaction = new PersonalTransaction(TransactionType.WITHDRAW, amount, transactor);
         bankManager.getDataManager().addTransaction(offlinePlayer.getUniqueId(), transaction);
     }
 
@@ -72,7 +75,11 @@ public class WithdrawalManager extends Manager {
         }
         economy.depositPlayer(offlinePlayer, purse);
         bankManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), bank);
-        sendMessage(offlinePlayer, getMessage("WITHDRAW", offlinePlayer).replace("%money%", formatter.format(purse)));
+        MessageUtils utils = new MessageUtils(getMessage("WITHDRAW", offlinePlayer));
+        utils.replace("%amount%", formatter.format(purse));
+        utils.replace("%amount_raw%", String.valueOf(purse));
+        utils.replace("%amount_formatted%", MoneyUtils.getMoney(purse));
+        sendMessage(offlinePlayer, utils.getMessage());
         addTransaction(offlinePlayer, formatter.format(purse));
         return true;
     }
@@ -95,7 +102,11 @@ public class WithdrawalManager extends Manager {
         bank -= amount;
         economy.depositPlayer(offlinePlayer, amount);
         bankManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), bank);
-        sendMessage(offlinePlayer, getMessage("WITHDRAW", offlinePlayer).replace("%money%", formatter.format(amount)));
+        MessageUtils utils = new MessageUtils(getMessage("WITHDRAW", offlinePlayer));
+        utils.replace("%amount%", formatter.format(amount));
+        utils.replace("%amount_raw%", String.valueOf(amount));
+        utils.replace("%amount_formatted%", MoneyUtils.getMoney(amount));
+        sendMessage(offlinePlayer, utils.getMessage());
         addTransaction(offlinePlayer, formatter.format(amount));
         return true;
     }

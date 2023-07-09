@@ -2,16 +2,16 @@ package com.mortisdevelopment.mortisbank.bank.personal;
 
 public enum TransactionType {
 
-    DEPOSIT('+'),
-    WITHDRAW('-');
+    DEPOSIT("&a+"),
+    WITHDRAW("&c-");
 
-    private final char character;
+    private final String symbol;
 
-    TransactionType(char character) {
-        this.character = character;
+    TransactionType(String symbol) {
+        this.symbol = symbol;
     }
 
-    public char getCharacter() {
-        return character;
+    public String getSymbol() {
+        return symbol;
     }
 }

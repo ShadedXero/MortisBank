@@ -38,7 +38,7 @@ accounts:
     # The name of the upgrade
     name: "&8Coal"
     icon: COAL_ACCOUNT
-    icon-slot: 24
+    icon-slot: 10
     # Max amount of balance that can be stored in the bank
     max-balance: 50000000
     upgrades:
@@ -55,7 +55,7 @@ accounts:
     priority: 20
     name: "&fCopper"
     icon: COPPER_ACCOUNT
-    icon-slot: 24
+    icon-slot: 11
     max-balance: 100000000
     upgrades:
       interests:
@@ -73,7 +73,7 @@ accounts:
     priority: 30
     name: "&dLapis Lazuli"
     icon: LAPIS_LAZULI_ACCOUNT
-    icon-slot: 24
+    icon-slot: 12
     max-balance: 250000000
     upgrades:
       interests:
@@ -95,7 +95,7 @@ accounts:
     priority: 40
     name: "&5Iron"
     icon: IRON_ACCOUNT
-    icon-slot: 24
+    icon-slot: 13
     max-balance: 500000000
     upgrades:
       interests:
@@ -121,7 +121,7 @@ accounts:
     priority: 50
     name: "&cRedstone"
     icon: REDSTONE_ACCOUNT
-    icon-slot: 24
+    icon-slot: 14
     max-balance: 1000000000
     upgrades:
       interests:
@@ -151,7 +151,7 @@ accounts:
     priority: 60
     name: "&3Emerald"
     icon: EMERALD_ACCOUNT
-    icon-slot: 24
+    icon-slot: 15
     max-balance: 6000000000
     upgrades:
       interests:
@@ -183,9 +183,9 @@ accounts:
       money: 100000000
   DIAMOND:
     priority: 70
-    name: "&Diamond"
+    name: "&bDiamond"
     icon: DIAMOND_ACCOUNT
-    icon-slot: 24
+    icon-slot: 16
     max-balance: 60000000000
     upgrades:
       interests:

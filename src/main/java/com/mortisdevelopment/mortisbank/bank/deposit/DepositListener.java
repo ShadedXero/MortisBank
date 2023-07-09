@@ -12,6 +12,7 @@ public class DepositListener implements Listener {
         if (e.getClickedInventory() == null || !(e.getClickedInventory().getHolder() instanceof DepositMenu)) {
             return;
         }
+        e.setCancelled(true);
         DepositMenu menu = (DepositMenu) e.getClickedInventory().getHolder();
         menu.click(slot);
     }

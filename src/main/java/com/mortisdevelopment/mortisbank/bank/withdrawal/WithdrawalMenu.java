@@ -47,20 +47,29 @@ public class WithdrawalMenu implements InventoryHolder {
         ItemEditor specificAmount = new ItemEditor(withdrawalManager.getMenu().getItem("SPECIFIC_AMOUNT"));
         specificAmount.setPlaceholders(player);
         menu.setItem(specificAmountSlot, specificAmount.getItem());
-        menu.setItem(backSlot, withdrawalManager.getMenu().getItem("BACK"));
+        menu.setItem(backSlot, ItemEditor.setPlaceholders(withdrawalManager.getMenu().getItem("BACK"), player));
     }
 
     public void click(int slot) {
         if (slot == everythingSlot) {
-            withdrawalManager.withdraw(player, WithdrawalType.ALL);
+            if (withdrawalManager.withdraw(player, WithdrawalType.ALL)) {
+                PersonalMenu menu = new PersonalMenu(withdrawalManager.getBankManager().getPersonalManager(), player);
+                menu.open();
+            }
             update();
         }
         if (slot == halfSlot) {
-            withdrawalManager.withdraw(player, WithdrawalType.ALL);
+            if (withdrawalManager.withdraw(player, WithdrawalType.HALF)) {
+                PersonalMenu menu = new PersonalMenu(withdrawalManager.getBankManager().getPersonalManager(), player);
+                menu.open();
+            }
             update();
         }
         if (slot == twentyPercentSlot) {
-            withdrawalManager.withdraw(player, WithdrawalType.TWENTY);
+            if (withdrawalManager.withdraw(player, WithdrawalType.TWENTY)) {
+                PersonalMenu menu = new PersonalMenu(withdrawalManager.getBankManager().getPersonalManager(), player);
+                menu.open();
+            }
             update();
         }
         if (slot == specificAmountSlot) {

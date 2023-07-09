@@ -40,12 +40,13 @@ public class PersonalMenu implements InventoryHolder {
     }
 
     public void update() {
-        menu.setItem(depositSlot, personalManager.getMenu().getItem("DEPOSIT"));
-        menu.setItem(withdrawalSlot, personalManager.getMenu().getItem("WITHDRAWAL"));
-        menu.setItem(closeSlot, personalManager.getMenu().getItem("CLOSE"));
-        menu.setItem(infoSlot, personalManager.getMenu().getItem("INFO"));
-        menu.setItem(accountSlot, personalManager.getMenu().getItem("ACCOUNTS"));
-        ItemEditor editor = new ItemEditor(personalManager.getMenu().getItem("TRANSACTION"));
+        menu.setItem(depositSlot, ItemEditor.setPlaceholders(personalManager.getMenu().getItem("DEPOSIT"), player));
+        menu.setItem(withdrawalSlot, ItemEditor.setPlaceholders(personalManager.getMenu().getItem("WITHDRAWAL"), player));
+        menu.setItem(closeSlot, ItemEditor.setPlaceholders(personalManager.getMenu().getItem("CLOSE"), player));
+        menu.setItem(infoSlot, ItemEditor.setPlaceholders(personalManager.getMenu().getItem("INFORMATION"), player));
+        menu.setItem(accountSlot, ItemEditor.setPlaceholders(personalManager.getMenu().getItem("ACCOUNTS"), player));
+        ItemEditor editor = new ItemEditor(personalManager.getMenu().getItem("TRANSACTIONS"));
+        editor.setPlaceholders(player);
         List<PersonalTransaction> transactions = personalManager.getBankManager().getDataManager().getTransactions(player.getUniqueId());
         if (transactions != null && transactions.size() != 0) {
             for (PersonalTransaction transaction : transactions) {
@@ -56,7 +57,7 @@ public class PersonalMenu implements InventoryHolder {
             }
             menu.setItem(transactionSlot, editor.getItem());
         }else {
-            menu.setItem(transactionSlot, personalManager.getMenu().getItem("NO_TRANSACTION"));
+            menu.setItem(transactionSlot, ItemEditor.setPlaceholders(personalManager.getMenu().getItem("NO_TRANSACTIONS"), player));
         }
     }
 

@@ -12,6 +12,7 @@ public class WithdrawalListener implements Listener {
         if (e.getClickedInventory() == null || !(e.getClickedInventory().getHolder() instanceof WithdrawalMenu)) {
             return;
         }
+        e.setCancelled(true);
         WithdrawalMenu menu = (WithdrawalMenu) e.getClickedInventory().getHolder();
         menu.click(slot);
     }

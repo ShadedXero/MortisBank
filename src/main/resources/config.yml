@@ -18,7 +18,7 @@ database:
   type: H2 #
   host: localhost # host of your database
   port: 3306 # default port for MariaDB and MySQL
-  database: data # name of your database. A database server can contain multiple databases
+  database: database # name of your database. A database server can contain multiple databases
   username: user
   password: pass
 
@@ -26,7 +26,7 @@ database:
 #               SETTINGS                               #
 #======================================================#
 
-input-mode: ANVIL # SIGN | ANVIL
+input-mode: SIGN # SIGN | ANVIL
 sign-input-slot: 0
 anvil-item: ANVIL_ITEM
 leaderboard: true
@@ -53,11 +53,13 @@ interests:
 personal:
   menu:
     title: "Personal Bank Account"
+    filter: FILTER
     deposit: DEPOSIT
-    withdraw: WITHDRAW
-    recent-transactions: RECENT_TRANSACTIONS
+    withdrawal: WITHDRAWAL
+    transactions: TRANSACTIONS
+    no-transactions: NO_TRANSACTIONS
     information: INFORMATION
-    upgrades: UPGRADES
+    accounts: ACCOUNTS
     close: CLOSE
   sound:
     enabled: true
@@ -72,13 +74,14 @@ personal:
 deposit:
   menu:
     title: "Bank Deposit"
+    filter: FILTER
     whole: DEPOSIT_WHOLE
     half: DEPOSIT_HALF
     specific-amount: DEPOSIT_SPECIFIC_AMOUNT
     back: BACK
   sound:
     enabled: true
-    sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
     volume: 1
     pitch: 1
 
@@ -89,13 +92,14 @@ deposit:
 withdrawal:
   menu:
     title: "Bank Withdrawal"
+    filter: FILTER
     everything: WITHDRAW_EVERYTHING
     half: WITHDRAW_HALF
-    20-percent: WITHDRAW_20
+    twenty-percent: WITHDRAW_TWENTY
     specific-amount: WITHDRAW_SPECIFIC_AMOUNT
     back: BACK
   sound:
     enabled: true
-    sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
     volume: 1
     pitch: 1

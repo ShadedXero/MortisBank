@@ -1,6 +1,7 @@
 package com.mortisdevelopment.mortisbank.config;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
+import com.mortisdevelopment.mortisbank.bank.admin.AdminManager;
 import com.mortisdevelopment.mortisbank.bank.deposit.DepositManager;
 import com.mortisdevelopment.mortisbank.bank.interest.InterestDisplayMode;
 import com.mortisdevelopment.mortisbank.bank.interest.InterestManager;
@@ -10,6 +11,7 @@ import com.mortisdevelopment.mortisbank.bank.personal.PersonalManager;
 import com.mortisdevelopment.mortisbank.bank.withdrawal.WithdrawalManager;
 import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortisbank.data.DatabaseType;
+import com.mortisdevelopment.mortisbank.placeholderapi.PlaceholderManager;
 import com.mortisdevelopment.mortisbank.utils.GuiSettings;
 import com.mortisdevelopment.mortisbank.utils.InputMode;
 import com.mortisdevelopment.mortiscorespigot.configs.Config;
@@ -73,6 +75,8 @@ public class MainConfig extends Config {
             return;
         }
         configManager.getManager().setWithdrawalManager(new WithdrawalManager(configManager.getManager(), withdrawalMenu, guiSettings));
+        configManager.getManager().setPlaceholderManager(new PlaceholderManager(configManager.getManager()));
+        configManager.getManager().setAdminManager(new AdminManager(configManager.getManager()));
     }
 
     private Database loadDatabase(ConfigurationSection section) {
@@ -98,7 +102,7 @@ public class MainConfig extends Config {
             return null;
         }
         if (type.equals(DatabaseType.H2)) {
-            return new H2Database(new File(plugin.getDataFolder(), database), username, password);
+            return new H2Database(new File(plugin.getDataFolder() + "/data/", database), username, password);
         }
         String host = section.getString("host");
         int port = section.getInt("port");

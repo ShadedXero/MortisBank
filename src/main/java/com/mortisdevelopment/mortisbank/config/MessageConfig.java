@@ -29,12 +29,13 @@ public class MessageConfig extends Config {
         if (prefix == null) {
             return;
         }
-        loadAccountMessages(config.getConfigurationSection("account-messages"), prefix);
-        loadDepositMessages(config.getConfigurationSection("deposit-messages"), prefix);
-        loadWithdrawalMessages(config.getConfigurationSection("withdrawal-messages"), prefix);
-        loadInterestMessages(config.getConfigurationSection("interest-messages"), prefix);
-        loadPlaceholderMessages(config.getConfigurationSection("placeholder-messages"), prefix);
-        loadCommandMessages(config.getConfigurationSection("command-messages"), prefix);
+        configManager.getManager().getAccountManager().addMessages(loadMessages(config.getConfigurationSection("account-messages"), prefix));
+        configManager.getManager().getPersonalManager().addMessages(loadMessages(config.getConfigurationSection("personal-messages"), prefix));
+        configManager.getManager().getDepositManager().addMessages(loadMessages(config.getConfigurationSection("deposit-messages"), prefix));
+        configManager.getManager().getWithdrawalManager().addMessages(loadMessages(config.getConfigurationSection("withdrawal-messages"), prefix));
+        configManager.getManager().getInterestManager().addMessages(loadMessages(config.getConfigurationSection("interest-messages"), prefix));
+        configManager.getManager().getPlaceholderManager().addMessages(loadMessages(config.getConfigurationSection("placeholder-messages"), prefix));
+        configManager.getManager().getAdminManager().addMessages(loadMessages(config.getConfigurationSection("command-messages"), prefix));
     }
 
     private String loadPrefix(ConfigurationSection section) {
@@ -44,7 +45,7 @@ public class MessageConfig extends Config {
         return section.getString("prefix");
     }
 
-    private HashMap<String, String> loadMessageList(ConfigurationSection section, String prefix) {
+    private HashMap<String, String> loadMessages(ConfigurationSection section, String prefix) {
         if (section == null) {
             return new HashMap<>();
         }
@@ -58,29 +59,5 @@ public class MessageConfig extends Config {
             messageById.put(id, utils.getMessage());
         }
         return messageById;
-    }
-
-    private void loadAccountMessages(ConfigurationSection section, String prefix) {
-        configManager.getManager().getAccountManager().addMessages(loadMessageList(section, prefix));
-    }
-
-    private void loadDepositMessages(ConfigurationSection section, String prefix) {
-        configManager.getManager().getDepositManager().addMessages(loadMessageList(section, prefix));
-    }
-
-    private void loadWithdrawalMessages(ConfigurationSection section, String prefix) {
-        configManager.getManager().getWithdrawalManager().addMessages(loadMessageList(section, prefix));
-    }
-
-    private void loadInterestMessages(ConfigurationSection section, String prefix) {
-        configManager.getManager().getInterestManager().addMessages(loadMessageList(section, prefix));
-    }
-
-    private void loadPlaceholderMessages(ConfigurationSection section, String prefix) {
-        configManager.getManager().getPlaceholderManager().addMessages(loadMessageList(section, prefix));
-    }
-
-    private void loadCommandMessages(ConfigurationSection section, String prefix) {
-        configManager.getManager().getAdminManager().addMessages(loadMessageList(section, prefix));
     }
 }

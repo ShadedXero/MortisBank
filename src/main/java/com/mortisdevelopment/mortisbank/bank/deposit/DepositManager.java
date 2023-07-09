@@ -8,6 +8,8 @@ import com.mortisdevelopment.mortisbank.bank.personal.PersonalTransaction;
 import com.mortisdevelopment.mortisbank.bank.personal.TransactionType;
 import com.mortisdevelopment.mortisbank.utils.GuiSettings;
 import com.mortisdevelopment.mortiscorespigot.menus.Menu;
+import com.mortisdevelopment.mortiscorespigot.utils.MessageUtils;
+import com.mortisdevelopment.mortiscorespigot.utils.MoneyUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -27,6 +29,7 @@ public class DepositManager extends Manager {
         this.bankManager = bankManager;
         this.menu = menu;
         this.guiSettings = guiSettings;
+        plugin.getServer().getPluginManager().registerEvents(new DepositListener(), plugin);
     }
 
     private void sendMessage(@NotNull OfflinePlayer offlinePlayer, String message) {
@@ -74,7 +77,11 @@ public class DepositManager extends Manager {
         }
         economy.withdrawPlayer(offlinePlayer, purse);
         bankManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), bank);
-        sendMessage(offlinePlayer, getMessage("DEPOSIT", offlinePlayer).replace("%amount%", formatter.format(purse)));
+        MessageUtils utils = new MessageUtils(getMessage("DEPOSIT", offlinePlayer));
+        utils.replace("%amount%", formatter.format(purse));
+        utils.replace("%amount_raw%", String.valueOf(purse));
+        utils.replace("%amount_formatted%", MoneyUtils.getMoney(purse));
+        sendMessage(offlinePlayer, utils.getMessage());
         addTransaction(offlinePlayer, formatter.format(purse));
         return true;
     }
@@ -109,7 +116,11 @@ public class DepositManager extends Manager {
         }
         economy.withdrawPlayer(offlinePlayer, purse);
         bankManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), bank);
-        sendMessage(offlinePlayer, getMessage("DEPOSIT", offlinePlayer).replace("%money%", formatter.format(purse)));
+        MessageUtils utils = new MessageUtils(getMessage("DEPOSIT", offlinePlayer));
+        utils.replace("%amount%", formatter.format(purse));
+        utils.replace("%amount_raw%", String.valueOf(purse));
+        utils.replace("%amount_formatted%", MoneyUtils.getMoney(purse));
+        sendMessage(offlinePlayer, utils.getMessage());
         addTransaction(offlinePlayer, formatter.format(purse));
         return true;
     }

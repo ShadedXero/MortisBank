@@ -43,16 +43,22 @@ public class DepositMenu implements InventoryHolder {
         ItemEditor specificAmount = new ItemEditor(depositManager.getMenu().getItem("SPECIFIC_AMOUNT"));
         specificAmount.setPlaceholders(player);
         menu.setItem(specificAmountSlot, specificAmount.getItem());
-        menu.setItem(backSlot, depositManager.getMenu().getItem("BACK"));
+        menu.setItem(backSlot, ItemEditor.setPlaceholders(depositManager.getMenu().getItem("BACK"), player));
     }
 
     public void click(int slot) {
         if (slot == wholeSlot) {
-            depositManager.deposit(player, DepositType.ALL);
+            if (depositManager.deposit(player, DepositType.ALL)) {
+                PersonalMenu menu = new PersonalMenu(depositManager.getBankManager().getPersonalManager(), player);
+                menu.open();
+            }
             update();
         }
         if (slot == halfSlot) {
-            depositManager.deposit(player, DepositType.HALF);
+            if (depositManager.deposit(player, DepositType.HALF)) {
+                PersonalMenu menu = new PersonalMenu(depositManager.getBankManager().getPersonalManager(), player);
+                menu.open();
+            }
             update();
         }
         if (slot == specificAmountSlot) {

@@ -1,6 +1,5 @@
 package com.mortisdevelopment.mortisbank.bank.personal;
 
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
@@ -50,6 +49,9 @@ public class PersonalTransaction {
 
     private TransactionType getType(@NotNull String rawTransaction) {
         String type = StringUtils.substringBetween(rawTransaction, "%", "%");
+        if (type == null) {
+            return null;
+        }
         try {
             return TransactionType.valueOf(type);
         }catch (IllegalArgumentException exp) {
@@ -58,22 +60,14 @@ public class PersonalTransaction {
     }
 
     private String getAmount(@NotNull String rawTransaction) {
-        DecimalFormat formatter = new DecimalFormat("#,###.#");
-        String amount = StringUtils.substringBetween(rawTransaction, "(", ")");
-        Double value;
-        try {
-            value = Double.parseDouble(amount);
-        }catch (NullPointerException | NumberFormatException ignored) {
-            value = null;
-        }
-        if (value == null) {
-            return null;
-        }
-        return formatter.format(value);
+        return StringUtils.substringBetween(rawTransaction, "(", ")");
     }
 
     private LocalDateTime getTime(@NotNull String rawTransaction) {
         String time = StringUtils.substringBetween(rawTransaction, "{", "}");
+        if (time == null) {
+            return null;
+        }
         try {
             return LocalDateTime.parse(time);
         }catch (DateTimeParseException exp) {
@@ -87,12 +81,12 @@ public class PersonalTransaction {
 
     private String getDuration(@NotNull PersonalManager personalManager) {
         return TimeUtils.getTime(time, LocalDateTime.now(),
-                personalManager.getMessage("TRANSACTION_TIME_YEAR"),
-                personalManager.getMessage("TRANSACTION_TIME_MONTH"),
-                personalManager.getMessage("TRANSACTION_TIME_DAY"),
-                personalManager.getMessage("TRANSACTION_TIME_HOUR"),
-                personalManager.getMessage("TRANSACTION_TIME_MINUTE"),
-                personalManager.getMessage("TRANSACTION_TIME_SECOND"));
+                " " + personalManager.getMessage("YEARS"),
+                " " + personalManager.getMessage("MONTHS"),
+                " " + personalManager.getMessage("DAYS"),
+                " " + personalManager.getMessage("HOURS"),
+                " " + personalManager.getMessage("MINUTES"),
+                " " + personalManager.getMessage("SECONDS"));
     }
 
     public boolean isValid() {
@@ -104,7 +98,7 @@ public class PersonalTransaction {
             return null;
         }
         MessageUtils utils = new MessageUtils(personalManager.getMessage("TRANSACTION"));
-        utils.replace("%transaction-type%", String.valueOf(type.getCharacter()));
+        utils.replace("%transaction-type%", MessageUtils.color(type.getSymbol()));
         utils.replace("%amount%", amount);
         utils.replace("%time%", getDuration(personalManager));
         utils.replace("%transactor%", transactor);
