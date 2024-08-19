@@ -1,0 +1,126 @@
+#  __  __            _   _       ____              _
+# |  \/  |          | | (_)     |  _ \            | |
+# | \  / | ___  _ __| |_ _ ___  | |_) | __ _ _ __ | | __
+# | |\/| |/ _ \| '__| __| / __| |  _ < / _` | '_ \| |/ /
+# | |  | | (_) | |  | |_| \__ \ | |_) | (_| | | | |   <
+# |_|  |_|\___/|_|   \__|_|___/ |____/ \__,_|_| |_|_|\_\
+#=======================================================
+# Mortis Bank Plugin Configuration FREE VERSION
+# Spigot https://www.spigotmc.org/resources/✨mortis-bank✨-advanced-upgrades-bank-interests-customizable.106180/
+# Github https://github.com/None030/Mortis-Bank
+# Discord https://discord.com/invite/cftU47UjyP
+# Join discord for support
+#======================================================#
+#               MESSAGES                               #
+#======================================================#
+
+prefix: "&e[&bMortis Bank&e]"
+
+#======================================================#
+#               ACCOUNT MESSAGES                       #
+#======================================================#
+
+account-messages:
+  removed-money: "%prefix% &aRemoved %amount% coins from your balance"
+  removed-item: "%prefix% &aRemoved %item_amount% %item_name% from your inventory"
+  upgraded: "%prefix% &aUpgraded your account to %account_name%"
+
+#======================================================#
+#               PERSONAL MESSAGES                      #
+#======================================================#
+
+personal-messages:
+  transaction: "%transaction-type% &6%amount%&7, &e%time% &7by %transactor%"
+  seconds: "second(s) ago"
+  minutes: "minute(s) ago"
+  hours: "hour(s) ago"
+  days: "day(s) ago"
+  months: "month(s) ago"
+  years: "year(s) ago"
+
+#======================================================#
+#               DEPOSIT MESSAGES                       #
+#======================================================#
+
+deposit-messages:
+  deposit: "%prefix% &aDeposited &6%amount% coins&a! There's now &6%mortisbank_balance% coins &ain the account!"
+  full: "%prefix% &cYou already have the maximum amount of Coins in your bank!"
+  little: "%prefix% &cYou cannot deposit this little amount"
+  anvil-title: "&aEnter the amount to deposit"
+  anvil-text: " "
+  sign-1: ""
+  sign-2: "^^^^^^^^^^^^^^^"
+  sign-3: "Enter the amount"
+  sign-4: "to deposit"
+
+#======================================================#
+#               WITHDRAWAL MESSAGES                    #
+#======================================================#
+
+withdrawal-messages:
+  withdraw: "%prefix% &aWithdrew &6%amount% coins&a! There's now &6%mortisbank_balance% coins &ain the account!"
+  little: "%prefix% &cYou cannot withdraw this little amount"
+  greater-than-zero: "%prefix% &cYou need to enter a number greater than 0!"
+  no-money: "%prefix% &cYou don't have any Coins in your bank account!"
+  anvil-title: "&aEnter the amount to withdraw"
+  anvil-text: ""
+  sign-1: ""
+  sign-2: "^^^^^^^^^^^^^^^"
+  sign-3: "Enter the amount"
+  sign-4: "to withdraw"
+
+#======================================================#
+#               PLACEHOLDER MESSAGES                   #
+#======================================================#
+
+placeholder-messages:
+  leaderboard: "&e%player_name% --- %mortisbank_balance%"
+  leaderboard-placeholder: "&e--------"
+
+#======================================================#
+#               COMMAND MESSAGES                       #
+#======================================================#
+
+command-messages:
+  invalid-target: "%prefix% &cPlease enter a valid target"
+  invalid-number: "%prefix% &cPlease enter a valid number"
+  invalid-transaction-type: "%prefix% &cPlease enter a valid transaction type"
+  no-console: "%prefix% &cThis command can only be executed by a player"
+  no-permission: "%prefix% &cYou don't have permission to use this"
+  could-not-process: "%prefix% &cCould not process"
+  help: "%prefix% &aHelp\n&a/bank - Opens the bank\n&a/bank help - Shows the commands\n&a/bank open <player_name> - Opens the bank for specified player\n&a/bank admin - Shows the admin commands"
+  personal-menu-open: "%prefix% &aOpened the personal bank menu"
+  open-usage: "%prefix% &cUsage: /bank open <player_name>"
+  admin-usage: "%prefix% &aAdmin\n&a/bank admin reload - Reloads the plugin\n&a/bank admin deposit <player_name|uuid> <amount> - Deposits the amount to the target's bank account\n&a/bank admin withdraw <player_name|uuid> <amount> - Withdraws the amount to the target's bank account\n&a/bank admin balance - Shows the admin balance commands\n&a/bank admin account - Shows the admin account commands\n&a/bank admin transaction - Shows the admin transaction commands\n&a/bank admin interest - Shows the admin interest commands"
+  reloaded: "%prefix% &aReloaded"
+  admin-deposit-usage: "%prefix% &cUsage: /bank admin deposit <player_name|uuid> <amount>"
+  admin-deposit: "%prefix% &aDeposited &6%amount% coins from the target's bank&a! There's now &6%mortisbank_balance% coins &ain the target's account!"
+  admin-withdraw-usage: "%prefix% &cUsage: /bank admin withdraw <player_name|uuid> <amount>"
+  admin-withdraw: "%prefix% &aWithdrew &6%amount% coins from the target's bank&a! There's now &6%mortisbank_balance% coins &ain the target's account!"
+  admin-balance-usage: "%prefix% &aAdmin Balance\n&a/bank admin balance get <player_name|uuid> - Shows you the target's bank balance\n&a/bank admin balance set <player_name|uuid> <amount> - Sets the target's bank balance to the specified amount\n&a/bank admin balance add <player_name|uuid> <amount> - Adds the specified amount to the target's bank account\n&a/bank admin balance remove <player_name|uuid> <amount> - Removes the specified amount from the target's bank account"
+  admin-balance-get-usage: "%prefix% &cUsage: /bank admin balance get <player_name|uuid>"
+  admin-balance-get: "%prefix% &aTarget has %mortisbank_balance% balance in their bank account"
+  admin-balance-set-usage: "%prefix% &cUsage: /bank admin balance set <player_name|uuid> <amount>"
+  admin-balance-set: "%prefix% &aSet the target's bank balance to %mortisbank_balance%"
+  admin-balance-add-usage: "%prefix% &cUsage: /bank admin balance add <player_name|uuid> <amount>"
+  admin-balance-add: "%prefix% &aAdded %amount% to the target's bank account"
+  admin-balance-remove-usage: "%prefix% &cUsage: /bank admin balance remove <player_name|uuid> <amount>"
+  admin-balance-remove: "%prefix% &aRemoved %amount% from the target's bank account"
+  admin-account-usage: "%prefix% &aAdmin Account\n&a/bank admin account get <player_name|uuid> - Shows the target's bank account\n&a/bank admin account set <player_name|uuid> <priority> - Sets the bank account with the specified priority to the target's account\n&a/bank admin account upgrade <player_name|uuid> - Upgrades the target's bank account\n&a/bank admin account downgrade <player_name|uuid> - Downgrades the target's bank account"
+  admin-account-get-usage: "%prefix% &cUsage: /bank admin account get <player_name|uuid>"
+  admin-account-get: "%prefix% &aTarget has %mortisbank_account% with %mortisbank_account_priority% priority"
+  admin-account-set-usage: "%prefix% &cUsage: /bank admin account set <player_name|uuid> <priority>"
+  admin-account-set: "%prefix% &aSet the target's bank account to %mortisbank_account%"
+  admin-account-upgrade-usage: "%prefix% &cUsage: /bank admin account upgrade <player_name|uuid>"
+  admin-account-upgrade: "%prefix% &aUpgraded the target's bank account to %mortisbank_account%"
+  admin-account-downgrade-usage: "%prefix% &cUsage: /bank admin account downgrade <player_name|uuid>"
+  admin-account-downgrade: "%prefix% &aDowngraded the target's bank account to %mortisbank_account%"
+  admin-transaction-usage: "%prefix% &aAdmin Transaction\n&a/bank admin transaction get <player_name|uuid> - Shows the target's bank transactions\n&a/bank admin transaction add <player_name|uuid> <deposit|withdraw> <amount> <transactor> - Adds the bank transaction with the specified details to the target's bank\n&a/bank admin transaction clear <player_name|uuid> <position> - Removes the transaction at the specified position from target's bank\n&a/bank admin transaction clearall <player_name|uuid> - Clears all the transactions from the target's bank"
+  admin-transaction-get-usage: "%prefix% &cUsage: /bank admin transaction get <player_name|uuid>"
+  admin-transaction-get: "%prefix% &a%transactions%"
+  admin-transaction-add-usage: "%prefix% &cUsage: /bank admin transaction add <player_name|uuid> <deposit|withdrawal> <amount> <transactor>"
+  admin-transaction-add: "%prefix% &aAdded the transaction to the target's bank"
+  admin-transaction-clear-usage: "%prefix% &cUsage: /bank admin transaction clear <player_name|uuid> <position>"
+  admin-transaction-clear: "%prefix% &aCleared the transaction for the target at the specified position"
+  admin-transaction-clearall-usage: "%prefix% &cUsage: /bank admin transaction clearall <player_name|uuid>"
+  admin-transaction-clearall: "%prefix% &aCleared the transactions for the target"
