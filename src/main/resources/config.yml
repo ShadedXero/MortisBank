@@ -16,11 +16,12 @@
 
 database:
   type: H2 #
-  host: localhost # host of your database
-  port: 3306 # default port for MariaDB and MySQL
-  database: database # name of your database. A database server can contain multiple databases
-  username: user
-  password: pass
+  path: "database/data"
+#  host: localhost # host of your database
+#  port: 3306 # default port for MariaDB and MySQL
+#  database: database # name of your database. A database server can contain multiple databases
+#  username: user
+#  password: pass
 
 #======================================================#
 #               SETTINGS                               #
