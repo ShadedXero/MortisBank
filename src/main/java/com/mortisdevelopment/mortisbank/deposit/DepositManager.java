@@ -22,7 +22,7 @@ import java.text.DecimalFormat;
 public class DepositManager extends Manager {
 
     public enum DepositType {
-        FULL,
+        ALL,
         HALF,
         SPECIFIC
     }

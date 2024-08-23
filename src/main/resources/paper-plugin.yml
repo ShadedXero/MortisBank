@@ -16,7 +16,7 @@ dependencies:
       load: BEFORE
       required: true
       join-classpath: true
-    EssentialsX:
+    Essentials:
       load: BEFORE
       required: false
       join-classpath: false
