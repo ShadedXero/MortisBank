@@ -38,6 +38,9 @@ transaction-limit: 10
 #               MENUS                                  #
 #======================================================#
 
-personal-menu: PERSONAL
-deposit-menu: DEPOSIT
-withdrawal-menu: WITHDRAWAL
+personal-menu:
+  reference: mortisbank:personal
+deposit-menu:
+  reference: mortisbank:deposit
+withdrawal-menu:
+  reference: mortisbank:withdrawal
