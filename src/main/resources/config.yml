@@ -1,0 +1,43 @@
+#  __  __            _   _       ____              _
+# |  \/  |          | | (_)     |  _ \            | |
+# | \  / | ___  _ __| |_ _ ___  | |_) | __ _ _ __ | | __
+# | |\/| |/ _ \| '__| __| / __| |  _ < / _` | '_ \| |/ /
+# | |  | | (_) | |  | |_| \__ \ | |_) | (_| | | | |   <
+# |_|  |_|\___/|_|   \__|_|___/ |____/ \__,_|_| |_|_|\_\
+#=======================================================
+# Mortis Bank Plugin Configuration FREE VERSION
+# Spigot https://www.spigotmc.org/resources/✨mortis-bank✨-advanced-upgrades-bank-interests-customizable.106180/
+# Github https://github.com/None030/Mortis-Bank
+# Discord https://discord.com/invite/cftU47UjyP
+# Join discord for support
+#======================================================#
+#               DATABASE SETTINGS                      #
+#======================================================#
+
+database:
+  type: H2 #
+  host: localhost # host of your database
+  port: 3306 # default port for MariaDB and MySQL
+  database: database # name of your database. A database server can contain multiple databases
+  username: user
+  password: pass
+
+#======================================================#
+#               SETTINGS                               #
+#======================================================#
+
+input-mode: SIGN # SIGN | ANVIL
+sign-input-slot: 0
+anvil-item:
+  material: PAPER
+  name: "&aEnter the amount"
+leaderboard: true
+transaction-limit: 10
+
+#======================================================#
+#               MENUS                                  #
+#======================================================#
+
+personal-menu: PERSONAL
+deposit-menu: DEPOSIT
+withdrawal-menu: WITHDRAWAL

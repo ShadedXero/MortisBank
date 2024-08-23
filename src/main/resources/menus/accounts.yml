@@ -1,0 +1,756 @@
+id: accounts
+menu-title: "&8Bank Account Upgrades"
+rows: 4
+items:
+  coal-account:
+    material: COAL
+    slot: 10
+    priority: 0
+    name: "&8Coal Account"
+    lore:
+      - "&8Not Upgraded"
+      - ""
+      - "&7Max balance: &650 Million Coins"
+      - ""
+      - "&7Cost: &aComplimentary"
+      - ""
+      - "&aThis is your account!"
+
+  better-coal-account:
+    material: COAL
+    slot: 10
+    priority: 1
+    name: "&8Coal Account"
+    lore:
+      - "&8Not Upgraded"
+      - ""
+      - "&7Max balance: &650 Million Coins"
+      - ""
+      - "&7Cost: &aComplimentary"
+      - ""
+      - "&cYou have a better account!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: ">"
+          input: "%mortisbank_account_priority%"
+          output: 10
+
+  copper-account:
+    material: GOLD_INGOT
+    slot: 11
+    priority: 0
+    name: "&6Copper Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6100 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&65,000,000 Coins"
+      - ""
+      - "&aThis is your account!"
+
+  better-copper-account:
+    material: GOLD_INGOT
+    slot: 11
+    priority: 1
+    name: "&6Copper Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6100 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&65,000,000 Coins"
+      - ""
+      - "&cYou have a better account!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: ">"
+          input: "%mortisbank_account_priority%"
+          output: 20
+
+  not-has-requirement-copper-account:
+    material: GOLD_INGOT
+    slot: 11
+    priority: 2
+    name: "&6Copper Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6100 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&65,000,000 Coins"
+      - ""
+      - "&cYou do not have the requirements for this!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 20
+
+  has-requirement-copper-account:
+    material: GOLD_INGOT
+    slot: 11
+    priority: 3
+    name: "&6Copper Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6100 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&65,000,000 Coins"
+      - ""
+      - "&eClick to upgrade your account to &fCopper"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 20
+        money:
+          type: has money
+          amount: 5000000
+    click-actions:
+      take-money:
+        type: take money
+        amount: 5000000
+      money-message:
+        type: message
+        message: "&aRemoved &65,000,000 &acoins from your balance"
+      set-account:
+        type: "[bank] set account"
+        priority: 20
+      message:
+        type: message
+        message: "&aUpgraded your account to &fCopper"
+      close:
+        type: close menu
+
+  lapis-lazuli-account:
+    material: LAPIS_LAZULI
+    slot: 12
+    priority: 0
+    name: "&1Lapis Lazuli Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6250 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&610,000,000 Coins"
+      - ""
+      - "&aThis is your account!"
+
+  better-lapis-lazuli-account:
+    material: LAPIS_LAZULI
+    slot: 12
+    priority: 1
+    name: "&1Lapis Lazuli Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6250 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&610,000,000 Coins"
+      - ""
+      - "&cYou have a better account!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: ">"
+          input: "%mortisbank_account_priority%"
+          output: 30
+
+  not-has-requirement-lapis-lazuli-account:
+    material: LAPIS_LAZULI
+    slot: 12
+    priority: 2
+    name: "&1Lapis Lazuli Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6250 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&610,000,000 Coins"
+      - ""
+      - "&cYou do not have the requirements for this!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 30
+
+  has-requirement-lapis-lazuli-account:
+    material: LAPIS_LAZULI
+    slot: 12
+    priority: 3
+    name: "&1Lapis Lazuli Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6250 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&610,000,000 Coins"
+      - ""
+      - "&eClick to upgrade your account to &dLapis Lazuli"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 30
+        money:
+          type: has money
+          amount: 10000000
+    click-actions:
+      take-money:
+        type: take money
+        amount: 10000000
+      money-message:
+        type: message
+        message: "&aRemoved &610,000,000 &acoins from your balance"
+      set-account:
+        type: "[bank] set account"
+        priority: 30
+      message:
+        type: message
+        message: "&aUpgraded your account to &dLapis Lazuli"
+      close:
+        type: close menu
+
+  need-previous-lapis-lazuli-account:
+    material: LAPIS_LAZULI
+    slot: 12
+    priority: 4
+    name: "&1Lapis Lazuli Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6250 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&610,000,000 Coins"
+      - ""
+      - "&cNeed previous upgrade"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 20
+
+  iron-account:
+    material: IRON_INGOT
+    slot: 13
+    priority: 0
+    name: "&fIron Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6500 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&625,000,000 Coins"
+      - ""
+      - "&aThis is your account!"
+
+  better-iron-account:
+    material: IRON_INGOT
+    slot: 13
+    priority: 1
+    name: "&fIron Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6500 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&625,000,000 Coins"
+      - ""
+      - "&cYou have a better account!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: ">"
+          input: "%mortisbank_account_priority%"
+          output: 40
+
+  not-has-requirement-iron-account:
+    material: IRON_INGOT
+    slot: 13
+    priority: 2
+    name: "&fIron Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6500 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&625,000,000 Coins"
+      - ""
+      - "&cYou do not have the requirements for this!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 40
+
+  has-requirement-iron-account:
+    material: IRON_INGOT
+    slot: 13
+    priority: 3
+    name: "&fIron Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6500 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&625,000,000 Coins"
+      - ""
+      - "&eClick to upgrade your account to &5Iron"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 40
+        money:
+          type: has money
+          amount: 25000000
+    click-actions:
+      take-money:
+        type: take money
+        amount: 25000000
+      money-message:
+        type: message
+        message: "&aRemoved &625,000,000 &acoins from your balance"
+      set-account:
+        type: "[bank] set account"
+        priority: 40
+      message:
+        type: message
+        message: "&aUpgraded your account to &fIron"
+      close:
+        type: close menu
+
+  need-previous-iron-account:
+    material: IRON_INGOT
+    slot: 13
+    priority: 4
+    name: "&fIron Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &6500 Million Coins"
+      - ""
+      - "&7Cost"
+      - "&625,000,000 Coins"
+      - ""
+      - "&cNeed previous upgrade"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 30
+
+  redstone-account:
+    material: REDSTONE
+    slot: 14
+    priority: 0
+    name: "&cRedstone Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &61 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&650,000,000 Coins"
+      - ""
+      - "&aThis is your account!"
+
+  better-redstone-account:
+    material: REDSTONE
+    slot: 14
+    priority: 1
+    name: "&cRedstone Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &61 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&650,000,000 Coins"
+      - ""
+      - "&cYou have a better account!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: ">"
+          input: "%mortisbank_account_priority%"
+          output: 50
+
+  not-has-requirement-redstone-account:
+    material: REDSTONE
+    slot: 14
+    priority: 2
+    name: "&cRedstone Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &61 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&650,000,000 Coins"
+      - ""
+      - "&cYou do not have the requirements for this!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 50
+
+  has-requirement-redstone-account:
+    material: REDSTONE
+    slot: 14
+    priority: 3
+    name: "&cRedstone Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &61 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&650,000,000 Coins"
+      - ""
+      - "&eClick to upgrade your account to &cRedstone"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 50
+        money:
+          type: has money
+          amount: 50000000
+    click-actions:
+      take-money:
+        type: take money
+        amount: 50000000
+      money-message:
+        type: message
+        message: "&aRemoved &6250,000,000 &acoins from your balance"
+      set-account:
+        type: "[bank] set account"
+        priority: 50
+      message:
+        type: message
+        message: "&aUpgraded your account to &cRedstone"
+      close:
+        type: close menu
+
+  need-previous-redstone-account:
+    material: REDSTONE
+    slot: 14
+    priority: 4
+    name: "&cRedstone Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &61 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&650,000,000 Coins"
+      - ""
+      - "&cNeed previous upgrade"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 40
+
+  emerald-account:
+    material: EMERALD
+    slot: 15
+    priority: 0
+    name: "&aEmerald Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &66 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6100,000,000 Coins"
+      - ""
+      - "&aThis is your account!"
+
+  better-emerald-account:
+    material: EMERALD
+    slot: 15
+    priority: 1
+    name: "&aEmerald Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &66 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6100,000,000 Coins"
+      - ""
+      - "&cYou have a better account!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: ">"
+          input: "%mortisbank_account_priority%"
+          output: 60
+
+  not-has-requirement-emerald-account:
+    material: EMERALD
+    slot: 15
+    priority: 2
+    name: "&aEmerald Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &66 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6100,000,000 Coins"
+      - ""
+      - "&cYou do not have the requirements for this!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 60
+
+  has-requirement-emerald-account:
+    material: EMERALD
+    slot: 15
+    priority: 3
+    name: "&aEmerald Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &66 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6100,000,000 Coins"
+      - ""
+      - "&eClick to upgrade your account to &3Emerald"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 60
+        money:
+          type: has money
+          amount: 100000000
+    click-actions:
+      take-money:
+        type: take money
+        amount: 100000000
+      money-message:
+        type: message
+        message: "&aRemoved &6100,000,000 &acoins from your balance"
+      set-account:
+        type: "[bank] set account"
+        priority: 60
+      message:
+        type: message
+        message: "&aUpgraded your account to &3Emerald"
+      close:
+        type: close menu
+
+  need-previous-emerald-account:
+    material: EMERALD
+    slot: 15
+    priority: 4
+    name: "&aEmerald Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &66 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6100,000,000 Coins"
+      - ""
+      - "&cNeed previous upgrade"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 50
+
+  diamond-account:
+    material: DIAMOND
+    slot: 16
+    priority: 0
+    name: "&3Diamond Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &660 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6200,000,000 Coins"
+      - "&bDiamond &8x10"
+      - ""
+      - "&aThis is your account!"
+
+  not-has-requirement-diamond-account:
+    material: DIAMOND
+    slot: 16
+    priority: 1
+    name: "&3Diamond Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &660 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6200,000,000 Coins"
+      - "&bDiamond &8x10"
+      - ""
+      - "&cYou do not have the requirements for this!"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 70
+
+  has-requirement-diamond-account:
+    material: DIAMOND
+    slot: 16
+    priority: 2
+    name: "&3Diamond Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &660 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6200,000,000 Coins"
+      - "&bDiamond &8x10"
+      - ""
+      - "&eClick to upgrade your account to &bDiamond"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 70
+        money:
+          type: has money
+          amount: 200000000
+        diamond:
+          type: has item
+          item:
+            material: DIAMOND
+            amount: 10
+    click-actions:
+      take-money:
+        type: take money
+        amount: 200000000
+      money-message:
+        type: message
+        message: "&aRemoved &6200,000,000 &acoins from your balance"
+      take-item:
+        type: take item
+        item:
+          material: DIAMOND
+          amount: 10
+      item-message:
+        type: message
+        message: "&aRemoved &bDiamond &8x10 from your inventory"
+      set-account:
+        type: "[bank] set account"
+        priority: 70
+      message:
+        type: message
+        message: "&aUpgraded your account to &bDiamond"
+      close:
+        type: close menu
+
+  need-previous-diamond-account:
+    material: DIAMOND
+    slot: 16
+    priority: 3
+    name: "&3Diamond Account"
+    lore:
+      - "&8Bank Upgrade"
+      - ""
+      - "&7Max balance: &660 Billion Coins"
+      - ""
+      - "&7Cost"
+      - "&6200,000,000 Coins"
+      - "&bDiamond &8x10"
+      - ""
+      - "&cNeed previous upgrade"
+    view-requirement:
+      requirements:
+        priority:
+          type: number
+          comparator: "<"
+          input: "%mortisbank_account_priority%"
+          output: 60
+
+  back:
+    material: ARROW
+    slot: 31
+    name: "&aGo Back"
+    lore:
+      - "&7To Personal Bank Account"
+    click-actions:
+      open:
+        type: open menu
+        menu:
+          reference: mortisbank:personal
+
+  filter:
+    material: BLACK_STAINED_GLASS_PANE
+    slots:
+      - 0-9
+      - 17-30
+      - 32-35
