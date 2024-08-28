@@ -9,7 +9,7 @@ items:
     name: "&aEverything in the account"
     lore:
       - "&8Bank withdrawal"
-      - ""
+      - " "
       - "&7Current balance: &6%mortisbank_balance%"
       - "&7Amount to withdraw: &6%mortisbank_withdraw_everything%"
     click-actions:
@@ -26,7 +26,7 @@ items:
     name: "&aHalf the account"
     lore:
       - "&8Bank withdrawal"
-      - ""
+      - " "
       - "&7Current balance: &6%mortisbank_balance%"
       - "&7Amount to withdraw: &6%mortisbank_withdraw_half%"
     click-actions:
@@ -42,7 +42,7 @@ items:
     name: "&aWithdraw 20%"
     lore:
       - "&8Bank withdrawal"
-      - ""
+      - " "
       - "&7Current balance: &6%mortisbank_balance%"
       - "&7Amount to withdraw: &6%mortisbank_withdraw_twenty%"
     click-actions:
@@ -58,7 +58,7 @@ items:
     name: "&aSpecific amount"
     lore:
       - "&7Current balance: &6%mortisbank_balance%"
-      - ""
+      - " "
       - "&eClick to withdraw coins!"
     click-actions:
       withdraw:

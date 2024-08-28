@@ -8,11 +8,11 @@ items:
     name: "&aDeposit Coins"
     lore:
       - "&7Current balance: &6%mortisbank_balance%"
-      - ""
+      - " "
       - "&7Store coins in the bank to keep"
       - "&7them safe while you go on"
       - "&7adventures!"
-      - ""
+      - " "
       - "&eClick to make a deposit!"
     click-actions:
       open:
@@ -26,10 +26,10 @@ items:
     name: "&aWithdraw Coins"
     lore:
       - "&7Current balance: &6%mortisbank_balance%"
-      - ""
+      - " "
       - "&7Take your coins out of the bank"
       - "&7in order to spend them."
-      - ""
+      - " "
       - "&eClick to withdraw coins!"
     click-actions:
       open:
@@ -43,8 +43,17 @@ items:
     priority: 1
     name: "&aRecent transactions"
     lore:
-      - ""
-      - "%mortisbank_transaction_list_10%"
+      - " "
+      - "%mortisbank_transaction_list_0%"
+      - "%mortisbank_transaction_list_1%"
+      - "%mortisbank_transaction_list_2%"
+      - "%mortisbank_transaction_list_3%"
+      - "%mortisbank_transaction_list_4%"
+      - "%mortisbank_transaction_list_5%"
+      - "%mortisbank_transaction_list_6%"
+      - "%mortisbank_transaction_list_7%"
+      - "%mortisbank_transaction_list_8%"
+      - "%mortisbank_transaction_list_9%"
     view-requirement:
       requirements:
         has-transactions:
@@ -70,7 +79,7 @@ items:
       - "&7Keep your coins safe in the bank"
       - "&7You lose half the coins in your"
       - "&7purse when dying in combat."
-      - ""
+      - " "
       - "&7Balance limit: &6%mortisbank_max_balance%"
 
   accounts:
@@ -80,10 +89,10 @@ items:
     lore:
       - "&7Are you so rich that you can't"
       - "&7even store your coins?"
-      - ""
+      - " "
       - "&7Current account: %mortisbank_account%"
       - "&7Bank limit: &6%mortisbank_max_balance%"
-      - ""
+      - " "
       - "&eClick to view upgrades!"
     click-actions:
       open:

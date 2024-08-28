@@ -9,7 +9,7 @@ items:
     name: "&aYour whole purse"
     lore:
       - "&8Bank deposit"
-      - ""
+      - " "
       - "&7Current balance: &6%mortisbank_balance%"
       - "&7Amount to deposit: &6%mortisbank_deposit_whole%"
     click-actions:
@@ -26,7 +26,7 @@ items:
     name: "&aHalf your purse"
     lore:
       - "&8Bank deposit"
-      - ""
+      - " "
       - "&7Current balance: &6%mortisbank_balance%"
       - "&7Amount to deposit: &6%mortisbank_deposit_half%"
     click-actions:
@@ -42,7 +42,7 @@ items:
     name: "&aSpecific amount"
     lore:
       - "&7Current balance: &6%mortisbank_balance%"
-      - ""
+      - " "
       - "&eClick to deposit coins!"
     click-actions:
       deposit:

@@ -24,6 +24,8 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 @Getter @Setter
 public final class MortisBank extends JavaPlugin {
 
@@ -55,7 +57,7 @@ public final class MortisBank extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-//        new File(getDataFolder(), "items").mkdirs();
+        new File(getDataFolder(), "items").mkdirs();
         try {
             core.getMenuManager().saveAndLoad(this);
             core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");

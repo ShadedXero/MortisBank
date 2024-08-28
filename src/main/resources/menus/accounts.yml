@@ -9,11 +9,11 @@ items:
     name: "&8Coal Account"
     lore:
       - "&8Not Upgraded"
-      - ""
+      - " "
       - "&7Max balance: &650 Million Coins"
-      - ""
+      - " "
       - "&7Cost: &aComplimentary"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   better-coal-account:
@@ -23,11 +23,11 @@ items:
     name: "&8Coal Account"
     lore:
       - "&8Not Upgraded"
-      - ""
+      - " "
       - "&7Max balance: &650 Million Coins"
-      - ""
+      - " "
       - "&7Cost: &aComplimentary"
-      - ""
+      - " "
       - "&cYou have a better account!"
     view-requirement:
       requirements:
@@ -44,12 +44,12 @@ items:
     name: "&6Copper Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6100 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&65,000,000 Coins"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   better-copper-account:
@@ -59,12 +59,12 @@ items:
     name: "&6Copper Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6100 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&65,000,000 Coins"
-      - ""
+      - " "
       - "&cYou have a better account!"
     view-requirement:
       requirements:
@@ -81,12 +81,12 @@ items:
     name: "&6Copper Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6100 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&65,000,000 Coins"
-      - ""
+      - " "
       - "&cYou do not have the requirements for this!"
     view-requirement:
       requirements:
@@ -103,12 +103,12 @@ items:
     name: "&6Copper Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6100 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&65,000,000 Coins"
-      - ""
+      - " "
       - "&eClick to upgrade your account to &fCopper"
     view-requirement:
       requirements:
@@ -143,12 +143,12 @@ items:
     name: "&1Lapis Lazuli Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6250 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&610,000,000 Coins"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   better-lapis-lazuli-account:
@@ -158,12 +158,12 @@ items:
     name: "&1Lapis Lazuli Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6250 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&610,000,000 Coins"
-      - ""
+      - " "
       - "&cYou have a better account!"
     view-requirement:
       requirements:
@@ -180,12 +180,12 @@ items:
     name: "&1Lapis Lazuli Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6250 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&610,000,000 Coins"
-      - ""
+      - " "
       - "&cYou do not have the requirements for this!"
     view-requirement:
       requirements:
@@ -202,12 +202,12 @@ items:
     name: "&1Lapis Lazuli Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6250 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&610,000,000 Coins"
-      - ""
+      - " "
       - "&eClick to upgrade your account to &dLapis Lazuli"
     view-requirement:
       requirements:
@@ -242,12 +242,12 @@ items:
     name: "&1Lapis Lazuli Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6250 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&610,000,000 Coins"
-      - ""
+      - " "
       - "&cNeed previous upgrade"
     view-requirement:
       requirements:
@@ -264,12 +264,12 @@ items:
     name: "&fIron Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6500 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&625,000,000 Coins"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   better-iron-account:
@@ -279,12 +279,12 @@ items:
     name: "&fIron Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6500 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&625,000,000 Coins"
-      - ""
+      - " "
       - "&cYou have a better account!"
     view-requirement:
       requirements:
@@ -301,12 +301,12 @@ items:
     name: "&fIron Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6500 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&625,000,000 Coins"
-      - ""
+      - " "
       - "&cYou do not have the requirements for this!"
     view-requirement:
       requirements:
@@ -323,12 +323,12 @@ items:
     name: "&fIron Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6500 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&625,000,000 Coins"
-      - ""
+      - " "
       - "&eClick to upgrade your account to &5Iron"
     view-requirement:
       requirements:
@@ -363,12 +363,12 @@ items:
     name: "&fIron Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &6500 Million Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&625,000,000 Coins"
-      - ""
+      - " "
       - "&cNeed previous upgrade"
     view-requirement:
       requirements:
@@ -385,12 +385,12 @@ items:
     name: "&cRedstone Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &61 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&650,000,000 Coins"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   better-redstone-account:
@@ -400,12 +400,12 @@ items:
     name: "&cRedstone Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &61 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&650,000,000 Coins"
-      - ""
+      - " "
       - "&cYou have a better account!"
     view-requirement:
       requirements:
@@ -422,12 +422,12 @@ items:
     name: "&cRedstone Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &61 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&650,000,000 Coins"
-      - ""
+      - " "
       - "&cYou do not have the requirements for this!"
     view-requirement:
       requirements:
@@ -444,12 +444,12 @@ items:
     name: "&cRedstone Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &61 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&650,000,000 Coins"
-      - ""
+      - " "
       - "&eClick to upgrade your account to &cRedstone"
     view-requirement:
       requirements:
@@ -484,12 +484,12 @@ items:
     name: "&cRedstone Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &61 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&650,000,000 Coins"
-      - ""
+      - " "
       - "&cNeed previous upgrade"
     view-requirement:
       requirements:
@@ -506,12 +506,12 @@ items:
     name: "&aEmerald Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &66 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6100,000,000 Coins"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   better-emerald-account:
@@ -521,12 +521,12 @@ items:
     name: "&aEmerald Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &66 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6100,000,000 Coins"
-      - ""
+      - " "
       - "&cYou have a better account!"
     view-requirement:
       requirements:
@@ -543,12 +543,12 @@ items:
     name: "&aEmerald Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &66 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6100,000,000 Coins"
-      - ""
+      - " "
       - "&cYou do not have the requirements for this!"
     view-requirement:
       requirements:
@@ -565,12 +565,12 @@ items:
     name: "&aEmerald Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &66 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6100,000,000 Coins"
-      - ""
+      - " "
       - "&eClick to upgrade your account to &3Emerald"
     view-requirement:
       requirements:
@@ -605,12 +605,12 @@ items:
     name: "&aEmerald Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &66 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6100,000,000 Coins"
-      - ""
+      - " "
       - "&cNeed previous upgrade"
     view-requirement:
       requirements:
@@ -627,13 +627,13 @@ items:
     name: "&3Diamond Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &660 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6200,000,000 Coins"
       - "&bDiamond &8x10"
-      - ""
+      - " "
       - "&aThis is your account!"
 
   not-has-requirement-diamond-account:
@@ -643,13 +643,13 @@ items:
     name: "&3Diamond Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &660 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6200,000,000 Coins"
       - "&bDiamond &8x10"
-      - ""
+      - " "
       - "&cYou do not have the requirements for this!"
     view-requirement:
       requirements:
@@ -666,13 +666,13 @@ items:
     name: "&3Diamond Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &660 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6200,000,000 Coins"
       - "&bDiamond &8x10"
-      - ""
+      - " "
       - "&eClick to upgrade your account to &bDiamond"
     view-requirement:
       requirements:
@@ -720,13 +720,13 @@ items:
     name: "&3Diamond Account"
     lore:
       - "&8Bank Upgrade"
-      - ""
+      - " "
       - "&7Max balance: &660 Billion Coins"
-      - ""
+      - " "
       - "&7Cost"
       - "&6200,000,000 Coins"
       - "&bDiamond &8x10"
-      - ""
+      - " "
       - "&cNeed previous upgrade"
     view-requirement:
       requirements:

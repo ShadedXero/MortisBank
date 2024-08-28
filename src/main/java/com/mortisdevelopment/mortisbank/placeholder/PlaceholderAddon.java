@@ -119,11 +119,11 @@ public class PlaceholderAddon extends PlaceholderExpansion {
             try {
                 index = Integer.parseInt(params.replace("transaction_", ""));
             }catch (NumberFormatException exp) {
-                return null;
+                return "";
             }
             PersonalTransaction transaction = plugin.getPersonalManager().getTransaction(player, index);
             if (transaction == null) {
-                return null;
+                return "";
             }
             return transaction.getTransaction(plugin.getPersonalManager());
         }
