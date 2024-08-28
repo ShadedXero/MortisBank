@@ -8,7 +8,6 @@ import com.mortisdevelopment.mortisbank.commands.CommandManager;
 import com.mortisdevelopment.mortisbank.config.AccountConfig;
 import com.mortisdevelopment.mortisbank.config.MainConfig;
 import com.mortisdevelopment.mortisbank.config.MessageConfig;
-import com.mortisdevelopment.mortisbank.dependencies.BankDependencyManager;
 import com.mortisdevelopment.mortisbank.deposit.DepositActionType;
 import com.mortisdevelopment.mortisbank.deposit.DepositManager;
 import com.mortisdevelopment.mortisbank.personal.PersonalManager;
@@ -31,7 +30,6 @@ public final class MortisBank extends JavaPlugin {
 
     private MortisCore core;
     private Economy economy;
-    private BankDependencyManager dependencyManager;
     private CommandManager commandManager;
     private PlaceholderManager placeholderManager;
     private DataManager dataManager;
@@ -64,7 +62,6 @@ public final class MortisBank extends JavaPlugin {
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
-        dependencyManager = new BankDependencyManager(this);
         commandManager = new CommandManager(this);
         placeholderManager = new PlaceholderManager(this);
         new MainConfig(this);
