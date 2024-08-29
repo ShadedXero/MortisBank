@@ -36,8 +36,8 @@ public class MessageConfig extends FileConfig {
 
     private void loadMessages(Manager manager, String prefix, ConfigurationSection section) {
         for (String key : section.getKeys(false)) {
-            String id = key.replaceAll("%prefix%", prefix).replace("-", "_").toLowerCase();
-            String message = section.getString(key);
+            String id = key.replace("-", "_").toLowerCase();
+            String message = Objects.requireNonNull(section.getString(key)).replaceAll("%prefix%", prefix);
             manager.addMessage(id, ColorUtils.getComponent(message));
         }
     }
