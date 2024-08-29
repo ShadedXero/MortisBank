@@ -1,10 +1,10 @@
 id: personal
-menu-title: "&8Personal Bank Account"
+title: "&8Personal Bank Account"
 rows: 4
 items:
   deposit:
     material: CHEST
-    slot: 11
+    slot: 12
     name: "&aDeposit Coins"
     lore:
       - "&7Current balance: &6%mortisbank_balance%"
@@ -22,7 +22,7 @@ items:
 
   withdrawal:
     material: DROPPER
-    slot: 13
+    slot: 14
     name: "&aWithdraw Coins"
     lore:
       - "&7Current balance: &6%mortisbank_balance%"
@@ -39,21 +39,12 @@ items:
 
   transactions:
     material: MAP
-    slot: 15
+    slot: 16
     priority: 1
     name: "&aRecent transactions"
     lore:
       - " "
-      - "%mortisbank_transaction_list_0%"
-      - "%mortisbank_transaction_list_1%"
-      - "%mortisbank_transaction_list_2%"
-      - "%mortisbank_transaction_list_3%"
-      - "%mortisbank_transaction_list_4%"
-      - "%mortisbank_transaction_list_5%"
-      - "%mortisbank_transaction_list_6%"
-      - "%mortisbank_transaction_list_7%"
-      - "%mortisbank_transaction_list_8%"
-      - "%mortisbank_transaction_list_9%"
+      - "%mortisbank_transaction_list_10%"
     view-requirement:
       requirements:
         has-transactions:
@@ -64,7 +55,7 @@ items:
 
   no-transactions:
     material: MAP
-    slot: 15
+    slot: 16
     priority: 0
     name: "&aRecent transactions"
     lore:
@@ -73,7 +64,7 @@ items:
 
   information:
     material: REDSTONE_TORCH
-    slot: 32
+    slot: 33
     name: "&aInformation"
     lore:
       - "&7Keep your coins safe in the bank"
@@ -84,7 +75,7 @@ items:
 
   accounts:
     material: GOLD_BLOCK
-    slot: 35
+    slot: 36
     name: "&6Bank Upgrades"
     lore:
       - "&7Are you so rich that you can't"
@@ -102,7 +93,7 @@ items:
 
   close:
     material: BARRIER
-    slot: 31
+    slot: 32
     amount: 1
     name: "&cClose"
     click-actions:
@@ -112,9 +103,8 @@ items:
   filter:
     material: BLACK_STAINED_GLASS_PANE
     slots:
-      - 0-10
-      - 12-12
+      - 1-11
       - 13-13
-      - 14-14
-      - 16-30
-      - 33-34
+      - 15-15
+      - 17-31
+      - 34-35

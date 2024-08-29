@@ -84,12 +84,12 @@ public class PersonalTransaction {
 
     private String getDuration(@NotNull PersonalManager personalManager) {
         return TimeUtils.getTime(time, LocalDateTime.now(),
-                " " + personalManager.getSimpleMessage("YEARS"),
-                " " + personalManager.getSimpleMessage("MONTHS"),
-                " " + personalManager.getSimpleMessage("DAYS"),
-                " " + personalManager.getSimpleMessage("HOURS"),
-                " " + personalManager.getSimpleMessage("MINUTES"),
-                " " + personalManager.getSimpleMessage("SECONDS"));
+                " " + personalManager.getSimpleMessage("years"),
+                " " + personalManager.getSimpleMessage("months"),
+                " " + personalManager.getSimpleMessage("days"),
+                " " + personalManager.getSimpleMessage("hours"),
+                " " + personalManager.getSimpleMessage("minutes"),
+                " " + personalManager.getSimpleMessage("seconds"));
     }
 
     public boolean isValid() {

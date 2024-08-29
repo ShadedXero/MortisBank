@@ -41,7 +41,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>de.rapha149.signgui</pattern>
-                                    <shadedPattern>com.mortisdevelopment.mortiscore.signgui</shadedPattern>
+                                    <shadedPattern>com.mortisdevelopment.mortisbank.signgui</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>net.wesjd.anvilgui</pattern>
