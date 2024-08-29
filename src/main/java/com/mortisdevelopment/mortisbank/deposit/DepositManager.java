@@ -9,6 +9,7 @@ import com.mortisdevelopment.mortiscore.managers.Manager;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
+import com.mortisdevelopment.mortiscore.utils.ColorUtils;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
@@ -49,7 +50,7 @@ public class DepositManager extends Manager {
     }
 
     private void sendTransactionMessage(@NotNull Player player, double purse) {
-        player.sendMessage(getPlaceholder(purse).setPlaceholders(getSimpleMessage("deposit")));
+        player.sendMessage(ColorUtils.getComponent(getPlaceholder(purse).setPlaceholders(getSimpleMessage("deposit"))));
     }
 
     private void addTransaction(@NotNull OfflinePlayer offlinePlayer, @NotNull String amount) {

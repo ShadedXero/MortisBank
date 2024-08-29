@@ -25,6 +25,7 @@ public class PersonalManager extends Manager {
         if (position >= transactions.size()) {
             return null;
         }
+        position = plugin.getDataManager().getTransactionLimit() - (position + 1);
         return transactions.get(position);
     }
 }
