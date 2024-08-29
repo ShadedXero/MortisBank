@@ -1,4 +1,4 @@
-Recoded the plugin
+Added compatibility up to 1.21.1
 
 Fixed the recent transactions
 

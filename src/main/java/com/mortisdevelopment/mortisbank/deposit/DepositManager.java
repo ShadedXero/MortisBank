@@ -50,7 +50,7 @@ public class DepositManager extends Manager {
     }
 
     private void sendTransactionMessage(@NotNull Player player, double purse) {
-        player.sendMessage(ColorUtils.getComponent(getPlaceholder(purse).setPlaceholders(getSimpleMessage("deposit"))));
+        player.sendMessage(ColorUtils.getComponent(getPlaceholder(purse).setPlaceholders(getSimplePlaceholderMessage(player, "deposit"))));
     }
 
     private void addTransaction(@NotNull OfflinePlayer offlinePlayer, @NotNull String amount) {
