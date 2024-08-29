@@ -32,6 +32,9 @@ public class BankCommand extends BaseCommand {
         if (!(sender instanceof Player player)) {
             return false;
         }
+        if (args.length > 0) {
+            return false;
+        }
         personalManager.getMenu().open(player, new Placeholder(player));
         return true;
     }

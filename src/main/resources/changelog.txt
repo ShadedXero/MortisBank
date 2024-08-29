@@ -1,5 +1,0 @@
-Added compatibility up to 1.21.1
-
-Fixed the recent transactions
-
-Removed the admin commands temporarily
