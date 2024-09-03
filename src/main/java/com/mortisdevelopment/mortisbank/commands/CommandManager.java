@@ -20,59 +20,6 @@ public class CommandManager extends Manager {
     public CommandManager(MortisBank plugin) {
         this.plugin = plugin;
     }
-
-    public boolean setBalance(@NotNull OfflinePlayer player, double amount) {
-        Account account = plugin.getAccountManager().getAccount(player);
-        if (account == null) {
-            return false;
-        }
-        double balance = plugin.getDataManager().getBalance(player.getUniqueId());
-        if (account.isFull(balance)) {
-            return false;
-        }
-        if (account.isStorable(amount)) {
-            plugin.getDataManager().setBalance(player.getUniqueId(), amount);
-        }else {
-            plugin.getDataManager().setBalance(player.getUniqueId(), account.getSpace(balance));
-        }
-        return true;
-    }
-
-    public boolean addBalance(@NotNull OfflinePlayer player, double amount) {
-        Account account = plugin.getAccountManager().getAccount(player);
-        if (account == null) {
-            return false;
-        }
-        double balance = plugin.getDataManager().getBalance(player.getUniqueId());
-        if (account.isFull(balance)) {
-            return false;
-        }
-        amount += balance;
-        if (account.isStorable(amount)) {
-            plugin.getDataManager().setBalance(player.getUniqueId(), amount);
-        }else {
-            plugin.getDataManager().setBalance(player.getUniqueId(), account.getSpace(balance));
-        }
-        return true;
-    }
-
-    public boolean removeBalance(@NotNull OfflinePlayer player, double amount) {
-        Account account = plugin.getAccountManager().getAccount(player);
-        if (account == null) {
-            return false;
-        }
-        double balance = plugin.getDataManager().getBalance(player.getUniqueId());
-        if (balance <= 0) {
-            return false;
-        }
-        balance -= amount;
-        if (balance > 0) {
-            plugin.getDataManager().setBalance(player.getUniqueId(), balance);
-        }else {
-            plugin.getDataManager().setBalance(player.getUniqueId(), 0);
-        }
-        return true;
-    }
     
     public boolean setAccount(@NotNull OfflinePlayer player, short priority) {
         Account account = plugin.getAccountManager().getAccount(priority);

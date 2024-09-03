@@ -28,7 +28,7 @@ database:
 #======================================================#
 
 input-mode: SIGN # SIGN | ANVIL
-sign-input-slot: 0
+sign-input-slot: 1
 anvil-item:
   material: PAPER
   name: "&aEnter the amount"
@@ -41,7 +41,3 @@ transaction-limit: 10
 
 personal-menu:
   reference: mortisbank:personal
-deposit-menu:
-  reference: mortisbank:deposit
-withdrawal-menu:
-  reference: mortisbank:withdrawal

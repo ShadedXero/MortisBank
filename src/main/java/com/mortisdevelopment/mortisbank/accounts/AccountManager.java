@@ -1,7 +1,6 @@
 package com.mortisdevelopment.mortisbank.accounts;
 
 import com.mortisdevelopment.mortisbank.data.DataManager;
-import com.mortisdevelopment.mortiscore.managers.Manager;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class AccountManager extends Manager {
+public class AccountManager {
     
     private final DataManager dataManager;
     private final CustomMenu menu;

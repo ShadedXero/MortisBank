@@ -3,6 +3,7 @@ package com.mortisdevelopment.mortisbank.personal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
+import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
 import com.mortisdevelopment.mortiscore.utils.TimeUtils;
@@ -82,21 +83,21 @@ public class PersonalTransaction {
         return StringUtils.substringBetween(rawTransaction, "<", ">");
     }
 
-    private String getDuration(@NotNull PersonalManager personalManager) {
+    private String getDuration(@NotNull Messages messages) {
         return TimeUtils.getTime(time, LocalDateTime.now(),
-                " " + personalManager.getSimpleMessage("years"),
-                " " + personalManager.getSimpleMessage("months"),
-                " " + personalManager.getSimpleMessage("days"),
-                " " + personalManager.getSimpleMessage("hours"),
-                " " + personalManager.getSimpleMessage("minutes"),
-                " " + personalManager.getSimpleMessage("seconds"));
+                " " + messages.getSimpleMessage("years"),
+                " " + messages.getSimpleMessage("months"),
+                " " + messages.getSimpleMessage("days"),
+                " " + messages.getSimpleMessage("hours"),
+                " " + messages.getSimpleMessage("minutes"),
+                " " + messages.getSimpleMessage("seconds"));
     }
 
     public boolean isValid() {
         return type != null && time != null && transactor != null && amount != null;
     }
 
-    public String getTransaction(@NotNull PersonalManager personalManager) {
+    public String getTransaction(@NotNull Messages messages) {
         if (!isValid()) {
             return null;
         }
@@ -104,9 +105,9 @@ public class PersonalTransaction {
         ClassicPlaceholderMethod method = new ClassicPlaceholderMethod();
         method.addReplacement("%transaction-type%", type.getSymbol());
         method.addReplacement("%amount%", amount);
-        method.addReplacement("%time%", getDuration(personalManager));
+        method.addReplacement("%time%", getDuration(messages));
         method.addReplacement("%transactor%",transactor);
         placeholder.addMethod(method);
-        return placeholder.setPlaceholders(personalManager.getSimpleMessage("transaction"));
+        return placeholder.setPlaceholders(messages.getSimpleMessage("transaction"));
     }
 }

@@ -1,18 +1,16 @@
 package com.mortisdevelopment.mortisbank.config;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
-import com.mortisdevelopment.mortisbank.deposit.DepositManager;
+import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.personal.PersonalManager;
-import com.mortisdevelopment.mortisbank.withdrawal.WithdrawalManager;
 import com.mortisdevelopment.mortisbank.data.DataManager;
-import com.mortisdevelopment.mortisbank.utils.GuiSettings;
-import com.mortisdevelopment.mortisbank.utils.InputMode;
+import com.mortisdevelopment.mortisbank.bank.GuiSettings;
+import com.mortisdevelopment.mortisbank.bank.InputMode;
 import com.mortisdevelopment.mortiscore.configs.FileConfig;
 import com.mortisdevelopment.mortiscore.databases.*;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.items.CustomItem;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,10 +40,7 @@ public class MainConfig extends FileConfig {
         try {
             CustomMenu personalMenu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("personal-menu"), false);
             plugin.setPersonalManager(new PersonalManager(plugin, personalMenu));
-            CustomMenu depositMenu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("deposit-menu"), false);
-            plugin.setDepositManager(new DepositManager(plugin, depositMenu, guiSettings));
-            CustomMenu withdrawMenu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("withdrawal-menu"), false);
-            plugin.setWithdrawalManager(new WithdrawalManager(plugin.getEconomy(), plugin.getDataManager(), withdrawMenu, guiSettings));
+            plugin.setBankManager(new BankManager(plugin.getAccountManager(), plugin.getDataManager(), plugin.getEconomy(), guiSettings, plugin.getMessageManager()));
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
@@ -68,6 +63,6 @@ public class MainConfig extends FileConfig {
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
-        return new GuiSettings(plugin, mode, inputSlot, customItem.getItem(new Placeholder()));
+        return new GuiSettings(plugin, mode, inputSlot, customItem);
     }
 }

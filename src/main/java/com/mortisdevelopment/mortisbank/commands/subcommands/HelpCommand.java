@@ -1,20 +1,20 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands;
 
-import com.mortisdevelopment.mortisbank.commands.CommandManager;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
+import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
 public class HelpCommand extends PermissionCommand {
 
-    public HelpCommand(CommandManager manager) {
-        super("help", "mortisbank.help", manager);
+    public HelpCommand(Messages messages) {
+        super("help", "mortisbank.help", messages);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, String label, String[] args) {
-        sender.sendMessage(getManager().getMessage("help"));
+        sender.sendMessage(getMessages().getMessage("help"));
         return true;
     }
 

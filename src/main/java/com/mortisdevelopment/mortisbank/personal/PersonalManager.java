@@ -1,7 +1,6 @@
 package com.mortisdevelopment.mortisbank.personal;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
-import com.mortisdevelopment.mortiscore.managers.Manager;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @Getter
-public class PersonalManager extends Manager {
+public class PersonalManager {
 
     private final MortisBank plugin;
     private final CustomMenu menu;

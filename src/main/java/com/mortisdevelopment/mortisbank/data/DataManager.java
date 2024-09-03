@@ -6,7 +6,7 @@ import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.personal.PersonalTransaction;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import lombok.Getter;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
@@ -38,34 +38,27 @@ public class DataManager {
     }
 
     private void initializeDatabases() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uuid varchar(36) primary key, balance double, account smallint, transactions mediumtext)");
-            }
-        }.runTask(plugin);
+        Bukkit.getScheduler().runTask(plugin,
+                () -> database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uuid varchar(36) primary key, balance double, account smallint, transactions mediumtext)"));
     }
 
     private void loadDatabase() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    ResultSet result = database.query("SELECT * FROM MortisBank");
-                    while (result.next()) {
-                        UUID uuid = UUID.fromString(result.getString("uuid"));
-                        double balance = result.getDouble("balance");
-                        short account = result.getShort("account");
-                        List<PersonalTransaction> transactions = getTransactions(result.getString("transactions"));
-                        balanceByUUID.put(uuid, balance);
-                        accountByUUID.put(uuid, account);
-                        transactionsByUUID.put(uuid, transactions);
-                    }
-                }catch (SQLException exp) {
-                    throw new RuntimeException(exp);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            try {
+                ResultSet result = database.query("SELECT * FROM MortisBank");
+                while (result.next()) {
+                    UUID uuid = UUID.fromString(result.getString("uuid"));
+                    double balance = result.getDouble("balance");
+                    short account = result.getShort("account");
+                    List<PersonalTransaction> transactions = getTransactions(result.getString("transactions"));
+                    balanceByUUID.put(uuid, balance);
+                    accountByUUID.put(uuid, account);
+                    transactionsByUUID.put(uuid, transactions);
                 }
+            }catch (SQLException exp) {
+                throw new RuntimeException(exp);
             }
-        }.runTask(plugin);
+        });
     }
 
     private List<PersonalTransaction> trimTransactions(@NotNull List<PersonalTransaction> transactions) {
@@ -124,68 +117,39 @@ public class DataManager {
     }
 
     public void addBank(@NotNull UUID uuid, double balance, short account, @NotNull List<PersonalTransaction> transactions) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.update("INSERT INTO MortisBank (uuid, balance, account, transactions) VALUES (?, ?, ?, ?)", uuid.toString(), balance, account, getTransactions(transactions));
-                balanceByUUID.put(uuid, balance);
-                accountByUUID.put(uuid, account);
-                transactionsByUUID.put(uuid, transactions);
-            }
-        }.runTask(plugin);
+        balanceByUUID.put(uuid, balance);
+        accountByUUID.put(uuid, account);
+        transactionsByUUID.put(uuid, transactions);
+        Bukkit.getScheduler().runTask(plugin,
+                () -> database.update("INSERT INTO MortisBank (uuid, balance, account, transactions) VALUES (?, ?, ?, ?)", uuid.toString(), balance, account, getTransactions(transactions)));
     }
 
     public void setBalance(@NotNull UUID uuid, double balance) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.update("UPDATE MortisBank SET balance = ? WHERE uuid = ?", balance, uuid.toString());
-            }
-        }.runTask(plugin);
-        balanceByUUID.put(uuid, balance);
+        balanceByUUID.put(uuid, Math.max(balance, 0));
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET balance = ? WHERE uuid = ?", balance, uuid.toString()));
     }
 
     public void setAccount(@NotNull UUID uuid, short account) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.update("UPDATE MortisBank SET account = ? WHERE uuid = ?", account, uuid.toString());
-            }
-        }.runTask(plugin);
         accountByUUID.put(uuid, account);
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET account = ? WHERE uuid = ?", account, uuid.toString()));
     }
 
     public void setTransactions(@NotNull UUID uuid, @NotNull List<PersonalTransaction> transactions) {
         List<PersonalTransaction> transactionList = trimTransactions(transactions);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.update("UPDATE MortisBank SET transactions = ? WHERE uuid = ?", getTransactions(transactionList), uuid.toString());
-            }
-        }.runTask(plugin);
         transactionsByUUID.put(uuid, transactionList);
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET transactions = ? WHERE uuid = ?", getTransactions(transactionList), uuid.toString()));
     }
 
     public void addTransaction(@NotNull UUID uuid, @NotNull PersonalTransaction transaction) {
         List<PersonalTransaction> transactions = getTransactions(uuid);
         transactions.add(transaction);
         List<PersonalTransaction> transactionList = trimTransactions(transactions);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.update("UPDATE MortisBank SET transactions = ? WHERE uuid = ?", getTransactions(transactionList), uuid.toString());
-            }
-        }.runTask(plugin);
         transactionsByUUID.put(uuid, transactionList);
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET transactions = ? WHERE uuid = ?", getTransactions(transactionList), uuid.toString()));
     }
 
     public void removeBank(@NotNull UUID uuid) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                database.update("DELETE FROM MortisBank WHERE uuid = ?", uuid.toString());
-            }
-        }.runTask(plugin);
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("DELETE FROM MortisBank WHERE uuid = ?", uuid.toString()));
     }
 
     public double getBalance(@NotNull UUID uuid) {
