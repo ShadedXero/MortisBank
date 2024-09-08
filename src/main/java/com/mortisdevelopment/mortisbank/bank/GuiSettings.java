@@ -1,7 +1,7 @@
 package com.mortisdevelopment.mortisbank.bank;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
-import com.mortisdevelopment.mortisbank.personal.TransactionType;
+import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortiscore.items.CustomItem;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
@@ -17,6 +17,10 @@ import java.util.Collections;
 @Getter
 public class GuiSettings {
 
+    public enum InputMode{
+        ANVIL,
+        SIGN
+    }
     private final MortisBank plugin;
     private final InputMode mode;
     private final int inputSlot;
@@ -29,14 +33,18 @@ public class GuiSettings {
         this.anvilItem = anvilItem;
     }
 
-    public void open(BankManager bankManager, @NotNull Player player, TransactionType type, Placeholder placeholder) {
+    public boolean open(BankManager bankManager, Player player, Transaction.TransactionType type, Placeholder placeholder) {
+        if (player == null) {
+            return false;
+        }
         switch (mode) {
             case SIGN -> openSign(bankManager, player, type, placeholder);
             case ANVIL -> openAnvil(bankManager, player, type, placeholder);
         }
+        return true;
     }
 
-    public void openSign(BankManager bankManager, @NotNull Player player, TransactionType type, Placeholder placeholder) {
+    public void openSign(BankManager bankManager, @NotNull Player player, Transaction.TransactionType type, Placeholder placeholder) {
         Messages messages = bankManager.getMessages(type);
         SignGUI.builder()
                 .setLines(messages.getSimpleMessage("sign_1"), messages.getSimpleMessage("sign_2"), messages.getSimpleMessage("sign_3"), messages.getSimpleMessage("sign_4"))
@@ -54,14 +62,14 @@ public class GuiSettings {
                         case DEPOSIT -> bankManager.deposit(player, amount);
                         case WITHDRAW -> bankManager.withdraw(player, amount);
                     }
-                    plugin.getPersonalManager().getMenu().open(player, placeholder);
+                    plugin.getBankManager().getPersonalMenu().open(player, placeholder);
                     return null;
                 })
                 .build()
                 .open(player);
     }
 
-    public void openAnvil(BankManager bankManager, @NotNull Player player, TransactionType type, Placeholder placeholder) {
+    public void openAnvil(BankManager bankManager, @NotNull Player player, Transaction.TransactionType type, Placeholder placeholder) {
         Messages messages = bankManager.getMessages(type);
         new AnvilGUI.Builder()
                 .onClose(state -> {
@@ -73,7 +81,7 @@ public class GuiSettings {
                         case DEPOSIT -> bankManager.deposit(player, amount);
                         case WITHDRAW -> bankManager.withdraw(player, amount);
                     }
-                    plugin.getPersonalManager().getMenu().open(player, placeholder);
+                    plugin.getBankManager().getPersonalMenu().open(player, placeholder);
                 })
                 .onClick((slot, state) -> {
                     if(slot != AnvilGUI.Slot.OUTPUT) {
@@ -87,7 +95,7 @@ public class GuiSettings {
                         case DEPOSIT -> bankManager.deposit(player, amount);
                         case WITHDRAW -> bankManager.withdraw(player, amount);
                     }
-                    plugin.getPersonalManager().getMenu().open(player, placeholder);
+                    plugin.getBankManager().getPersonalMenu().open(player, placeholder);
                     return Collections.singletonList(AnvilGUI.ResponseAction.close());
                 })
                 .text(messages.getSimplePlaceholderMessage("anvil_text", placeholder))

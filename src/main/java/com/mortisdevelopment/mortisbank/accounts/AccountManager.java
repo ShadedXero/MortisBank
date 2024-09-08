@@ -1,7 +1,6 @@
 package com.mortisdevelopment.mortisbank.accounts;
 
 import com.mortisdevelopment.mortisbank.data.DataManager;
-import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -13,13 +12,11 @@ import java.util.List;
 public class AccountManager {
     
     private final DataManager dataManager;
-    private final CustomMenu menu;
     private final AccountSettings settings;
     private final List<Account> accounts = new ArrayList<>();
 
-    public AccountManager(DataManager dataManager, CustomMenu menu, @NotNull AccountSettings settings) {
+    public AccountManager(DataManager dataManager, @NotNull AccountSettings settings) {
         this.dataManager = dataManager;
-        this.menu = menu;
         this.settings = settings;
     }
 
@@ -107,5 +104,37 @@ public class AccountManager {
             }
         }
         return firstAccount;
+    }
+
+    public boolean setAccount(@NotNull OfflinePlayer player, short priority) {
+        Account account = getAccount(priority);
+        if (account == null) {
+            account = getPreviousAccount(priority);
+            if (account == null) {
+                return false;
+            }
+        }
+        dataManager.setAccount(player.getUniqueId(), account.getPriority());
+        return true;
+    }
+
+    public boolean upgradeAccount(@NotNull OfflinePlayer player) {
+        short priority = dataManager.getAccount(player.getUniqueId());
+        Account account = getNextAccount(priority);
+        if (account == null) {
+            return false;
+        }
+        dataManager.setAccount(player.getUniqueId(), account.getPriority());
+        return true;
+    }
+
+    public boolean downgradeAccount(@NotNull OfflinePlayer player) {
+        short priority = dataManager.getAccount(player.getUniqueId());
+        Account account = getPreviousAccount(priority);
+        if (account == null) {
+            return false;
+        }
+        dataManager.setAccount(player.getUniqueId(), account.getPriority());
+        return true;
     }
 }

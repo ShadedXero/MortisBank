@@ -2,46 +2,59 @@ package com.mortisdevelopment.mortisbank.bank;
 
 import com.mortisdevelopment.mortisbank.accounts.Account;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
-import com.mortisdevelopment.mortisbank.commands.subcommands.admin.balance.BalanceActionCommand;
 import com.mortisdevelopment.mortisbank.data.DataManager;
-import com.mortisdevelopment.mortisbank.personal.PersonalTransaction;
-import com.mortisdevelopment.mortisbank.personal.TransactionType;
+import com.mortisdevelopment.mortisbank.transactions.Transaction;
+import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
 import com.mortisdevelopment.mortiscore.placeholder.methods.PlayerPlaceholderMethod;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.Objects;
 
+@Getter
 public class BankManager {
 
+    public enum DepositType {
+        ALL,
+        HALF,
+        SPECIFIC
+    }
+    public enum WithdrawalType {
+        ALL,
+        HALF,
+        TWENTY,
+        SPECIFIC
+    }
     private final AccountManager accountManager;
     private final DataManager dataManager;
     private final Economy economy;
+    private final CustomMenu personalMenu;
     private final GuiSettings guiSettings;
     private final Messages depositMessages;
     private final Messages withdrawalMessages;
 
-    public BankManager(AccountManager accountManager, DataManager dataManager, Economy economy, GuiSettings guiSettings, MessageManager messageManager) {
+    public BankManager(AccountManager accountManager, DataManager dataManager, Economy economy, CustomMenu personalMenu, GuiSettings guiSettings, MessageManager messageManager) {
         this.accountManager = accountManager;
         this.dataManager = dataManager;
         this.economy = economy;
+        this.personalMenu = personalMenu;
         this.guiSettings = guiSettings;
         this.depositMessages = messageManager.getMessages("deposit_messages");
         this.withdrawalMessages = messageManager.getMessages("withdrawal_messages");
     }
 
-    private void addTransaction(@NotNull OfflinePlayer offlinePlayer, @NotNull String amount, TransactionType type) {
+    private void addTransaction(@NotNull OfflinePlayer offlinePlayer, double amount, Transaction.TransactionType type) {
         String transactor = Objects.requireNonNullElse(offlinePlayer.getName(), "Unknown");
-        PersonalTransaction transaction = new PersonalTransaction(type, amount, transactor);
+        Transaction transaction = new Transaction(type, NumberUtils.format(amount), transactor);
         dataManager.addTransaction(offlinePlayer.getUniqueId(), transaction);
     }
 
@@ -53,14 +66,14 @@ public class BankManager {
         return new Placeholder(method);
     }
 
-    public Messages getMessages(TransactionType type) {
+    public Messages getMessages(Transaction.TransactionType type) {
         return switch (type) {
             case DEPOSIT -> depositMessages;
             case WITHDRAW -> withdrawalMessages;
         };
     }
 
-    private void sendTransactionMessage(Player player, double purse, TransactionType type) {
+    private void sendTransactionMessage(Player player, double purse, Transaction.TransactionType type) {
         if (player == null) {
             return;
         }
@@ -72,47 +85,29 @@ public class BankManager {
     public boolean deposit(@NotNull OfflinePlayer offlinePlayer, @NotNull DepositType type) {
         Player player = offlinePlayer.getPlayer();
         if (type.equals(DepositType.SPECIFIC)) {
-            if (player == null) {
-                return false;
-            }
-            guiSettings.open(this, player, TransactionType.DEPOSIT, new Placeholder(player));
+            guiSettings.open(this, player, Transaction.TransactionType.DEPOSIT, new Placeholder(player));
             return true;
-        }
-        DecimalFormat formatter = new DecimalFormat("#,###.#");
-        Account account = accountManager.getAccount(offlinePlayer);
-        if (account == null) {
-            return false;
-        }
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
-        if (account.isFull(balance)) {
-            depositMessages.sendPlaceholderMessage(player, "full", new Placeholder(player));
-            return false;
         }
         double purse = economy.getBalance(offlinePlayer);
         if (type.equals(DepositType.HALF)) {
             purse = purse / 2;
         }
-        if (purse <= 0) {
-            depositMessages.sendPlaceholderMessage(player, "little", new Placeholder(player));
-            return false;
-        }
-        double bank = balance + purse;
-        if (!account.isStorable(bank)) {
-            purse = account.getSpace(balance);
-            bank = balance + purse;
-        }
-        economy.withdrawPlayer(offlinePlayer, purse);
-        dataManager.setBalance(offlinePlayer.getUniqueId(), bank);
-        addTransaction(offlinePlayer, formatter.format(purse), TransactionType.DEPOSIT);
-        sendTransactionMessage(player, purse, TransactionType.DEPOSIT);
-        return true;
+        return deposit(purse, offlinePlayer, purse);
     }
 
     public boolean deposit(@NotNull OfflinePlayer offlinePlayer, double amount) {
+        return deposit(economy.getBalance(offlinePlayer), offlinePlayer, amount);
+    }
+
+    private boolean deposit(double purse, OfflinePlayer offlinePlayer, double amount) {
         Player player = offlinePlayer.getPlayer();
-        DecimalFormat formatter = new DecimalFormat("#,###.#");
         if (amount <= 0) {
             depositMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
+            return false;
+        }
+        amount = Math.min(amount, purse);
+        if (amount <= 0) {
+            depositMessages.sendPlaceholderMessage(player, "little", new Placeholder(player));
             return false;
         }
         Account account = accountManager.getAccount(offlinePlayer);
@@ -124,133 +119,84 @@ public class BankManager {
             depositMessages.sendPlaceholderMessage(player, "full", new Placeholder(player));
             return false;
         }
-        double purse = economy.getBalance(offlinePlayer);
-        if (amount < purse) {
-            purse = amount;
+        double newBalance = balance + amount;
+        if (!account.isStorable(newBalance)) {
+            amount = account.getSpace(balance);
+            newBalance = balance + amount;
         }
-        if (purse <= 0) {
-            depositMessages.sendPlaceholderMessage(player, "little", new Placeholder(player));
-            return false;
-        }
-        double bank = balance + purse;
-        if (!account.isStorable(bank)) {
-            purse = account.getSpace(balance);
-            bank = balance + purse;
-        }
-        economy.withdrawPlayer(offlinePlayer, purse);
-        dataManager.setBalance(offlinePlayer.getUniqueId(), bank);
-        addTransaction(offlinePlayer, formatter.format(purse), TransactionType.DEPOSIT);
-        sendTransactionMessage(player, purse, TransactionType.DEPOSIT);
+        economy.withdrawPlayer(offlinePlayer, amount);
+        dataManager.setBalance(offlinePlayer.getUniqueId(), newBalance);
+        addTransaction(offlinePlayer, purse, Transaction.TransactionType.DEPOSIT);
+        sendTransactionMessage(player, purse, Transaction.TransactionType.DEPOSIT);
         return true;
     }
 
-    public double getDepositWhole(@NotNull OfflinePlayer player) {
-        Account account = accountManager.getAccount(player);
+    public double getDepositWhole(@NotNull OfflinePlayer offlinePlayer) {
+        return getDeposit(economy.getBalance(offlinePlayer), offlinePlayer);
+    }
+
+    public double getDepositHalf(@NotNull OfflinePlayer offlinePlayer) {
+        return getDeposit(economy.getBalance(offlinePlayer) / 2, offlinePlayer);
+    }
+
+    private double getDeposit(double purse, OfflinePlayer offlinePlayer) {
+        Account account = accountManager.getAccount(offlinePlayer);
         if (account == null) {
             return 0;
         }
-        double purse = economy.getBalance(player);
-        if (purse == 0) {
-            return 0;
-        }
-        double balance = dataManager.getBalance(player.getUniqueId());
-        if (account.isFull(balance)) {
-            return 0;
-        }
-        double space = account.getSpace(balance);
-        return Math.min(purse, space);
-    }
-
-    public double getDepositWhole(@NotNull Account account, double balance, double purse) {
-        if (purse == 0 || account.isFull(balance)) {
-            return 0;
-        }
-        double space = account.getSpace(balance);
-        return Math.min(purse, space);
-    }
-
-    public double getDepositHalf(@NotNull OfflinePlayer player) {
-        Account account = accountManager.getAccount(player);
-        if (account == null) {
-            return 0;
-        }
-        double purse = economy.getBalance(player) / 2;
         if (purse <= 0) {
             return 0;
         }
-        double balance = dataManager.getBalance(player.getUniqueId());
+        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
         if (account.isFull(balance)) {
             return 0;
         }
-        double space = account.getSpace(balance);
-        return Math.min(purse, space);
-    }
-
-    public double getDepositHalf(@NotNull Account account, double balance, double purse) {
-        purse = purse / 2;
-        if (purse == 0 || account.isFull(balance)) {
-            return 0;
-        }
-        double space = account.getSpace(balance);
-        return Math.min(purse, space);
+        return Math.min(purse, account.getSpace(balance));
     }
 
     public boolean withdraw(@NotNull OfflinePlayer offlinePlayer, @NotNull WithdrawalType type) {
         Player player = offlinePlayer.getPlayer();
         if (type.equals(WithdrawalType.SPECIFIC)) {
-            if (player == null) {
-                return false;
-            }
-            guiSettings.open(this, player, TransactionType.WITHDRAW, new Placeholder(player));
-            return true;
+            return guiSettings.open(this, player, Transaction.TransactionType.WITHDRAW, new Placeholder(player));
         }
-        DecimalFormat formatter = new DecimalFormat("#,###.#");
-        double bank = dataManager.getBalance(offlinePlayer.getUniqueId());
-        if (bank <= 0) {
+        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        if (balance <= 0) {
             withdrawalMessages.sendPlaceholderMessage(player, "little", new Placeholder(player));
             return false;
         }
-        double purse = 0;
-        if (type.equals(WithdrawalType.ALL)) {
-            purse = bank;
-            bank = 0;
+        double amount = 0;
+        switch (type) {
+            case ALL -> amount = balance;
+            case HALF -> amount = balance / 2;
+            case TWENTY -> amount = balance * 0.20;
         }
-        if (type.equals(WithdrawalType.HALF)) {
-            purse = bank / 2;
-            bank /= 2;
-        }
-        if (type.equals(WithdrawalType.TWENTY)) {
-            purse = bank * 0.20;
-            bank *= 0.80;
-        }
-        economy.depositPlayer(offlinePlayer, purse);
-        dataManager.setBalance(offlinePlayer.getUniqueId(), bank);
-        addTransaction(offlinePlayer, formatter.format(purse), TransactionType.WITHDRAW);
-        sendTransactionMessage(player, purse, TransactionType.WITHDRAW);
-        return true;
+        return withdraw(balance, offlinePlayer, amount);
     }
 
     public boolean withdraw(@NotNull OfflinePlayer offlinePlayer, double amount) {
         Player player = offlinePlayer.getPlayer();
-        DecimalFormat formatter = new DecimalFormat("#,###.#");
+        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        if (balance <= 0) {
+            withdrawalMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
+            return false;
+        }
+        return withdraw(balance, offlinePlayer, amount);
+    }
+
+    private boolean withdraw(double balance, OfflinePlayer offlinePlayer, double amount) {
+        Player player = offlinePlayer.getPlayer();
         if (amount <= 0) {
             withdrawalMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
             return false;
         }
-        double bank = dataManager.getBalance(offlinePlayer.getUniqueId());
-        if (bank <= 0) {
-            withdrawalMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
-            return false;
-        }
-        if (amount > bank) {
+        if (amount > balance) {
             withdrawalMessages.sendPlaceholderMessage(player, "no_money", new Placeholder(player));
             return false;
         }
-        bank -= amount;
         economy.depositPlayer(offlinePlayer, amount);
-        dataManager.setBalance(offlinePlayer.getUniqueId(), bank);
-        addTransaction(offlinePlayer, formatter.format(amount), TransactionType.WITHDRAW);
-        sendTransactionMessage(player, amount, TransactionType.WITHDRAW);
+        dataManager.setBalance(offlinePlayer.getUniqueId(), balance - amount);
+        addTransaction(offlinePlayer, amount, Transaction.TransactionType.WITHDRAW);
+        sendTransactionMessage(player, amount, Transaction.TransactionType.WITHDRAW);
         return true;
     }
 
@@ -266,37 +212,42 @@ public class BankManager {
         return dataManager.getBalance(offlinePlayer.getUniqueId()) * 0.20;
     }
 
-    public boolean setBalance(OfflinePlayer offlinePlayer, double amount, BalanceActionCommand.BalanceAction action) {
+    private void setBalance(Account account, OfflinePlayer offlinePlayer, double amount) {
+        dataManager.setBalance(offlinePlayer.getUniqueId(), Math.min(amount, account.getMaxBalance()));
+    }
+
+    public boolean setBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
         Account account = accountManager.getAccount(offlinePlayer);
         if (account == null) {
             return false;
         }
-        double balance = accountManager.getDataManager().getBalance(offlinePlayer.getUniqueId());
-        if (action.equals(BalanceActionCommand.BalanceAction.REMOVE)) {
-            if (balance <= 0) {
-                return false;
-            }
-        }else {
-            if (account.isFull(balance)) {
-                return false;
-            }
-        }
-        switch (action) {
-            case ADD -> balance += amount;
-            case REMOVE -> balance -= amount;
-        }
-        if (account.isStorable(balance)) {
-            accountManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), balance);
-        }else {
-            accountManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), account.getSpace(balance));
-        }
+        setBalance(account, offlinePlayer, amount);
+        return true;
     }
 
-    public boolean removeBalance() {
-
+    public boolean addBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
+        Account account = accountManager.getAccount(offlinePlayer);
+        if (account == null) {
+            return false;
+        }
+        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        if (account.isFull(balance)) {
+            return false;
+        }
+        setBalance(account, offlinePlayer, balance + amount);
+        return true;
     }
 
-    public boolean addBalance() {
-
+    public boolean removeBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
+        Account account = accountManager.getAccount(offlinePlayer);
+        if (account == null) {
+            return false;
+        }
+        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        if (balance <= 0) {
+            return false;
+        }
+        setBalance(account, offlinePlayer, balance - amount);
+        return true;
     }
 }

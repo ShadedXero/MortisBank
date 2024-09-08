@@ -3,7 +3,7 @@ package com.mortisdevelopment.mortisbank.data;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.mortisdevelopment.mortisbank.MortisBank;
-import com.mortisdevelopment.mortisbank.personal.PersonalTransaction;
+import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -23,7 +23,7 @@ public class DataManager {
     private final int transactionLimit;
     private final HashMap<UUID, Double> balanceByUUID;
     private final HashMap<UUID, Short> accountByUUID;
-    private final HashMap<UUID, List<PersonalTransaction>> transactionsByUUID;
+    private final HashMap<UUID, List<Transaction>> transactionsByUUID;
 
     public DataManager(MortisBank plugin, @NotNull Database database, boolean leaderboard, int transactionLimit) {
         this.plugin = plugin;
@@ -50,7 +50,7 @@ public class DataManager {
                     UUID uuid = UUID.fromString(result.getString("uuid"));
                     double balance = result.getDouble("balance");
                     short account = result.getShort("account");
-                    List<PersonalTransaction> transactions = getTransactions(result.getString("transactions"));
+                    List<Transaction> transactions = getTransactions(result.getString("transactions"));
                     balanceByUUID.put(uuid, balance);
                     accountByUUID.put(uuid, account);
                     transactionsByUUID.put(uuid, transactions);
@@ -61,7 +61,7 @@ public class DataManager {
         });
     }
 
-    private List<PersonalTransaction> trimTransactions(@NotNull List<PersonalTransaction> transactions) {
+    private List<Transaction> trimTransactions(@NotNull List<Transaction> transactions) {
         if (transactions.size() <= transactionLimit) {
             return transactions;
         }
@@ -72,24 +72,24 @@ public class DataManager {
         return transactions;
     }
 
-    private List<String> getRawTransactions(@NotNull List<PersonalTransaction> transactions) {
+    private List<String> getRawTransactions(@NotNull List<Transaction> transactions) {
         List<String> rawTransactions = new ArrayList<>();
-        for (PersonalTransaction transaction : transactions) {
+        for (Transaction transaction : transactions) {
             rawTransactions.add(transaction.getRawTransaction());
         }
         return rawTransactions;
     }
 
-    private String getTransactions(@NotNull List<PersonalTransaction> transactions) {
+    private String getTransactions(@NotNull List<Transaction> transactions) {
         List<String> rawTransactions = getRawTransactions(transactions);
         return gson.toJson(rawTransactions);
     }
 
-    private List<PersonalTransaction> getTransactions(@NotNull String raw) {
-        List<PersonalTransaction> transactionList = new ArrayList<>();
+    private List<Transaction> getTransactions(@NotNull String raw) {
+        List<Transaction> transactionList = new ArrayList<>();
         List<String> rawTransactions = gson.fromJson(raw, new TypeToken<List<String>>(){}.getType());
         for (String rawTransaction : rawTransactions) {
-            PersonalTransaction transaction = new PersonalTransaction(rawTransaction);
+            Transaction transaction = new Transaction(rawTransaction);
             if (!transaction.isValid()) {
                 continue;
             }
@@ -116,7 +116,7 @@ public class DataManager {
         return balanceByUUID.containsKey(uuid);
     }
 
-    public void addBank(@NotNull UUID uuid, double balance, short account, @NotNull List<PersonalTransaction> transactions) {
+    public void addBank(@NotNull UUID uuid, double balance, short account, @NotNull List<Transaction> transactions) {
         balanceByUUID.put(uuid, balance);
         accountByUUID.put(uuid, account);
         transactionsByUUID.put(uuid, transactions);
@@ -134,16 +134,16 @@ public class DataManager {
         Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET account = ? WHERE uuid = ?", account, uuid.toString()));
     }
 
-    public void setTransactions(@NotNull UUID uuid, @NotNull List<PersonalTransaction> transactions) {
-        List<PersonalTransaction> transactionList = trimTransactions(transactions);
+    public void setTransactions(@NotNull UUID uuid, @NotNull List<Transaction> transactions) {
+        List<Transaction> transactionList = trimTransactions(transactions);
         transactionsByUUID.put(uuid, transactionList);
         Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET transactions = ? WHERE uuid = ?", getTransactions(transactionList), uuid.toString()));
     }
 
-    public void addTransaction(@NotNull UUID uuid, @NotNull PersonalTransaction transaction) {
-        List<PersonalTransaction> transactions = getTransactions(uuid);
+    public void addTransaction(@NotNull UUID uuid, @NotNull Transaction transaction) {
+        List<Transaction> transactions = getTransactions(uuid);
         transactions.add(transaction);
-        List<PersonalTransaction> transactionList = trimTransactions(transactions);
+        List<Transaction> transactionList = trimTransactions(transactions);
         transactionsByUUID.put(uuid, transactionList);
         Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET transactions = ? WHERE uuid = ?", getTransactions(transactionList), uuid.toString()));
     }
@@ -160,7 +160,7 @@ public class DataManager {
         return accountByUUID.get(uuid);
     }
 
-    public List<PersonalTransaction> getTransactions(@NotNull UUID uuid) {
+    public List<Transaction> getTransactions(@NotNull UUID uuid) {
         return transactionsByUUID.get(uuid);
     }
 }

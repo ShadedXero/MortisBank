@@ -1,8 +1,8 @@
 package com.mortisdevelopment.mortisbank.commands;
 
+import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.subcommands.HelpCommand;
 import com.mortisdevelopment.mortisbank.commands.subcommands.OpenCommand;
-import com.mortisdevelopment.mortisbank.personal.PersonalManager;
 import com.mortisdevelopment.mortiscore.commands.BaseCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public class BankCommand extends BaseCommand {
 
-    private final PersonalManager personalManager;
+    private final BankManager bankManager;
 
-    public BankCommand(Messages messages, PersonalManager personalManager) {
+    public BankCommand(Messages messages, BankManager bankManager) {
         super("mortisbank");
         setAliases(List.of("bank"));
-        this.personalManager = personalManager;
-        addSubCommand(new OpenCommand(messages, personalManager));
+        this.bankManager = bankManager;
+        addSubCommand(new OpenCommand(messages, bankManager));
         addSubCommand(new HelpCommand(messages));
     }
 
@@ -36,7 +36,7 @@ public class BankCommand extends BaseCommand {
         if (args.length > 0) {
             return false;
         }
-        personalManager.getMenu().open(player, new Placeholder(player));
+        bankManager.getPersonalMenu().open(player, new Placeholder(player));
         return true;
     }
 

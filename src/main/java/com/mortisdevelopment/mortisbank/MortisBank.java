@@ -2,14 +2,13 @@ package com.mortisdevelopment.mortisbank;
 
 import com.mortisdevelopment.mortisbank.actions.types.SetAccountActionType;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
-import com.mortisdevelopment.mortisbank.accounts.AccountListener;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
 import com.mortisdevelopment.mortisbank.config.AccountConfig;
 import com.mortisdevelopment.mortisbank.config.MainConfig;
 import com.mortisdevelopment.mortisbank.config.MessageConfig;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
-import com.mortisdevelopment.mortisbank.personal.PersonalManager;
+import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
 import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
@@ -34,7 +33,7 @@ public final class MortisBank extends JavaPlugin {
     private PlaceholderManager placeholderManager;
     private DataManager dataManager;
     private AccountManager accountManager;
-    private PersonalManager personalManager;
+    private TransactionManager transactionManager;
     private BankManager bankManager;
 
     @Override
@@ -66,8 +65,7 @@ public final class MortisBank extends JavaPlugin {
         new AccountConfig(this);
         placeholderManager = new PlaceholderManager(this, messageManager);
         placeholderManager.register();
-        getServer().getPluginManager().registerEvents(new AccountListener(accountManager), this);
-        new BankCommand(messageManager.getMessages("command_messages"), personalManager).register();
+        new BankCommand(messageManager.getMessages("command_messages"), bankManager).register();
     }
 
     private boolean setupEconomy() {

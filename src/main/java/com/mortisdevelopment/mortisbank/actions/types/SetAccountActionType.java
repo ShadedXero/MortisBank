@@ -20,7 +20,7 @@ public class SetAccountActionType extends MenuActionType {
     private MortisBank plugin;
     private PlaceholderShort placeholderPriority;
 
-    public SetAccountActionType(MortisBank plugin, short priority) throws ConfigException {
+    public SetAccountActionType(MortisBank plugin, short priority) {
         this.plugin = plugin;
         this.placeholderPriority = new PlaceholderShort(priority);
     }

@@ -2,10 +2,9 @@ package com.mortisdevelopment.mortisbank.config;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
-import com.mortisdevelopment.mortisbank.personal.PersonalManager;
+import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortisbank.bank.GuiSettings;
-import com.mortisdevelopment.mortisbank.bank.InputMode;
 import com.mortisdevelopment.mortiscore.configs.FileConfig;
 import com.mortisdevelopment.mortiscore.databases.*;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
@@ -38,9 +37,9 @@ public class MainConfig extends FileConfig {
             return;
         }
         try {
-            CustomMenu personalMenu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("personal-menu"), false);
-            plugin.setPersonalManager(new PersonalManager(plugin, personalMenu));
-            plugin.setBankManager(new BankManager(plugin.getAccountManager(), plugin.getDataManager(), plugin.getEconomy(), guiSettings, plugin.getMessageManager()));
+            CustomMenu personalMenu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("personal-menu"));
+            plugin.setBankManager(new BankManager(plugin.getAccountManager(), plugin.getDataManager(), plugin.getEconomy(), personalMenu, guiSettings, plugin.getMessageManager()));
+            plugin.setTransactionManager(new TransactionManager(plugin.getDataManager()));
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
@@ -50,16 +49,16 @@ public class MainConfig extends FileConfig {
         if (section == null) {
             return null;
         }
-        InputMode mode;
+        GuiSettings.InputMode mode;
         try {
-            mode = InputMode.valueOf(section.getString("input-mode"));
+            mode = GuiSettings.InputMode.valueOf(section.getString("input-mode"));
         }catch (IllegalArgumentException exp) {
             return null;
         }
         int inputSlot = section.getInt("sign-input-slot");
         CustomItem customItem;
         try {
-            customItem = plugin.getCore().getItemManager().getObject(plugin, section.getConfigurationSection("anvil-item"), false);
+            customItem = plugin.getCore().getItemManager().getObject(plugin, section.getConfigurationSection("anvil-item"));
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }

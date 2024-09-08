@@ -1,22 +1,5 @@
 package com.mortisdevelopment.mortisbank.admin;
 
-import com.mortisdevelopment.mortisbank.MortisBank;
-import com.mortisdevelopment.mortisbank.personal.PersonalTransaction;
-import com.mortisdevelopment.mortisbank.personal.TransactionType;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 public class BankCommand {
 
 //    private final MortisBank plugin = MortisBank.getInstance();

@@ -1,6 +1,6 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands;
 
-import com.mortisdevelopment.mortisbank.personal.PersonalManager;
+import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
@@ -12,11 +12,11 @@ import java.util.List;
 
 public class OpenCommand extends PermissionCommand {
 
-    private final PersonalManager personalManager;
+    private final BankManager bankManager;
 
-    public OpenCommand(Messages messages, PersonalManager personalManager) {
+    public OpenCommand(Messages messages, BankManager bankManager) {
         super("open", "mortisbank.open", messages);
-        this.personalManager = personalManager;
+        this.bankManager = bankManager;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class OpenCommand extends PermissionCommand {
             sender.sendMessage(getMessages().getMessage("invalid_target"));
             return false;
         }
-        personalManager.getMenu().open(target, new Placeholder(target));
+        bankManager.getPersonalMenu().open(target, new Placeholder(target));
         return true;
     }
 

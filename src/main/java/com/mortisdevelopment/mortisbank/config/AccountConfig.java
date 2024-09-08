@@ -2,12 +2,12 @@ package com.mortisdevelopment.mortisbank.config;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.accounts.Account;
+import com.mortisdevelopment.mortisbank.accounts.AccountListener;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.accounts.AccountSettings;
 import com.mortisdevelopment.mortiscore.configs.FileConfig;
-import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
-import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.utils.ColorUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,20 +29,12 @@ public class AccountConfig extends FileConfig {
     public void loadConfig() {
         File file = getFile(plugin);
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        CustomMenu menu;
-        try {
-            menu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("account-menu"), false);
-        } catch (ConfigException exp) {
-            throw new RuntimeException(exp);
-        }
-        if (menu == null) {
-            return;
-        }
         AccountSettings settings = loadSettings(config);
         if (settings == null) {
             return;
         }
-        plugin.setAccountManager(new AccountManager(plugin.getDataManager(), menu, settings));
+        plugin.setAccountManager(new AccountManager(plugin.getDataManager(), settings));
+        Bukkit.getPluginManager().registerEvents(new AccountListener(plugin.getAccountManager()), plugin);
         loadAccounts(config.getConfigurationSection("accounts"));
     }
 

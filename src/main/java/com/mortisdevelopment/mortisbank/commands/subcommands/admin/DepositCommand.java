@@ -1,12 +1,13 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands.admin;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
-import com.mortisdevelopment.mortisbank.actions.types.SetAccountActionType;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.utils.BankUtils;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.messages.Messages;
+import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.PlayerExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -16,11 +17,11 @@ import java.util.List;
 
 public class DepositCommand extends PermissionCommand {
 
-    private final BankManager bankManager;
+    private final MortisBank plugin;
 
-    public DepositCommand(Messages messages, BankManager bankManager) {
+    public DepositCommand(Messages messages, MortisBank plugin) {
         super("deposit", "mortisbank.admin.deposit", messages);
-        this.bankManager = bankManager;
+        this.plugin = plugin;
     }
 
     @Override
@@ -45,10 +46,7 @@ public class DepositCommand extends PermissionCommand {
             sender.sendMessage(getMessages().getMessage("invalid_number"));
             return false;
         }
-        if (!bankManager.deposit(target, amount)) {
-            sender.sendMessage(getMessages().getMessage("could_not_process"));
-            return false;
-        }
+        new DepositActionType(plugin, amount).execute(new PlayerExecutor(target), new Placeholder());
         getMessages().sendPlaceholderMessage(sender, "admin_deposit", BankUtils.getPlaceholder(amount));
         return true;
     }

@@ -2,7 +2,7 @@ package com.mortisdevelopment.mortisbank.placeholders;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.accounts.Account;
-import com.mortisdevelopment.mortisbank.personal.PersonalTransaction;
+import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
@@ -92,7 +92,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             return checkDouble(params.replace("withdraw_twenty", ""), plugin.getBankManager().getWithdrawTwentyPercent(player));
         }
         if (params.contains("has_transactions")) {
-            if (plugin.getPersonalManager().getTransaction(player, 0) != null) {
+            if (plugin.getTransactionManager().getTransaction(player, 0) != null) {
                 return "true";
             }else {
                 return "false";
@@ -107,7 +107,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             }
             StringBuilder builder = new StringBuilder();
             for (int index = 0; index < maxIndex; index++) {
-                PersonalTransaction transaction = plugin.getPersonalManager().getTransaction(player, index);
+                Transaction transaction = plugin.getTransactionManager().getTransaction(player, index);
                 if (transaction == null) {
                     continue;
                 }
@@ -125,7 +125,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             }catch (NumberFormatException exp) {
                 return "";
             }
-            PersonalTransaction transaction = plugin.getPersonalManager().getTransaction(player, index);
+            Transaction transaction = plugin.getTransactionManager().getTransaction(player, index);
             if (transaction == null) {
                 return "";
             }
