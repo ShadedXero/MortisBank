@@ -1,113 +1,56 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands.admin.balance;
 
-import com.mortisdevelopment.mortisbank.accounts.Account;
-import com.mortisdevelopment.mortisbank.accounts.AccountManager;
+import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Getter
 public class BalanceActionCommand extends PermissionCommand {
 
-    public enum BalanceAction {SET,ADD,REMOVE}
-    private final AccountManager accountManager;
+    public enum Action{SET,ADD,SUBTRACT}
+    private final Action action;
+    private final BankManager bankManager;
 
-    public BalanceActionCommand(String name, String permission, Messages messages, AccountManager accountManager) {
+    public BalanceActionCommand(String name, String permission, Messages messages, Action action, BankManager bankManager) {
         super(name, permission, messages);
-        this.accountManager = accountManager;
+        this.action = action;
+        this.bankManager = bankManager;
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, String s, String[] strings) {
-        return false;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, String s, String[] strings) {
-        return List.of();
-    }
-
-    public boolean setBalance(OfflinePlayer offlinePlayer, double amount, BalanceAction action) {
-        Account account = accountManager.getAccount(offlinePlayer);
-        if (account == null) {
+    public boolean onCommand(CommandSender sender, String label, String[] args) {
+        if (args.length < 2) {
+            getMessages().sendMessage(sender, "wrong_usage");
             return false;
         }
-        double balance = accountManager.getDataManager().getBalance(offlinePlayer.getUniqueId());
-        if (action.equals(BalanceAction.REMOVE)) {
-            if (balance <= 0) {
-                return false;
-            }
-        }else {
-            if (account.isFull(balance)) {
-                return false;
-            }
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        if (!target.hasPlayedBefore()) {
+            getMessages().sendMessage(sender, "invalid_target");
+            return false;
+        }
+        double amount;
+        try {
+            amount = Double.parseDouble(args[1]);
+        } catch (NumberFormatException e) {
+            getMessages().sendMessage(sender, "invalid_amount");
+            return false;
         }
         switch (action) {
-            case ADD -> balance += amount;
-            case REMOVE -> balance -= amount;
-        }
-        if (account.isStorable(balance)) {
-            accountManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), balance);
-        }else {
-            accountManager.getDataManager().setBalance(offlinePlayer.getUniqueId(), account.getSpace(balance));
-        }
-    }
-
-    public boolean setBalance(@NotNull OfflinePlayer player, double amount) {
-        Account account = plugin.getAccountManager().getAccount(player);
-        if (account == null) {
-            return false;
-        }
-        double balance = plugin.getDataManager().getBalance(player.getUniqueId());
-        if (account.isFull(balance)) {
-            return false;
-        }
-        if (account.isStorable(amount)) {
-            plugin.getDataManager().setBalance(player.getUniqueId(), amount);
-        }else {
-            plugin.getDataManager().setBalance(player.getUniqueId(), account.getSpace(balance));
+            case SET -> bankManager.setBalance(target, amount);
+            case ADD -> bankManager.addBalance(target, amount);
+            case SUBTRACT -> bankManager.subtractBalance(target, amount);
         }
         return true;
     }
 
-    public boolean addBalance(@NotNull OfflinePlayer player, double amount) {
-        Account account = plugin.getAccountManager().getAccount(player);
-        if (account == null) {
-            return false;
-        }
-        double balance = plugin.getDataManager().getBalance(player.getUniqueId());
-        if (account.isFull(balance)) {
-            return false;
-        }
-        amount += balance;
-        if (account.isStorable(amount)) {
-            plugin.getDataManager().setBalance(player.getUniqueId(), amount);
-        }else {
-            plugin.getDataManager().setBalance(player.getUniqueId(), account.getSpace(balance));
-        }
-        return true;
-    }
-
-    public boolean removeBalance(@NotNull OfflinePlayer player, double amount) {
-        Account account = plugin.getAccountManager().getAccount(player);
-        if (account == null) {
-            return false;
-        }
-        double balance = plugin.getDataManager().getBalance(player.getUniqueId());
-        if (balance <= 0) {
-            return false;
-        }
-        balance -= amount;
-        if (balance > 0) {
-            plugin.getDataManager().setBalance(player.getUniqueId(), balance);
-        }else {
-            plugin.getDataManager().setBalance(player.getUniqueId(), 0);
-        }
-        return true;
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String label, String[] args) {
+        return null;
     }
 }

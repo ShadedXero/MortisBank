@@ -4,6 +4,7 @@ import com.mortisdevelopment.mortisbank.accounts.Account;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
+import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
@@ -35,16 +36,16 @@ public class BankManager {
         SPECIFIC
     }
     private final AccountManager accountManager;
-    private final DataManager dataManager;
+    private final Database database;
     private final Economy economy;
     private final CustomMenu personalMenu;
     private final GuiSettings guiSettings;
     private final Messages depositMessages;
     private final Messages withdrawalMessages;
 
-    public BankManager(AccountManager accountManager, DataManager dataManager, Economy economy, CustomMenu personalMenu, GuiSettings guiSettings, MessageManager messageManager) {
+    public BankManager(AccountManager accountManager, Database database, Economy economy, CustomMenu personalMenu, GuiSettings guiSettings, MessageManager messageManager) {
         this.accountManager = accountManager;
-        this.dataManager = dataManager;
+        this.database = database;
         this.economy = economy;
         this.personalMenu = personalMenu;
         this.guiSettings = guiSettings;
@@ -238,7 +239,7 @@ public class BankManager {
         return true;
     }
 
-    public boolean removeBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
+    public boolean subtractBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
         Account account = accountManager.getAccount(offlinePlayer);
         if (account == null) {
             return false;

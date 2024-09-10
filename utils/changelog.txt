@@ -1,1 +1,5 @@
+Added back all the commands
+Added new action types
+Added more messages for customizability
+
 Fixed balance command

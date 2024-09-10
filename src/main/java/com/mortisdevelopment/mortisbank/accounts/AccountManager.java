@@ -1,26 +1,36 @@
 package com.mortisdevelopment.mortisbank.accounts;
 
 import com.mortisdevelopment.mortisbank.data.DataManager;
+import com.mortisdevelopment.mortiscore.databases.Database;
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
 public class AccountManager {
-    
-    private final DataManager dataManager;
-    private final AccountSettings settings;
-    private final List<Account> accounts = new ArrayList<>();
 
-    public AccountManager(DataManager dataManager, @NotNull AccountSettings settings) {
-        this.dataManager = dataManager;
+    private final Database database;
+    private final AccountSettings settings;
+    private final HashMap<String, Account> accountById = new HashMap<>();
+
+    public AccountManager(Database database, @NotNull AccountSettings settings) {
+        this.database = database;
         this.settings = settings;
     }
 
-    public Account getAccount(@NotNull OfflinePlayer player) {
+    public Account getAccount(String id) {
+        return accountById.get(id);
+    }
+
+    public List<Account> getAccounts() {
+        return new ArrayList<>(accountById.values());
+    }
+
+    public Account getAccount(DataManager dataManager, @NotNull OfflinePlayer player) {
         short accountPriority = dataManager.getAccount(player.getUniqueId());
         Account account = getAccount(accountPriority);
         if (account != null) {
@@ -40,7 +50,7 @@ public class AccountManager {
     }
 
     public Account getAccount(short priority) {
-        for (Account account : accounts) {
+        for (Account account : getAccounts()) {
             if (account.isPriority(priority)) {
                 return account;
             }
@@ -50,7 +60,7 @@ public class AccountManager {
 
     public Account getPreviousAccount(short priority) {
         Account newAccount = null;
-        for (Account account : accounts) {
+        for (Account account : getAccounts()) {
             short accountPriority = account.getPriority();
             if (accountPriority >= priority) {
                 continue;
@@ -68,7 +78,7 @@ public class AccountManager {
 
     public Account getNextAccount(short priority) {
         Account newAccount = null;
-        for (Account account : accounts) {
+        for (Account account : getAccounts()) {
             short accountPriority = account.getPriority();
             if (accountPriority <= priority) {
                 continue;
@@ -94,7 +104,7 @@ public class AccountManager {
 
     public Account getFirstAccount() {
         Account firstAccount = null;
-        for (Account account : accounts) {
+        for (Account account : getAccounts()) {
             if (firstAccount == null) {
                 firstAccount = account;
                 continue;

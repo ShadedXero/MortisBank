@@ -1,7 +1,7 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands.admin;
 
-import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
+import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.utils.BankUtils;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
@@ -15,11 +15,11 @@ import java.util.List;
 
 public class WithdrawCommand extends PermissionCommand {
 
-    private final MortisBank plugin;
+    private final BankManager bankManager;
 
-    public WithdrawCommand(Messages messages, MortisBank plugin) {
+    public WithdrawCommand(Messages messages, BankManager bankManager) {
         super("withdraw", "mortisbank.admin.withdraw", messages);
-        this.plugin = plugin;
+        this.bankManager = bankManager;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class WithdrawCommand extends PermissionCommand {
             sender.sendMessage(getMessages().getMessage("invalid_number"));
             return false;
         }
-        new WithdrawActionType(plugin, amount).execute(new PlayerExecutor(target), new Placeholder());
+        new WithdrawActionType(bankManager, amount).execute(new PlayerExecutor(target), new Placeholder());
         getMessages().sendPlaceholderMessage(sender, "admin_withdraw", BankUtils.getPlaceholder(amount));
         return true;
     }

@@ -1,11 +1,9 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands.admin;
 
-import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.utils.BankUtils;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
-import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.PlayerExecutor;
@@ -17,11 +15,11 @@ import java.util.List;
 
 public class DepositCommand extends PermissionCommand {
 
-    private final MortisBank plugin;
+    private final BankManager bankManager;
 
-    public DepositCommand(Messages messages, MortisBank plugin) {
+    public DepositCommand(Messages messages, BankManager bankManager) {
         super("deposit", "mortisbank.admin.deposit", messages);
-        this.plugin = plugin;
+        this.bankManager = bankManager;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class DepositCommand extends PermissionCommand {
             sender.sendMessage(getMessages().getMessage("invalid_number"));
             return false;
         }
-        new DepositActionType(plugin, amount).execute(new PlayerExecutor(target), new Placeholder());
+        new DepositActionType(bankManager, amount).execute(new PlayerExecutor(target), new Placeholder());
         getMessages().sendPlaceholderMessage(sender, "admin_deposit", BankUtils.getPlaceholder(amount));
         return true;
     }

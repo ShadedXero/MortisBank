@@ -1,6 +1,6 @@
 package com.mortisdevelopment.mortisbank;
 
-import com.mortisdevelopment.mortisbank.actions.types.SetAccountActionType;
+import com.mortisdevelopment.mortisbank.actions.types.accounts.SetAccountActionType;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
@@ -15,17 +15,17 @@ import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
 import com.mortisdevelopment.mortiscore.MortisCore;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
+import com.mortisdevelopment.mortiscore.utils.CorePlugin;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
 
 @Getter @Setter
-public final class MortisBank extends JavaPlugin {
+public final class MortisBank extends CorePlugin {
 
     private MortisCore core;
     private Economy economy;
@@ -37,7 +37,8 @@ public final class MortisBank extends JavaPlugin {
     private BankManager bankManager;
 
     @Override
-    public void onLoad() {
+    public void onEnable() {
+        System.out.println("Core Ready");
         this.core = (MortisCore) Objects.requireNonNull(getServer().getPluginManager().getPlugin("MortisCore"));
         core.register(this);
         if (!setupEconomy()) {
@@ -48,24 +49,23 @@ public final class MortisBank extends JavaPlugin {
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] set account", SetAccountActionType.class);
-    }
-
-    @Override
-    public void onEnable() {
-        // Plugin startup logic
-        new File(getDataFolder(), "items").mkdirs();
-        try {
-            core.getMenuManager().saveAndLoad(this);
-            core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
-        } catch (ConfigException e) {
-            throw new RuntimeException(e);
-        }
         new MessageConfig(this);
         new MainConfig(this);
         new AccountConfig(this);
         placeholderManager = new PlaceholderManager(this, messageManager);
         placeholderManager.register();
         new BankCommand(messageManager.getMessages("command_messages"), bankManager).register();
+    }
+
+    @Override
+    public void onStart() {
+        new File(getDataFolder(), "items").mkdirs();
+        try {
+            core.getMenuManager().saveAndLoad(this);
+            core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
+        } catch (ConfigException exp) {
+            throw new RuntimeException(exp);
+        }
     }
 
     private boolean setupEconomy() {

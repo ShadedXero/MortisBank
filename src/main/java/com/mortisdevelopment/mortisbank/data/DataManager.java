@@ -1,7 +1,6 @@
 package com.mortisdevelopment.mortisbank.data;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortiscore.databases.Database;
@@ -17,7 +16,6 @@ import java.util.*;
 public class DataManager {
 
     private final MortisBank plugin;
-    private final Gson gson = new Gson();
     private final Database database;
     private final boolean leaderboard;
     private final int transactionLimit;
