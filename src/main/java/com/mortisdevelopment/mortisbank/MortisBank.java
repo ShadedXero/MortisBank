@@ -11,7 +11,6 @@ import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
 import com.mortisdevelopment.mortiscore.MortisCore;
 import com.mortisdevelopment.mortiscore.configs.ConfigManager;
 import com.mortisdevelopment.mortiscore.databases.Database;
-import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.utils.CorePlugin;
 import lombok.Getter;
@@ -47,10 +46,13 @@ public final class MortisBank extends CorePlugin {
         }
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
-        enable();
     }
 
-    private void enable() {
+    @Override
+    public void onStart() {
+        new File(getDataFolder(), "items").mkdirs();
+        core.getItemManager().saveAndLoad(this);
+        core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
         configManager = new BankConfigManager(this);
         placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder_messages"));
         placeholderManager.register();
@@ -58,22 +60,10 @@ public final class MortisBank extends CorePlugin {
         command.register();
     }
 
-    @Override
-    public void onStart() {
-        new File(getDataFolder(), "items").mkdirs();
-        try {
-            core.getItemManager().saveAndLoad(this);
-            core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
-        } catch (ConfigException exp) {
-            throw new RuntimeException(exp);
-        }
-    }
-
     public void reload() {
         core.reload(this);
         placeholderManager.unregister();
         command.unregister();
-        enable();
         onStart();
     }
 
