@@ -14,7 +14,7 @@ public class DowngradeCommand extends PermissionCommand {
     private final AccountManager accountManager;
 
     public DowngradeCommand(Messages messages, AccountManager accountManager) {
-        super("downgrade", "mortisbank.account.downgrade", messages);
+        super("downgrade", "mortisbank.admin.account.downgrade", messages);
         this.accountManager = accountManager;
     }
 
@@ -29,7 +29,10 @@ public class DowngradeCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        accountManager.downgradeAccount(target);
+        if (!accountManager.downgradeAccount(target)) {
+            getMessages().sendMessage(sender, "could_not_process");
+            return false;
+        }
         getMessages().sendMessage(sender, "command_success");
         return true;
     }

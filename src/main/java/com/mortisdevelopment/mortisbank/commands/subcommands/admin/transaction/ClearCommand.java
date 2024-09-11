@@ -14,7 +14,7 @@ public class ClearCommand extends PermissionCommand {
     private final TransactionManager transactionManager;
 
     public ClearCommand(Messages messages, TransactionManager transactionManager) {
-        super("clear", "mortisbank.transaction.clear", messages);
+        super("clear", "mortisbank.admin.transaction.clear", messages);
         this.transactionManager = transactionManager;
     }
 
@@ -29,7 +29,10 @@ public class ClearCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        transactionManager.clearTransactions(target.getUniqueId());
+        if (!transactionManager.clearTransactions(target.getUniqueId())) {
+            getMessages().sendMessage(sender, "could_not_process");
+            return false;
+        }
         getMessages().sendMessage(sender, "command_success");
         return true;
     }

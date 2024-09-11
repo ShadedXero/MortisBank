@@ -39,11 +39,16 @@ public class BalanceActionCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_amount");
             return false;
         }
-        switch (action) {
+        boolean success = switch (action) {
             case SET -> bankManager.setBalance(target, amount);
             case ADD -> bankManager.addBalance(target, amount);
             case SUBTRACT -> bankManager.subtractBalance(target, amount);
+        };
+        if (!success) {
+            getMessages().sendMessage(sender, "could_not_process");
+            return false;
         }
+        getMessages().sendMessage(sender, "command_success");
         return true;
     }
 

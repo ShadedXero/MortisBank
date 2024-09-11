@@ -2,6 +2,7 @@ package com.mortisdevelopment.mortisbank.commands.subcommands.admin.account;
 
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
+import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -11,7 +12,7 @@ import java.util.List;
 public class GetCommand extends PermissionCommand {
 
     public GetCommand(Messages messages) {
-        super("get", "mortisbank.account.get", messages);
+        super("get", "mortisbank.admin.account.get", messages);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class GetCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        getMessages().sendMessage(sender, "account_get");
+        getMessages().sendPlaceholderMessage(sender, "account_get", new Placeholder(target));
         return true;
     }
 

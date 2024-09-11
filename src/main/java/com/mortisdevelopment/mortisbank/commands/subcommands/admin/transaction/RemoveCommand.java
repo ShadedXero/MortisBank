@@ -14,7 +14,7 @@ public class RemoveCommand extends PermissionCommand {
     private final TransactionManager transactionManager;
 
     public RemoveCommand(Messages messages, TransactionManager transactionManager) {
-        super("remove", "mortisbank.transaction.remove", messages);
+        super("remove", "mortisbank.admin.transaction.remove", messages);
         this.transactionManager = transactionManager;
     }
 
@@ -36,7 +36,10 @@ public class RemoveCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_number");
             return false;
         }
-        transactionManager.removeTransaction(target, position);
+        if (!transactionManager.removeTransaction(target, position)) {
+            getMessages().sendMessage(sender, "could_not_process");
+            return false;
+        }
         getMessages().sendMessage(sender, "command_success");
         return true;
     }

@@ -6,6 +6,6 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 public class SubtractCommand extends BalanceActionCommand {
 
     public SubtractCommand(Messages messages, BankManager bankManager) {
-        super("subtract", "mortisbank.balance.subtract", messages, Action.SUBTRACT, bankManager);
+        super("subtract", "mortisbank.admin.balance.subtract", messages, Action.SUBTRACT, bankManager);
     }
 }

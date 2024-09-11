@@ -104,9 +104,9 @@
         <dependency>
             <groupId>com.mortisdevelopment</groupId>
             <artifactId>MortisCore</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
             <scope>system</scope>
-            <systemPath>E:/Java/Plugins/MortisCore/target/MortisCore-3.0.2.jar</systemPath>
+            <systemPath>E:/Java/Plugins/MortisCore/target/MortisCore-3.0.3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>

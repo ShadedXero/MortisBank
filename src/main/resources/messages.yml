@@ -84,7 +84,8 @@ placeholder-messages:
 command-messages:
   invalid-target: "%prefix% &cPlease enter a valid target"
   invalid-number: "%prefix% &cPlease enter a valid number"
-  invalid-transaction-type: "%prefix% &cPlease enter a valid transaction type"
+  invalid-amount: "%prefix% &cPlease enter a valid amount"
+  invalid-type: "%prefix% &cPlease enter a valid type"
   no-console: "%prefix% &cThis command can only be executed by a player"
   no-permission: "%prefix% &cYou don't have permission to use this"
   could-not-process: "%prefix% &cCould not process"

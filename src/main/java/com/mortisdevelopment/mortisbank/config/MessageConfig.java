@@ -24,10 +24,11 @@ public class MessageConfig extends FileConfig {
         File file = getFile(plugin);
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         try {
-            MessageManager messageManager = new MessageManager(config);
-            plugin.setMessageManager(messageManager);
+            plugin.setMessageManager(new MessageManager(config));
         } catch (ConfigException e) {
-            throw new RuntimeException(e);
+            e.setFile(file);
+            e.setPath(config);
+            e.log(plugin);
         }
     }
 }

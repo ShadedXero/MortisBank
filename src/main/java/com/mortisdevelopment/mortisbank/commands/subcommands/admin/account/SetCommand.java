@@ -16,7 +16,7 @@ public class SetCommand extends PermissionCommand {
     private final AccountManager accountManager;
 
     public SetCommand(Messages messages, AccountManager accountManager) {
-        super("set", "mortisbank.account.set", messages);
+        super("set", "mortisbank.admin.account.set", messages);
         this.accountManager = accountManager;
     }
 
@@ -31,16 +31,25 @@ public class SetCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
+        boolean success = true;
         try {
             short priority = Short.parseShort(args[1]);
-            accountManager.setAccount(target, priority);
+            if (!accountManager.setAccount(target, priority)) {
+                success = false;
+            }
         } catch (NumberFormatException e) {
             Account account = accountManager.getAccount(args[1]);
             if (account == null) {
                 getMessages().sendMessage(sender, "invalid_account");
                 return false;
             }
-            accountManager.setAccount(target, account.getPriority());
+            if (!accountManager.setAccount(target, account.getPriority())) {
+                success = false;
+            }
+        }
+        if (!success) {
+            getMessages().sendMessage(sender, "could_not_process");
+            return false;
         }
         getMessages().sendMessage(sender, "command_success");
         return true;

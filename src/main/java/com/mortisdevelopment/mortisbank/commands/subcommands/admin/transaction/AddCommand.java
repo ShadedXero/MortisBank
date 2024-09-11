@@ -15,7 +15,7 @@ public class AddCommand extends PermissionCommand {
     private final TransactionManager transactionManager;
 
     public AddCommand(Messages messages, TransactionManager transactionManager) {
-        super("add", "mortisbank.transaction.add", messages);
+        super("add", "mortisbank.admin.transaction.add", messages);
         this.transactionManager = transactionManager;
     }
 

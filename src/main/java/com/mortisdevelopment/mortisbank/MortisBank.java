@@ -3,14 +3,12 @@ package com.mortisdevelopment.mortisbank;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
-import com.mortisdevelopment.mortisbank.config.AccountConfig;
-import com.mortisdevelopment.mortisbank.config.MainConfig;
-import com.mortisdevelopment.mortisbank.config.MessageConfig;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
 import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
 import com.mortisdevelopment.mortiscore.MortisCore;
+import com.mortisdevelopment.mortiscore.configs.ConfigManager;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
@@ -28,12 +26,14 @@ public final class MortisBank extends CorePlugin {
 
     private MortisCore core;
     private Economy economy;
-    private MessageManager messageManager;
-    private PlaceholderManager placeholderManager;
+    private ConfigManager configManager;
     private Database database;
+    private MessageManager messageManager;
     private AccountManager accountManager;
     private TransactionManager transactionManager;
     private BankManager bankManager;
+    private PlaceholderManager placeholderManager;
+    private BankCommand command;
 
     @Override
     public void onEnable() {
@@ -46,23 +46,34 @@ public final class MortisBank extends CorePlugin {
         }
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
-        new MessageConfig(this);
-        new MainConfig(this);
-        new AccountConfig(this);
+        enable();
+    }
+
+    private void enable() {
+        configManager = new ConfigManager();
         placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder_messages"));
         placeholderManager.register();
-        new BankCommand(messageManager.getMessages("command_messages"), bankManager).register();
+        command = new BankCommand(messageManager.getMessages("command_messages"), this, bankManager, accountManager, transactionManager);
+        command.register();
     }
 
     @Override
     public void onStart() {
         new File(getDataFolder(), "items").mkdirs();
         try {
-            core.getMenuManager().saveAndLoad(this);
+            core.getItemManager().saveAndLoad(this);
             core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
         } catch (ConfigException exp) {
             throw new RuntimeException(exp);
         }
+    }
+
+    public void reload() {
+        core.reload(this);
+        placeholderManager.unregister();
+        command.unregister();
+        enable();
+        onStart();
     }
 
     private boolean setupEconomy() {

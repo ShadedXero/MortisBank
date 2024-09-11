@@ -12,7 +12,7 @@ import java.util.List;
 public class GetCommand extends PermissionCommand {
 
     public GetCommand(Messages messages) {
-        super("get", "mortisbank.transaction.get", messages);
+        super("get", "mortisbank.admin.transaction.get", messages);
     }
 
     @Override

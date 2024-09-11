@@ -14,7 +14,7 @@ public class UpgradeCommand extends PermissionCommand {
     private final AccountManager accountManager;
 
     public UpgradeCommand(Messages messages, AccountManager accountManager) {
-        super("upgrade", "mortisbank.account.upgrade", messages);
+        super("upgrade", "mortisbank.admin.account.upgrade", messages);
         this.accountManager = accountManager;
     }
 
@@ -29,7 +29,10 @@ public class UpgradeCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        accountManager.upgradeAccount(target);
+        if (!accountManager.upgradeAccount(target)) {
+            getMessages().sendMessage(sender, "could_not_process");
+            return false;
+        }
         getMessages().sendMessage(sender, "command_success");
         return true;
     }
