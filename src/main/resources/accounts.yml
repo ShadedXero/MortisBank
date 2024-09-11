@@ -14,9 +14,9 @@
 #======================================================#
 #               ACCOUNTS                               #
 #======================================================#
-account-menu:
-  reference: mortisbank:accounts
+
 default-account: 10
+
 accounts:
   coal:
     priority: 10
@@ -24,26 +24,32 @@ accounts:
     name: "&8Coal"
     # Max amount of balance that can be stored in the bank
     max-balance: 50000000
+
   copper:
     priority: 20
     name: "&fCopper"
     max-balance: 100000000
+
   lapis_lazuli:
     priority: 30
     name: "&dLapis Lazuli"
     max-balance: 250000000
+
   iron:
     priority: 40
     name: "&5Iron"
     max-balance: 500000000
+
   redstone:
     priority: 50
     name: "&cRedstone"
     max-balance: 1000000000
+
   emerald:
     priority: 60
     name: "&3Emerald"
     max-balance: 6000000000
+
   diamond:
     priority: 70
     name: "&bDiamond"

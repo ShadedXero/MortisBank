@@ -2,8 +2,8 @@ package com.mortisdevelopment.mortisbank.bank;
 
 import com.mortisdevelopment.mortisbank.accounts.Account;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
-import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
+import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
@@ -14,12 +14,15 @@ import com.mortisdevelopment.mortiscore.placeholder.methods.PlayerPlaceholderMet
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-import java.util.Objects;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Getter
 public class BankManager {
@@ -35,28 +38,73 @@ public class BankManager {
         TWENTY,
         SPECIFIC
     }
+
+    private final JavaPlugin plugin;
     private final AccountManager accountManager;
+    private final TransactionManager transactionManager;
     private final Database database;
     private final Economy economy;
+    private final BankSettings settings;
     private final CustomMenu personalMenu;
-    private final GuiSettings guiSettings;
     private final Messages depositMessages;
     private final Messages withdrawalMessages;
+    private final HashMap<UUID, Double> balanceByPlayer = new HashMap<>();
 
-    public BankManager(AccountManager accountManager, Database database, Economy economy, CustomMenu personalMenu, GuiSettings guiSettings, MessageManager messageManager) {
+    public BankManager(JavaPlugin plugin, AccountManager accountManager, TransactionManager transactionManager, Database database, Economy economy, BankSettings settings, CustomMenu personalMenu, MessageManager messageManager) {
+        this.plugin = plugin;
         this.accountManager = accountManager;
+        this.transactionManager = transactionManager;
         this.database = database;
         this.economy = economy;
+        this.settings = settings;
         this.personalMenu = personalMenu;
-        this.guiSettings = guiSettings;
         this.depositMessages = messageManager.getMessages("deposit_messages");
         this.withdrawalMessages = messageManager.getMessages("withdrawal_messages");
+        Bukkit.getServer().getPluginManager().registerEvents(new BankListener(this), plugin);
+        initialize();
+    }
+
+    private void initialize() {
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uniqueId varchar(36) primary key, balance double)");
+            ResultSet result = database.query("SELECT * FROM MortisBank");
+            try {
+                while (result.next()) {
+                    UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
+                    double balance = result.getDouble("balance");
+                    balanceByPlayer.put(uniqueId, balance);
+                }
+            }catch (SQLException exp) {
+                throw new RuntimeException(exp);
+            }
+        });
+    }
+
+    private List<UUID> getSortedPlayers() {
+        List<UUID> sortedUUIDs = new ArrayList<>(balanceByPlayer.keySet());
+        sortedUUIDs.sort(Comparator.<UUID>comparingDouble(balanceByPlayer::get).reversed());
+        return sortedUUIDs;
+    }
+
+    public UUID getPlayer(int position) {
+        List<UUID> uuids = getSortedPlayers();
+        if (position >= uuids.size()) {
+            return null;
+        }
+        return uuids.get(position);
+    }
+
+    public void setBalance(@NotNull UUID uuid, double balance) {
+        balanceByPlayer.put(uuid, Math.max(balance, 0));
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET balance = ? WHERE uniqueId = ?", balance, uuid.toString()));
+    }
+
+    public double getBalance(@NotNull UUID uuid) {
+        return balanceByPlayer.get(uuid);
     }
 
     private void addTransaction(@NotNull OfflinePlayer offlinePlayer, double amount, Transaction.TransactionType type) {
-        String transactor = Objects.requireNonNullElse(offlinePlayer.getName(), "Unknown");
-        Transaction transaction = new Transaction(type, NumberUtils.format(amount), transactor);
-        dataManager.addTransaction(offlinePlayer.getUniqueId(), transaction);
+        transactionManager.addTransaction(offlinePlayer, type, amount, Objects.requireNonNullElse(offlinePlayer.getName(), "Unknown"));
     }
 
     private Placeholder getTransactionPlaceholder(double purse) {
@@ -86,7 +134,7 @@ public class BankManager {
     public boolean deposit(@NotNull OfflinePlayer offlinePlayer, @NotNull DepositType type) {
         Player player = offlinePlayer.getPlayer();
         if (type.equals(DepositType.SPECIFIC)) {
-            guiSettings.open(this, player, Transaction.TransactionType.DEPOSIT, new Placeholder(player));
+            settings.open(plugin, this, player, Transaction.TransactionType.DEPOSIT, new Placeholder(player));
             return true;
         }
         double purse = economy.getBalance(offlinePlayer);
@@ -115,7 +163,7 @@ public class BankManager {
         if (account == null) {
             return false;
         }
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        double balance = getBalance(offlinePlayer.getUniqueId());
         if (account.isFull(balance)) {
             depositMessages.sendPlaceholderMessage(player, "full", new Placeholder(player));
             return false;
@@ -126,7 +174,7 @@ public class BankManager {
             newBalance = balance + amount;
         }
         economy.withdrawPlayer(offlinePlayer, amount);
-        dataManager.setBalance(offlinePlayer.getUniqueId(), newBalance);
+        setBalance(offlinePlayer.getUniqueId(), newBalance);
         addTransaction(offlinePlayer, purse, Transaction.TransactionType.DEPOSIT);
         sendTransactionMessage(player, purse, Transaction.TransactionType.DEPOSIT);
         return true;
@@ -148,7 +196,7 @@ public class BankManager {
         if (purse <= 0) {
             return 0;
         }
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        double balance = getBalance(offlinePlayer.getUniqueId());
         if (account.isFull(balance)) {
             return 0;
         }
@@ -158,9 +206,9 @@ public class BankManager {
     public boolean withdraw(@NotNull OfflinePlayer offlinePlayer, @NotNull WithdrawalType type) {
         Player player = offlinePlayer.getPlayer();
         if (type.equals(WithdrawalType.SPECIFIC)) {
-            return guiSettings.open(this, player, Transaction.TransactionType.WITHDRAW, new Placeholder(player));
+            return settings.open(plugin, this, player, Transaction.TransactionType.WITHDRAW, new Placeholder(player));
         }
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        double balance = getBalance(offlinePlayer.getUniqueId());
         if (balance <= 0) {
             withdrawalMessages.sendPlaceholderMessage(player, "little", new Placeholder(player));
             return false;
@@ -176,7 +224,7 @@ public class BankManager {
 
     public boolean withdraw(@NotNull OfflinePlayer offlinePlayer, double amount) {
         Player player = offlinePlayer.getPlayer();
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        double balance = getBalance(offlinePlayer.getUniqueId());
         if (balance <= 0) {
             withdrawalMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
             return false;
@@ -195,26 +243,26 @@ public class BankManager {
             return false;
         }
         economy.depositPlayer(offlinePlayer, amount);
-        dataManager.setBalance(offlinePlayer.getUniqueId(), balance - amount);
+        setBalance(offlinePlayer.getUniqueId(), balance - amount);
         addTransaction(offlinePlayer, amount, Transaction.TransactionType.WITHDRAW);
         sendTransactionMessage(player, amount, Transaction.TransactionType.WITHDRAW);
         return true;
     }
 
     public double getWithdrawEverything(@NotNull OfflinePlayer offlinePlayer) {
-        return dataManager.getBalance(offlinePlayer.getUniqueId());
+        return getBalance(offlinePlayer.getUniqueId());
     }
 
     public double getWithdrawHalf(@NotNull OfflinePlayer offlinePlayer) {
-        return dataManager.getBalance(offlinePlayer.getUniqueId()) / 2;
+        return getBalance(offlinePlayer.getUniqueId()) / 2;
     }
 
     public double getWithdrawTwentyPercent(@NotNull OfflinePlayer offlinePlayer) {
-        return dataManager.getBalance(offlinePlayer.getUniqueId()) * 0.20;
+        return getBalance(offlinePlayer.getUniqueId()) * 0.20;
     }
 
     private void setBalance(Account account, OfflinePlayer offlinePlayer, double amount) {
-        dataManager.setBalance(offlinePlayer.getUniqueId(), Math.min(amount, account.getMaxBalance()));
+        setBalance(offlinePlayer.getUniqueId(), Math.min(amount, account.getMaxBalance()));
     }
 
     public boolean setBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
@@ -231,7 +279,7 @@ public class BankManager {
         if (account == null) {
             return false;
         }
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        double balance = getBalance(offlinePlayer.getUniqueId());
         if (account.isFull(balance)) {
             return false;
         }
@@ -244,7 +292,7 @@ public class BankManager {
         if (account == null) {
             return false;
         }
-        double balance = dataManager.getBalance(offlinePlayer.getUniqueId());
+        double balance = getBalance(offlinePlayer.getUniqueId());
         if (balance <= 0) {
             return false;
         }

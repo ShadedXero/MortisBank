@@ -1,25 +1,59 @@
 package com.mortisdevelopment.mortisbank.accounts;
 
-import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class AccountManager {
 
+    private final JavaPlugin plugin;
     private final Database database;
     private final AccountSettings settings;
+    private final HashMap<UUID, Short> accountPriorityByPlayer = new HashMap<>();
     private final HashMap<String, Account> accountById = new HashMap<>();
 
-    public AccountManager(Database database, @NotNull AccountSettings settings) {
+    public AccountManager(JavaPlugin plugin, Database database, @NotNull AccountSettings settings) {
+        this.plugin = plugin;
         this.database = database;
         this.settings = settings;
+        Bukkit.getServer().getPluginManager().registerEvents(new AccountListener(this), plugin);
+        initialize();
+    }
+
+    private void initialize() {
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            database.execute("CREATE TABLE IF NOT EXISTS BankAccounts(uniqueId varchar(36) primary key, priority smallint)");
+            ResultSet result = database.query("SELECT * FROM BankAccounts");
+            try {
+                while (result.next()) {
+                    UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
+                    short priority = result.getShort("priority");
+                    accountPriorityByPlayer.put(uniqueId, priority);
+                }
+            } catch (SQLException exp) {
+                throw new RuntimeException(exp);
+            }
+        });
+    }
+
+    public void setAccount(@NotNull UUID uuid, short priority) {
+        accountPriorityByPlayer.put(uuid, priority);
+        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE BankAccounts SET priority = ? WHERE uniqueId = ?", priority, uuid.toString()));
+    }
+
+    public short getAccount(@NotNull UUID uuid) {
+        return accountPriorityByPlayer.get(uuid);
     }
 
     public Account getAccount(String id) {
@@ -30,20 +64,20 @@ public class AccountManager {
         return new ArrayList<>(accountById.values());
     }
 
-    public Account getAccount(DataManager dataManager, @NotNull OfflinePlayer player) {
-        short accountPriority = dataManager.getAccount(player.getUniqueId());
+    public Account getAccount(@NotNull OfflinePlayer player) {
+        short accountPriority = getAccount(player.getUniqueId());
         Account account = getAccount(accountPriority);
         if (account != null) {
             return account;
         }
         account = getPreviousAccount(accountPriority);
         if (account != null) {
-            dataManager.setAccount(player.getUniqueId(), account.getPriority());
+            setAccount(player.getUniqueId(), account.getPriority());
             return account;
         }
         account = getDefaultAccount();
         if (account != null) {
-            dataManager.setAccount(player.getUniqueId(), account.getPriority());
+            setAccount(player.getUniqueId(), account.getPriority());
             return account;
         }
         return null;
@@ -124,27 +158,27 @@ public class AccountManager {
                 return false;
             }
         }
-        dataManager.setAccount(player.getUniqueId(), account.getPriority());
+        setAccount(player.getUniqueId(), account.getPriority());
         return true;
     }
 
     public boolean upgradeAccount(@NotNull OfflinePlayer player) {
-        short priority = dataManager.getAccount(player.getUniqueId());
+        short priority = getAccount(player.getUniqueId());
         Account account = getNextAccount(priority);
         if (account == null) {
             return false;
         }
-        dataManager.setAccount(player.getUniqueId(), account.getPriority());
+        setAccount(player.getUniqueId(), account.getPriority());
         return true;
     }
 
     public boolean downgradeAccount(@NotNull OfflinePlayer player) {
-        short priority = dataManager.getAccount(player.getUniqueId());
+        short priority = getAccount(player.getUniqueId());
         Account account = getPreviousAccount(priority);
         if (account == null) {
             return false;
         }
-        dataManager.setAccount(player.getUniqueId(), account.getPriority());
+        setAccount(player.getUniqueId(), account.getPriority());
         return true;
     }
 }

@@ -29,14 +29,14 @@ account-messages:
 #               PERSONAL MESSAGES                      #
 #======================================================#
 
-personal-messages:
-  transaction: "%transaction-type% &6%amount%&7, &e%time% &7by %transactor%"
+transaction-messages:
+  deposit-transaction: "&a+ &6%amount%&7, &e%time% &7by %transactor%"
+  withdraw-transaction: "&c- &6%amount%&7, &e%time% &7by %transactor%"
   seconds: "second(s) ago"
   minutes: "minute(s) ago"
   hours: "hour(s) ago"
   days: "day(s) ago"
   months: "month(s) ago"
-  years: "year(s) ago"
 
 #======================================================#
 #               DEPOSIT MESSAGES                       #

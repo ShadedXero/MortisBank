@@ -1,6 +1,5 @@
 package com.mortisdevelopment.mortisbank;
 
-import com.mortisdevelopment.mortisbank.actions.types.accounts.SetAccountActionType;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
@@ -10,9 +9,9 @@ import com.mortisdevelopment.mortisbank.config.MessageConfig;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
-import com.mortisdevelopment.mortisbank.data.DataManager;
 import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
 import com.mortisdevelopment.mortiscore.MortisCore;
+import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.utils.CorePlugin;
@@ -31,14 +30,13 @@ public final class MortisBank extends CorePlugin {
     private Economy economy;
     private MessageManager messageManager;
     private PlaceholderManager placeholderManager;
-    private DataManager dataManager;
+    private Database database;
     private AccountManager accountManager;
     private TransactionManager transactionManager;
     private BankManager bankManager;
 
     @Override
     public void onEnable() {
-        System.out.println("Core Ready");
         this.core = (MortisCore) Objects.requireNonNull(getServer().getPluginManager().getPlugin("MortisCore"));
         core.register(this);
         if (!setupEconomy()) {
@@ -48,11 +46,10 @@ public final class MortisBank extends CorePlugin {
         }
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
-        core.getActionManager().getActionTypeManager().getRegistry().register("[bank] set account", SetAccountActionType.class);
         new MessageConfig(this);
         new MainConfig(this);
         new AccountConfig(this);
-        placeholderManager = new PlaceholderManager(this, messageManager);
+        placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder_messages"));
         placeholderManager.register();
         new BankCommand(messageManager.getMessages("command_messages"), bankManager).register();
     }

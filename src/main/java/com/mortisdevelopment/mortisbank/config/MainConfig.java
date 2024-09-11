@@ -4,7 +4,7 @@ import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.data.DataManager;
-import com.mortisdevelopment.mortisbank.bank.GuiSettings;
+import com.mortisdevelopment.mortisbank.bank.BankSettings;
 import com.mortisdevelopment.mortiscore.configs.FileConfig;
 import com.mortisdevelopment.mortiscore.databases.*;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
@@ -32,7 +32,7 @@ public class MainConfig extends FileConfig {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         Database database = plugin.getCore().getDatabaseManager().getDatabase(plugin, config.getConfigurationSection("database"));
         plugin.setDataManager(new DataManager(plugin, database, config.getBoolean("leaderboard"), config.getInt("transaction-limit")));
-        GuiSettings guiSettings = loadGuiSettings(config);
+        BankSettings guiSettings = loadGuiSettings(config);
         if (guiSettings == null) {
             return;
         }
@@ -45,13 +45,13 @@ public class MainConfig extends FileConfig {
         }
     }
 
-    private GuiSettings loadGuiSettings(ConfigurationSection section) {
+    private BankSettings loadGuiSettings(ConfigurationSection section) {
         if (section == null) {
             return null;
         }
-        GuiSettings.InputMode mode;
+        BankSettings.InputMode mode;
         try {
-            mode = GuiSettings.InputMode.valueOf(section.getString("input-mode"));
+            mode = BankSettings.InputMode.valueOf(section.getString("input-mode"));
         }catch (IllegalArgumentException exp) {
             return null;
         }
@@ -62,6 +62,6 @@ public class MainConfig extends FileConfig {
         } catch (ConfigException e) {
             throw new RuntimeException(e);
         }
-        return new GuiSettings(plugin, mode, inputSlot, customItem);
+        return new BankSettings(plugin, mode, inputSlot, customItem);
     }
 }

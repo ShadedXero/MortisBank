@@ -33,7 +33,7 @@ public class AccountConfig extends FileConfig {
         if (settings == null) {
             return;
         }
-        plugin.setAccountManager(new AccountManager(plugin.getDataManager(), settings));
+        plugin.setAccountManager(new AccountManager(plugin, plugin.getDataManager(), settings));
         Bukkit.getPluginManager().registerEvents(new AccountListener(plugin.getAccountManager()), plugin);
         loadAccounts(config.getConfigurationSection("accounts"));
     }
