@@ -16,22 +16,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Getter @Setter
 public class DepositActionType extends AmountActionType {
 
-    private BankManager bankManager;
+    private MortisBank plugin;
     private PlaceholderEnum<BankManager.DepositType> placeholderType;
 
-    public DepositActionType(BankManager bankManager, BankManager.DepositType type) {
-        this.bankManager = bankManager;
+    public DepositActionType(MortisBank plugin, BankManager.DepositType type) {
+        this.plugin = plugin;
         this.placeholderType = new PlaceholderEnum<>(type);
     }
 
-    public DepositActionType(BankManager bankManager, double amount) {
+    public DepositActionType(MortisBank plugin, double amount) {
         super(amount);
-        this.bankManager = bankManager;
+        this.plugin = plugin;
     }
 
     public DepositActionType(MortisCore core, JavaPlugin plugin, ConfigurationSection section) throws ConfigException {
         super(core, plugin, section);
-        this.bankManager = core.getRegisteredPlugin(MortisBank.class).getBankManager();
+        this.plugin = core.getRegisteredPlugin(MortisBank.class);
         if (!section.contains("amount")) {
             this.placeholderType = new PlaceholderEnum<>(ConfigException.requireNonNull(section, section.getString("deposit-type")), BankManager.DepositType.class);
         }
@@ -44,9 +44,9 @@ public class DepositActionType extends AmountActionType {
             return;
         }
         if (getPlaceholderAmount() != null) {
-            bankManager.deposit(offlinePlayer, getPlaceholderAmount().getObject(placeholder));
+            plugin.getBankManager().deposit(offlinePlayer, getPlaceholderAmount().getObject(placeholder));
         }else {
-            bankManager.deposit(offlinePlayer, getPlaceholderType().getObject(placeholder));
+            plugin.getBankManager().deposit(offlinePlayer, getPlaceholderType().getObject(placeholder));
         }
     }
 
@@ -61,7 +61,7 @@ public class DepositActionType extends AmountActionType {
     @Override
     public DepositActionType clone() {
         DepositActionType clone = (DepositActionType) super.clone();
-        clone.bankManager = bankManager;
+        clone.plugin = plugin;
         if (placeholderType != null) {
             clone.placeholderType = (PlaceholderEnum<BankManager.DepositType>) placeholderType.clone();
         }
