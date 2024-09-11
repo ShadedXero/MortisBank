@@ -128,8 +128,8 @@ items:
         type: message
         message: "&aRemoved &65,000,000 &acoins from your balance"
       set-account:
-        type: "[bank] set account"
-        priority: 20
+        type: console
+        command: "bank admin account set 20"
       message:
         type: message
         message: "&aUpgraded your account to &fCopper"
@@ -226,9 +226,8 @@ items:
       money-message:
         type: message
         message: "&aRemoved &610,000,000 &acoins from your balance"
-      set-account:
-        type: "[bank] set account"
-        priority: 30
+      type: console
+      command: "bank admin account set 30"
       message:
         type: message
         message: "&aUpgraded your account to &dLapis Lazuli"
@@ -347,9 +346,8 @@ items:
       money-message:
         type: message
         message: "&aRemoved &625,000,000 &acoins from your balance"
-      set-account:
-        type: "[bank] set account"
-        priority: 40
+      type: console
+      command: "bank admin account set 40"
       message:
         type: message
         message: "&aUpgraded your account to &fIron"
@@ -469,8 +467,8 @@ items:
         type: message
         message: "&aRemoved &6250,000,000 &acoins from your balance"
       set-account:
-        type: "[bank] set account"
-        priority: 50
+        type: console
+        command: "bank admin account set 50"
       message:
         type: message
         message: "&aUpgraded your account to &cRedstone"
@@ -590,8 +588,8 @@ items:
         type: message
         message: "&aRemoved &6100,000,000 &acoins from your balance"
       set-account:
-        type: "[bank] set account"
-        priority: 60
+        type: console
+        command: "bank admin account set 60"
       message:
         type: message
         message: "&aUpgraded your account to &3Emerald"
@@ -705,8 +703,8 @@ items:
         type: message
         message: "&aRemoved &bDiamond &8x10 from your inventory"
       set-account:
-        type: "[bank] set account"
-        priority: 70
+        type: console
+        command: "bank admin account set 70"
       message:
         type: message
         message: "&aUpgraded your account to &bDiamond"
