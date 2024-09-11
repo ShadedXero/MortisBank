@@ -22,12 +22,12 @@ public class OpenCommand extends PermissionCommand {
     @Override
     public boolean onCommand(CommandSender sender, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(getMessages().getMessage("open_usage"));
+            getMessages().sendMessage(sender, "wrong_usage");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(getMessages().getMessage("invalid_target"));
+            getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
         bankManager.getPersonalMenu().open(target, new Placeholder(target));

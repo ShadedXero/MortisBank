@@ -14,7 +14,7 @@ public class HelpCommand extends PermissionCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, String label, String[] args) {
-        sender.sendMessage(getMessages().getMessage("help"));
+        getMessages().sendMessage(sender, "help");
         return true;
     }
 
