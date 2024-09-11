@@ -58,11 +58,7 @@ public class Transaction {
         return getTime(rawTransaction);
     }
 
-    private String getDuration(Messages messages) {
-        LocalDateTime time = getTime();
-        if (time == null) {
-            return null;
-        }
+    private String getDuration(LocalDateTime time, Messages messages) {
         return TimeUtils.getTime(time, LocalDateTime.now(),
                 " " + messages.getSimpleMessage("years"),
                 " " + messages.getSimpleMessage("months"),
@@ -73,24 +69,22 @@ public class Transaction {
     }
 
     public String getTransactionMessage(Messages messages) {
-        return ColorUtils.color(new Placeholder(new ClassicPlaceholderMethod("%time%", getDuration(messages))).setPlaceholders(rawTransaction));
+        LocalDateTime time = getTime();
+        String duration = getDuration(time, messages);
+        return ColorUtils.color(new Placeholder(new ClassicPlaceholderMethod("%time%" + time.toString() + "%time%", duration)).setPlaceholders(rawTransaction));
     }
 
     public static Transaction deserialize(String id, UUID uniqueId, String rawTransaction) {
-        LocalDateTime time = getTime(rawTransaction);
-        if (time == null) {
-            return null;
-        }
         return new Transaction(id, uniqueId, rawTransaction);
     }
 
-    private static LocalDateTime getTime(String serializedString) {
-        String time = StringUtils.substringBetween(serializedString, "%time%", "%time%");
-        if (time == null) {
+    private static LocalDateTime getTime(String rawTransaction) {
+        String rawTime = StringUtils.substringBetween(rawTransaction, "%time%", "%time%");
+        if (rawTime == null) {
             return null;
         }
         try {
-            return LocalDateTime.parse(time);
+            return LocalDateTime.parse(rawTime);
         }catch (DateTimeParseException exp) {
             return null;
         }

@@ -42,15 +42,25 @@ public class TransactionManager {
                 }
             }catch (SQLException exp) {
                 throw new RuntimeException(exp);
+            }finally {
+                for (List<Transaction> transactions : transactionsByPlayer.values()) {
+                    if (transactions.size() > 1) {
+                        sort(transactions);
+                    }
+                }
             }
         });
+    }
+
+    private void sort(List<Transaction> transactions) {
+        transactions.sort(Comparator.comparing(Transaction::getTime).reversed());
     }
 
     public void addTransaction(Transaction transaction) {
         List<Transaction> transactions = transactionsByPlayer.computeIfAbsent(transaction.getUniqueId(), k -> new ArrayList<>());
         transactions.add(transaction);
         if (transactions.size() > 1) {
-            transactions.sort(Comparator.comparing(Transaction::getTime));
+            sort(transactions);
             List<Transaction> transactionsToRemove = new ArrayList<>();
             while (transactions.size() > settings.getTransactionLimit()) {
                 transactionsToRemove.add(transactions.remove(transactions.size() - 1));
@@ -87,7 +97,7 @@ public class TransactionManager {
         if (position >= transactions.size()) {
             return null;
         }
-        return transactions.get(settings.getTransactionLimit() - (position + 1));
+        return transactions.get(position);
     }
 
     public void addTransaction(@NotNull OfflinePlayer offlinePlayer, @NotNull Transaction.TransactionType type, double amount, @NotNull String transactor) {
