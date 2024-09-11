@@ -4,6 +4,7 @@ import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
+import com.mortisdevelopment.mortisbank.config.BankConfigManager;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
 import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
@@ -50,7 +51,7 @@ public final class MortisBank extends CorePlugin {
     }
 
     private void enable() {
-        configManager = new ConfigManager();
+        configManager = new BankConfigManager(this);
         placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder_messages"));
         placeholderManager.register();
         command = new BankCommand(messageManager.getMessages("command_messages"), this, bankManager, accountManager, transactionManager);

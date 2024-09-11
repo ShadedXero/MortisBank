@@ -30,7 +30,8 @@ public class BankConfigManager extends ConfigManager {
         loadConfigs();
     }
 
-    private void loadConfigs() {
+    @Override
+    public void loadConfigs() {
         new MessageConfig(plugin);
 
         File configFile = getFile(plugin, "config.yml");
