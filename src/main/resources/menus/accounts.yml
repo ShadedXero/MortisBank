@@ -129,7 +129,7 @@ items:
         message: "&aRemoved &65,000,000 &acoins from your balance"
       set-account:
         type: console
-        command: "bank admin account set 20"
+        command: "bank admin account set %player_name% 20"
       message:
         type: message
         message: "&aUpgraded your account to &fCopper"
@@ -228,7 +228,7 @@ items:
         message: "&aRemoved &610,000,000 &acoins from your balance"
       set-account:
         type: console
-        command: "bank admin account set 30"
+        command: "bank admin account set %player_name% 30"
       message:
         type: message
         message: "&aUpgraded your account to &dLapis Lazuli"
@@ -349,7 +349,7 @@ items:
         message: "&aRemoved &625,000,000 &acoins from your balance"
       set-account:
         type: console
-        command: "bank admin account set 40"
+        command: "bank admin account set %player_name% 40"
       message:
         type: message
         message: "&aUpgraded your account to &fIron"
@@ -470,7 +470,7 @@ items:
         message: "&aRemoved &6250,000,000 &acoins from your balance"
       set-account:
         type: console
-        command: "bank admin account set 50"
+        command: "bank admin account set %player_name% 50"
       message:
         type: message
         message: "&aUpgraded your account to &cRedstone"
@@ -591,7 +591,7 @@ items:
         message: "&aRemoved &6100,000,000 &acoins from your balance"
       set-account:
         type: console
-        command: "bank admin account set 60"
+        command: "bank admin account set %player_name% 60"
       message:
         type: message
         message: "&aUpgraded your account to &3Emerald"
@@ -706,7 +706,7 @@ items:
         message: "&aRemoved &bDiamond &8x10 from your inventory"
       set-account:
         type: console
-        command: "bank admin account set 70"
+        command: "bank admin account set %player_name% 70"
       message:
         type: message
         message: "&aUpgraded your account to &bDiamond"
