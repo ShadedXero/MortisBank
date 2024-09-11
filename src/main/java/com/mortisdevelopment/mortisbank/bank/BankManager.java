@@ -65,7 +65,7 @@ public class BankManager {
     }
 
     private void initialize() {
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uniqueId varchar(36) primary key, balance double)");
             ResultSet result = database.query("SELECT * FROM MortisBank");
             try {
@@ -96,7 +96,7 @@ public class BankManager {
 
     public void setBalance(@NotNull UUID uuid, double balance) {
         balanceByPlayer.put(uuid, Math.max(balance, 0));
-        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE MortisBank SET balance = ? WHERE uniqueId = ?", balance, uuid.toString()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE MortisBank SET balance = ? WHERE uniqueId = ?", balance, uuid.toString()));
     }
 
     public double getBalance(@NotNull UUID uuid) {
@@ -175,8 +175,8 @@ public class BankManager {
         }
         economy.withdrawPlayer(offlinePlayer, amount);
         setBalance(offlinePlayer.getUniqueId(), newBalance);
-        addTransaction(offlinePlayer, purse, Transaction.TransactionType.DEPOSIT);
-        sendTransactionMessage(player, purse, Transaction.TransactionType.DEPOSIT);
+        addTransaction(offlinePlayer, amount, Transaction.TransactionType.DEPOSIT);
+        sendTransactionMessage(player, amount, Transaction.TransactionType.DEPOSIT);
         return true;
     }
 

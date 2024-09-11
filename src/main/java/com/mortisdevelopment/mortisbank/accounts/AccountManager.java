@@ -32,7 +32,7 @@ public class AccountManager {
     }
 
     private void initialize() {
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankAccounts(uniqueId varchar(36) primary key, priority smallint)");
             ResultSet result = database.query("SELECT * FROM BankAccounts");
             try {
@@ -49,7 +49,7 @@ public class AccountManager {
 
     public void setAccount(@NotNull UUID uuid, short priority) {
         accountPriorityByPlayer.put(uuid, priority);
-        Bukkit.getScheduler().runTask(plugin, () -> database.update("UPDATE BankAccounts SET priority = ? WHERE uniqueId = ?", priority, uuid.toString()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE BankAccounts SET priority = ? WHERE uniqueId = ?", priority, uuid.toString()));
     }
 
     public short getAccount(@NotNull UUID uuid) {

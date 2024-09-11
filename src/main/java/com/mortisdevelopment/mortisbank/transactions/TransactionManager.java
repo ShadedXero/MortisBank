@@ -30,7 +30,7 @@ public class TransactionManager {
     }
 
     private void initialize() {
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankTransactions(id varchar(36), uniqueId varchar(36), transaction mediumtext)");
             ResultSet result = database.query("SELECT * FROM BankTransactions");
             try {
@@ -60,14 +60,14 @@ public class TransactionManager {
             }
         }
         transactionsByPlayer.put(transaction.getUniqueId(), transactions);
-        Bukkit.getScheduler().runTask(plugin, () -> database.update("INSERT INTO BankTransactions(id, player, transaction) (?, ?, ?)", transaction.getId(), transaction.getUniqueId(), transaction.getRawTransaction()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("INSERT INTO BankTransactions(id, uniqueId, transaction) VALUES (?, ?, ?)", transaction.getId(), transaction.getUniqueId(), transaction.getRawTransaction()));
     }
 
     public void removeTransaction(Transaction transaction, boolean modifyCache) {
         if (modifyCache) {
             transactionsByPlayer.computeIfAbsent(transaction.getUniqueId(), k -> new ArrayList<>()).remove(transaction);
         }
-        Bukkit.getScheduler().runTask(plugin, () -> database.update("DELETE FROM BankTransactions WHERE id = ?", transaction.getId()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("DELETE FROM BankTransactions WHERE id = ?", transaction.getId()));
     }
 
     public void removeTransaction(Transaction transaction) {
@@ -116,7 +116,7 @@ public class TransactionManager {
         if (transactionsByPlayer.remove(uuid) == null) {
             return false;
         }
-        Bukkit.getScheduler().runTask(plugin, () -> database.update("DELETE FROM BankTransactions WHERE uniqueId = ?", uuid));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("DELETE FROM BankTransactions WHERE uniqueId = ?", uuid));
         return true;
     }
 }

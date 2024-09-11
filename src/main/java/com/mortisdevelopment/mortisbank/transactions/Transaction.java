@@ -102,12 +102,25 @@ public class Transaction {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        Transaction that = (Transaction) object;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(uniqueId, that.uniqueId) &&
+                Objects.equals(rawTransaction, that.rawTransaction);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Transaction{" +
+                "id='" + id + '\'' +
+                ", uniqueId=" + uniqueId +
+                ", rawTransaction='" + rawTransaction + '\'' +
+                '}';
     }
 }

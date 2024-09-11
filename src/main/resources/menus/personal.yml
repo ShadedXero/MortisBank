@@ -44,7 +44,6 @@ items:
     name: "&aRecent transactions"
     lore:
       - " "
-      - "%mortisbank_transaction_0%"
       - "%mortisbank_transaction_1%"
       - "%mortisbank_transaction_2%"
       - "%mortisbank_transaction_3%"
@@ -54,6 +53,7 @@ items:
       - "%mortisbank_transaction_7%"
       - "%mortisbank_transaction_8%"
       - "%mortisbank_transaction_9%"
+      - "%mortisbank_transaction_10%"
     view-requirement:
       requirements:
         has-transactions:

@@ -91,10 +91,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
             return checkDouble(params.replace("withdraw_twenty", ""), bankPlugin.getBankManager().getWithdrawTwentyPercent(player));
         }
         if (params.contains("has_transactions")) {
-            if (bankPlugin.getTransactionManager().getTransaction(player, 0) != null) {
-                return "true";
-            }else {
+            if (bankPlugin.getTransactionManager().getTransactions(player.getUniqueId()).isEmpty()) {
                 return "false";
+            }else {
+                return "true";
             }
         }
         if (params.contains("transaction_list_")) {
