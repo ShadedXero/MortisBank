@@ -19,7 +19,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.Objects;
 
 public class BankConfigManager extends ConfigManager {
 
@@ -45,7 +44,11 @@ public class BankConfigManager extends ConfigManager {
 
         AccountManager accountManager = new AccountManager(plugin, database, getSettings(accounts));
         plugin.setAccountManager(accountManager);
-        loadAccounts(accounts.getConfigurationSection("accounts"));
+        try {
+            loadAccounts(ConfigException.requireNonNull(accounts, accounts.getConfigurationSection("accounts")));
+        } catch (ConfigException e) {
+            throw new RuntimeException(e);
+        }
 
         TransactionManager transactionManager = new TransactionManager(plugin, database, getTransactionSettings(config), plugin.getMessageManager().getMessages("transaction-messages"));
         plugin.setTransactionManager(transactionManager);
@@ -82,20 +85,14 @@ public class BankConfigManager extends ConfigManager {
         return new AccountSettings((short) section.getInt("default-account"));
     }
 
-    private void loadAccounts(ConfigurationSection accounts) {
-        if (accounts == null) {
-            return;
-        }
+    private void loadAccounts(ConfigurationSection accounts) throws ConfigException {
         for (String id : accounts.getKeys(false)) {
-            ConfigurationSection section = accounts.getConfigurationSection(id);
-            if (section == null) {
-                continue;
-            }
+            ConfigurationSection section = ConfigException.requireNonNull(accounts, accounts.getConfigurationSection(id));
             short priority = (short) section.getInt("priority");
-            String name = Objects.requireNonNull(ColorUtils.color(section.getString("name")));
+            String name = ColorUtils.color(ConfigException.requireNonNull(accounts, section.getString("name")));
             double maxBalance = section.getDouble("max-balance");
             Account account = new Account(id, priority, name, maxBalance);
-            plugin.getAccountManager().getAccounts().add(account);
+            plugin.getAccountManager().getAccountById().put(account.getId(), account);
         }
     }
 }
