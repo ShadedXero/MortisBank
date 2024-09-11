@@ -53,7 +53,7 @@ public class TransactionManager {
             transactions.sort(Comparator.comparing(Transaction::getTime));
             List<Transaction> transactionsToRemove = new ArrayList<>();
             while (transactions.size() > settings.getTransactionLimit()) {
-                transactionsToRemove.add(transactions.removeLast());
+                transactionsToRemove.add(transactions.remove(transactions.size() - 1));
             }
             for (Transaction toRemove : transactionsToRemove) {
                 removeTransaction(toRemove, false);

@@ -19,11 +19,11 @@ import java.util.UUID;
 @Getter
 public class PlaceholderManager extends PlaceholderExpansion {
 
-    private final MortisBank plugin;
+    private final MortisBank bankPlugin;
     private final Messages messages;
 
-    public PlaceholderManager(MortisBank plugin, Messages messages) {
-        this.plugin = plugin;
+    public PlaceholderManager(MortisBank bankPlugin, Messages messages) {
+        this.bankPlugin = bankPlugin;
         this.messages = messages;
     }
 
@@ -52,46 +52,46 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
     public String getReplacement(OfflinePlayer player, String params) {
         if (params.contains("max_balance")) {
-            Account account = plugin.getAccountManager().getAccount(player);
+            Account account = bankPlugin.getAccountManager().getAccount(player);
             if (account == null) {
                 return null;
             }
             return checkDouble(params.replace("max_balance", ""), account.getMaxBalance());
         }
         if (params.contains("balance")) {
-            return checkDouble(params.replace("balance", ""), plugin.getBankManager().getBalance(player.getUniqueId()));
+            return checkDouble(params.replace("balance", ""), bankPlugin.getBankManager().getBalance(player.getUniqueId()));
         }
         if (params.contains("account_priority")) {
-            Account account = plugin.getAccountManager().getAccount(player);
+            Account account = bankPlugin.getAccountManager().getAccount(player);
             if (account == null) {
                 return null;
             }
             return String.valueOf(account.getPriority());
         }
         if (params.contains("account")) {
-            Account account = plugin.getAccountManager().getAccount(player);
+            Account account = bankPlugin.getAccountManager().getAccount(player);
             if (account == null) {
                 return null;
             }
             return account.getName();
         }
         if (params.contains("deposit_whole")) {
-            return checkDouble(params.replace("deposit_whole", ""), plugin.getBankManager().getDepositWhole(player));
+            return checkDouble(params.replace("deposit_whole", ""), bankPlugin.getBankManager().getDepositWhole(player));
         }
         if (params.contains("deposit_half")) {
-            return checkDouble(params.replace("deposit_half", ""), plugin.getBankManager().getDepositHalf(player));
+            return checkDouble(params.replace("deposit_half", ""), bankPlugin.getBankManager().getDepositHalf(player));
         }
         if (params.contains("withdraw_everything")) {
-            return checkDouble(params.replace("withdraw_everything", ""), plugin.getBankManager().getWithdrawEverything(player));
+            return checkDouble(params.replace("withdraw_everything", ""), bankPlugin.getBankManager().getWithdrawEverything(player));
         }
         if (params.contains("withdraw_half")) {
-            return checkDouble(params.replace("withdraw_half", ""), plugin.getBankManager().getWithdrawHalf(player));
+            return checkDouble(params.replace("withdraw_half", ""), bankPlugin.getBankManager().getWithdrawHalf(player));
         }
         if (params.contains("withdraw_twenty")) {
-            return checkDouble(params.replace("withdraw_twenty", ""), plugin.getBankManager().getWithdrawTwentyPercent(player));
+            return checkDouble(params.replace("withdraw_twenty", ""), bankPlugin.getBankManager().getWithdrawTwentyPercent(player));
         }
         if (params.contains("has_transactions")) {
-            if (plugin.getTransactionManager().getTransaction(player, 0) != null) {
+            if (bankPlugin.getTransactionManager().getTransaction(player, 0) != null) {
                 return "true";
             }else {
                 return "false";
@@ -106,11 +106,11 @@ public class PlaceholderManager extends PlaceholderExpansion {
             }
             StringBuilder builder = new StringBuilder();
             for (int index = 0; index < maxIndex; index++) {
-                Transaction transaction = plugin.getTransactionManager().getTransaction(player, index);
+                Transaction transaction = bankPlugin.getTransactionManager().getTransaction(player, index);
                 if (transaction == null) {
                     continue;
                 }
-                builder.append(transaction.getTransactionMessage(plugin.getTransactionManager().getMessages()));
+                builder.append(transaction.getTransactionMessage(bankPlugin.getTransactionManager().getMessages()));
                 if (index < (maxIndex - 1)) {
                     builder.append("\n");
                 }
@@ -124,11 +124,11 @@ public class PlaceholderManager extends PlaceholderExpansion {
             }catch (NumberFormatException exp) {
                 return "";
             }
-            Transaction transaction = plugin.getTransactionManager().getTransaction(player, index);
+            Transaction transaction = bankPlugin.getTransactionManager().getTransaction(player, index);
             if (transaction == null) {
                 return "";
             }
-            return transaction.getTransactionMessage(plugin.getTransactionManager().getMessages());
+            return transaction.getTransactionMessage(bankPlugin.getTransactionManager().getMessages());
         }
         if (params.contains("leaderboard_")) {
             int position;
@@ -138,7 +138,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return null;
             }
             String leaderboardPlaceholder = messages.getSimpleMessage("leaderboard_placeholder");
-            UUID uuid = plugin.getBankManager().getPlayer(position);
+            UUID uuid = bankPlugin.getBankManager().getPlayer(position);
             if (uuid == null) {
                 return leaderboardPlaceholder;
             }
