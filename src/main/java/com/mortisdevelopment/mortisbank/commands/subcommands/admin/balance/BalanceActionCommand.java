@@ -3,14 +3,12 @@ package com.mortisdevelopment.mortisbank.commands.subcommands.admin.balance;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-@Getter
 public class BalanceActionCommand extends PermissionCommand {
 
     public enum Action{SET,ADD,SUBTRACT}

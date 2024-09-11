@@ -25,7 +25,7 @@ public class GetCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        getMessages().sendMessage(sender, "admin_account_get");
+        getMessages().sendMessage(sender, "account_get");
         return true;
     }
 

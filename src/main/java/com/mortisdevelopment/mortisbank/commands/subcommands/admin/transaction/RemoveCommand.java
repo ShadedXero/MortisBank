@@ -9,18 +9,18 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class ClearCommand extends PermissionCommand {
+public class RemoveCommand extends PermissionCommand {
 
     private final TransactionManager transactionManager;
 
-    public ClearCommand(Messages messages, TransactionManager transactionManager) {
-        super("clear", "mortisbank.transaction.clear", messages);
+    public RemoveCommand(Messages messages, TransactionManager transactionManager) {
+        super("remove", "mortisbank.transaction.remove", messages);
         this.transactionManager = transactionManager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, String s, String[] args) {
-        if (args.length < 1) {
+        if (args.length < 2) {
             getMessages().sendMessage(sender, "wrong_usage");
             return false;
         }
@@ -29,7 +29,14 @@ public class ClearCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        transactionManager.clearTransactions(target.getUniqueId());
+        int position;
+        try {
+            position = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            getMessages().sendMessage(sender, "invalid_number");
+            return false;
+        }
+        transactionManager.removeTransaction(target, position);
         getMessages().sendMessage(sender, "command_success");
         return true;
     }

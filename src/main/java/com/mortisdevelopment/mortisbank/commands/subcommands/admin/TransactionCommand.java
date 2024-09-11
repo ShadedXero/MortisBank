@@ -1,5 +1,9 @@
 package com.mortisdevelopment.mortisbank.commands.subcommands.admin;
 
+import com.mortisdevelopment.mortisbank.commands.subcommands.admin.transaction.AddCommand;
+import com.mortisdevelopment.mortisbank.commands.subcommands.admin.transaction.ClearCommand;
+import com.mortisdevelopment.mortisbank.commands.subcommands.admin.transaction.GetCommand;
+import com.mortisdevelopment.mortisbank.commands.subcommands.admin.transaction.RemoveCommand;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortiscore.commands.BaseCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
@@ -11,7 +15,10 @@ public class TransactionCommand extends BaseCommand {
 
     public TransactionCommand(Messages messages, TransactionManager transactionManager) {
         super("transaction");
-        addSubCommand();
+        addSubCommand(new AddCommand(messages, transactionManager));
+        addSubCommand(new RemoveCommand(messages, transactionManager));
+        addSubCommand(new ClearCommand(messages, transactionManager));
+        addSubCommand(new GetCommand(messages));
     }
 
     @Override

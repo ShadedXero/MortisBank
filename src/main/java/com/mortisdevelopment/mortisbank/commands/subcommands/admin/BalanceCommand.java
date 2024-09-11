@@ -18,7 +18,7 @@ public class BalanceCommand extends BaseCommand {
         addSubCommand(new SetCommand(messages, bankManager));
         addSubCommand(new AddCommand(messages, bankManager));
         addSubCommand(new SubtractCommand(messages, bankManager));
-        addSubCommand(new GetCommand(messages, bankManager));
+        addSubCommand(new GetCommand(messages));
     }
 
     @Override
