@@ -3,7 +3,6 @@ package com.mortisdevelopment.mortisbank.config;
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortiscore.configs.FileConfig;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
-import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -24,11 +23,11 @@ public class MessageConfig extends FileConfig {
         File file = getFile(plugin);
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         try {
-            plugin.setMessageManager(new MessageManager(config));
+            plugin.getMessageManager().loadMessages(config);
         } catch (ConfigException e) {
             e.setFile(file);
             e.setPath(config);
-            e.log(plugin);
+            throw new RuntimeException(e);
         }
     }
 }

@@ -58,8 +58,8 @@ public class BankManager {
         this.economy = economy;
         this.settings = settings;
         this.personalMenu = personalMenu;
-        this.depositMessages = messageManager.getMessages("deposit_messages");
-        this.withdrawalMessages = messageManager.getMessages("withdrawal_messages");
+        this.depositMessages = messageManager.getMessages("deposit-messages");
+        this.withdrawalMessages = messageManager.getMessages("withdrawal-messages");
         Bukkit.getServer().getPluginManager().registerEvents(new BankListener(this), plugin);
         initialize();
     }

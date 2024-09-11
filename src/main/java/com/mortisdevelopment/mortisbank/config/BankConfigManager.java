@@ -45,9 +45,9 @@ public class BankConfigManager extends ConfigManager {
 
         AccountManager accountManager = new AccountManager(plugin, database, getSettings(accounts));
         plugin.setAccountManager(accountManager);
-        loadAccounts(config.getConfigurationSection("accounts"));
+        loadAccounts(accounts.getConfigurationSection("accounts"));
 
-        TransactionManager transactionManager = new TransactionManager(plugin, database, getTransactionSettings(config), plugin.getMessageManager().getMessages("transaction_messages"));
+        TransactionManager transactionManager = new TransactionManager(plugin, database, getTransactionSettings(config), plugin.getMessageManager().getMessages("transaction-messages"));
         plugin.setTransactionManager(transactionManager);
 
         try {

@@ -226,8 +226,9 @@ items:
       money-message:
         type: message
         message: "&aRemoved &610,000,000 &acoins from your balance"
-      type: console
-      command: "bank admin account set 30"
+      set-account:
+        type: console
+        command: "bank admin account set 30"
       message:
         type: message
         message: "&aUpgraded your account to &dLapis Lazuli"
@@ -346,8 +347,9 @@ items:
       money-message:
         type: message
         message: "&aRemoved &625,000,000 &acoins from your balance"
-      type: console
-      command: "bank admin account set 40"
+      set-account:
+        type: console
+        command: "bank admin account set 40"
       message:
         type: message
         message: "&aUpgraded your account to &fIron"

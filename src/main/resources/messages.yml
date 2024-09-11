@@ -17,16 +17,7 @@
 prefix: "&e[&bMortis Bank&e]"
 
 #======================================================#
-#               ACCOUNT MESSAGES                       #
-#======================================================#
-
-account-messages:
-  removed-money: "%prefix% &aRemoved %amount% coins from your balance"
-  removed-item: "%prefix% &aRemoved %item_amount% %item_name% from your inventory"
-  upgraded: "%prefix% &aUpgraded your account to %account_name%"
-
-#======================================================#
-#               PERSONAL MESSAGES                      #
+#               TRANSACTION MESSAGES                   #
 #======================================================#
 
 transaction-messages:

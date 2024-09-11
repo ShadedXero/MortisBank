@@ -26,9 +26,9 @@ public final class MortisBank extends CorePlugin {
 
     private MortisCore core;
     private Economy economy;
+    private MessageManager messageManager;
     private ConfigManager configManager;
     private Database database;
-    private MessageManager messageManager;
     private AccountManager accountManager;
     private TransactionManager transactionManager;
     private BankManager bankManager;
@@ -46,6 +46,7 @@ public final class MortisBank extends CorePlugin {
         }
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
+        messageManager = new MessageManager();
     }
 
     @Override
@@ -54,9 +55,9 @@ public final class MortisBank extends CorePlugin {
         core.getItemManager().saveAndLoad(this);
         core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
         configManager = new BankConfigManager(this);
-        placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder_messages"));
+        placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder-messages"));
         placeholderManager.register();
-        command = new BankCommand(messageManager.getMessages("command_messages"), this, bankManager, accountManager, transactionManager);
+        command = new BankCommand(messageManager.getMessages("command-messages"), this, bankManager, accountManager, transactionManager);
         command.register();
     }
 
