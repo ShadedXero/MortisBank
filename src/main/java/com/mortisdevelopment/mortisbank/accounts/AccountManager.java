@@ -48,8 +48,13 @@ public class AccountManager {
     }
 
     public void setAccount(@NotNull UUID uuid, short priority) {
+        boolean contains = accountPriorityByPlayer.containsKey(uuid);
         accountPriorityByPlayer.put(uuid, priority);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE BankAccounts SET priority = ? WHERE uniqueId = ?", priority, uuid.toString()));
+        if (contains) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE BankAccounts SET priority = ? WHERE uniqueId = ?", priority, uuid.toString()));
+        }else {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("INSERT INTO BankAccounts(uniqueId, priority) VALUES (?, ?)", uuid.toString(), priority));
+        }
     }
 
     public short getAccount(@NotNull UUID uuid) {

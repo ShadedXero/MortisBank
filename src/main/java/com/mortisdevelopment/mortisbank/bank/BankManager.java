@@ -95,8 +95,13 @@ public class BankManager {
     }
 
     public void setBalance(@NotNull UUID uuid, double balance) {
+        boolean contains = balanceByPlayer.containsKey(uuid);
         balanceByPlayer.put(uuid, Math.max(balance, 0));
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE MortisBank SET balance = ? WHERE uniqueId = ?", balance, uuid.toString()));
+        if (contains) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE MortisBank SET balance = ? WHERE uniqueId = ?", balance, uuid.toString()));
+        }else {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("INSERT INTO MortisBank(uniqueId, balance) VALUES (?, ?)", uuid.toString(), balance));
+        }
     }
 
     public double getBalance(@NotNull UUID uuid) {
