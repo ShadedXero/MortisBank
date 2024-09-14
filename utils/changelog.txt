@@ -1,7 +1,0 @@
-Added back all the commands
-Added reload command
-Added more messages for customizability
-Implemented new database storing system
-
-Fixed the transactions being displayed
-Fixed balance command
