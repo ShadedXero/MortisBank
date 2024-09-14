@@ -1,32 +1,50 @@
 package com.mortisdevelopment.mortisbank.transactions;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.messages.Messages;
+import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
+import com.mortisdevelopment.mortiscore.utils.Reloadable;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Getter
-public class TransactionManager {
+@Getter @Setter
+public class TransactionManager implements Reloadable {
 
-    private final JavaPlugin plugin;
+    private final MortisBank plugin;
     private final Database database;
-    private final TransactionSettings settings;
     private final Messages messages;
+    private TransactionSettings settings;
     private final HashMap<UUID, List<Transaction>> transactionsByPlayer = new HashMap<>();
 
-    public TransactionManager(JavaPlugin plugin, Database database, TransactionSettings settings, Messages messages) {
+    public TransactionManager(MortisBank plugin, Database database, Messages messages) {
         this.plugin = plugin;
         this.database = database;
-        this.settings = settings;
         this.messages = messages;
+        reload();
         initialize();
+    }
+
+    @Override
+    public void reload() {
+        File file = ConfigUtils.getFile(plugin, "config.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        this.settings = getTransactionSettings(config);
+    }
+
+    private TransactionSettings getTransactionSettings(ConfigurationSection section) {
+        return new TransactionSettings(section.getInt("transaction-limit"));
     }
 
     private void initialize() {

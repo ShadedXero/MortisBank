@@ -4,18 +4,19 @@ import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
-import com.mortisdevelopment.mortisbank.config.BankConfigManager;
+import com.mortisdevelopment.mortisbank.messages.BankMessageManager;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
 import com.mortisdevelopment.mortisbank.placeholders.PlaceholderManager;
 import com.mortisdevelopment.mortiscore.MortisCore;
-import com.mortisdevelopment.mortiscore.configs.ConfigManager;
 import com.mortisdevelopment.mortiscore.databases.Database;
-import com.mortisdevelopment.mortiscore.messages.MessageManager;
+import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
 import com.mortisdevelopment.mortiscore.utils.CorePlugin;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.io.File;
@@ -26,8 +27,7 @@ public final class MortisBank extends CorePlugin {
 
     private MortisCore core;
     private Economy economy;
-    private MessageManager messageManager;
-    private ConfigManager configManager;
+    private BankMessageManager messageManager;
     private Database database;
     private AccountManager accountManager;
     private TransactionManager transactionManager;
@@ -46,7 +46,21 @@ public final class MortisBank extends CorePlugin {
         }
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionManager().getActionTypeManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
-        messageManager = new MessageManager();
+        messageManager = new BankMessageManager(this);
+        database = getDatabase();
+        accountManager = new AccountManager(this, database);
+        transactionManager = new TransactionManager(this, database, messageManager.getMessages("transaction-messages"));
+        bankManager = new BankManager(this, accountManager, transactionManager, database, economy, messageManager);
+        placeholderManager = new PlaceholderManager(accountManager, transactionManager, bankManager, messageManager.getMessages("placeholder-messages"));
+        placeholderManager.register();
+        command = new BankCommand(messageManager.getMessages("command-messages"), this, bankManager, accountManager, transactionManager);
+        command.register(this);
+    }
+
+    private Database getDatabase() {
+        File configFile = ConfigUtils.getFile(this, "config.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        return core.getDatabaseManager().getDatabase(this, config.getConfigurationSection("database"));
     }
 
     @Override
@@ -54,18 +68,16 @@ public final class MortisBank extends CorePlugin {
         new File(getDataFolder(), "items").mkdirs();
         core.getItemManager().saveAndLoad(this);
         core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
-        configManager = new BankConfigManager(this);
-        placeholderManager = new PlaceholderManager(this, messageManager.getMessages("placeholder-messages"));
-        placeholderManager.register();
-        command = new BankCommand(messageManager.getMessages("command-messages"), this, bankManager, accountManager, transactionManager);
-        command.register();
+        bankManager.onStart();
     }
 
     public void reload() {
+        core.getMenuManager().save(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
         core.reload(this);
-        placeholderManager.unregister();
-        command.unregister();
-        onStart();
+        messageManager.reload();
+        accountManager.reload();
+        transactionManager.reload();
+        bankManager.reload();
     }
 
     private boolean setupEconomy() {

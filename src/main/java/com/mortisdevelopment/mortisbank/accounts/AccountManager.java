@@ -1,12 +1,21 @@
 package com.mortisdevelopment.mortisbank.accounts;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortiscore.databases.Database;
+import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
+import com.mortisdevelopment.mortiscore.utils.ColorUtils;
+import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
+import com.mortisdevelopment.mortiscore.utils.Reloadable;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,42 +23,74 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-public class AccountManager {
+@Getter @Setter
+public class AccountManager implements Reloadable {
 
-    private final JavaPlugin plugin;
+    private final MortisBank plugin;
     private final Database database;
-    private final AccountSettings settings;
-    private final HashMap<UUID, Short> accountPriorityByPlayer = new HashMap<>();
+    private AccountSettings settings;
+    private final HashMap<UUID, Short> priorityByPlayer = new HashMap<>();
     private final HashMap<String, Account> accountById = new HashMap<>();
 
-    public AccountManager(JavaPlugin plugin, Database database, @NotNull AccountSettings settings) {
+    public AccountManager(MortisBank plugin, Database database) {
         this.plugin = plugin;
         this.database = database;
-        this.settings = settings;
-        Bukkit.getServer().getPluginManager().registerEvents(new AccountListener(this), plugin);
+        reload();
         initialize();
+        Bukkit.getServer().getPluginManager().registerEvents(new AccountListener(this), plugin);
+    }
+
+    @Override
+    public void reload() {
+        accountById.clear();
+        File file = ConfigUtils.getFile(plugin, "accounts.yml");
+        FileConfiguration accountsConfig = YamlConfiguration.loadConfiguration(file);
+        this.settings = getSettings(accountsConfig);
+        try {
+            loadAccounts(ConfigException.requireNonNull(accountsConfig, accountsConfig.getConfigurationSection("accounts")));
+        } catch (ConfigException e) {
+            e.setFile(file);
+            e.setPath(accountsConfig);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AccountSettings getSettings(ConfigurationSection section) {
+        return new AccountSettings((short) section.getInt("default-account"));
+    }
+
+    private void loadAccounts(ConfigurationSection accounts) throws ConfigException {
+        for (String id : accounts.getKeys(false)) {
+            ConfigurationSection section = ConfigException.requireNonNull(accounts, accounts.getConfigurationSection(id));
+            short priority = (short) section.getInt("priority");
+            String name = ColorUtils.color(ConfigException.requireNonNull(accounts, section.getString("name")));
+            double maxBalance = section.getDouble("max-balance");
+            Account account = new Account(id, priority, name, maxBalance);
+            accountById.put(account.getId(), account);
+        }
     }
 
     private void initialize() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankAccounts(uniqueId varchar(36) primary key, priority smallint)");
             ResultSet result = database.query("SELECT * FROM BankAccounts");
+            HashMap<UUID, Short> cache = new HashMap<>();
             try {
                 while (result.next()) {
                     UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
                     short priority = result.getShort("priority");
-                    accountPriorityByPlayer.put(uniqueId, priority);
+                    cache.put(uniqueId, priority);
                 }
             } catch (SQLException exp) {
                 throw new RuntimeException(exp);
             }
+            Bukkit.getScheduler().runTask(plugin, () -> priorityByPlayer.putAll(cache));
         });
     }
 
     public void setAccount(@NotNull UUID uuid, short priority) {
-        boolean contains = accountPriorityByPlayer.containsKey(uuid);
-        accountPriorityByPlayer.put(uuid, priority);
+        boolean contains = priorityByPlayer.containsKey(uuid);
+        priorityByPlayer.put(uuid, priority);
         if (contains) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("UPDATE BankAccounts SET priority = ? WHERE uniqueId = ?", priority, uuid.toString()));
         }else {
@@ -58,7 +99,7 @@ public class AccountManager {
     }
 
     public short getAccount(@NotNull UUID uuid) {
-        return accountPriorityByPlayer.get(uuid);
+        return priorityByPlayer.get(uuid);
     }
 
     public Account getAccount(String id) {

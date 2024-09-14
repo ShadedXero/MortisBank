@@ -1,0 +1,9 @@
+name: MortisBank
+version: ${project.version}
+main: com.mortisdevelopment.mortisbank.MortisBank
+api-version: '1.13'
+depend:
+  - MortisCore
+  - Vault
+  - PlaceholderAPI
+  - Essentials

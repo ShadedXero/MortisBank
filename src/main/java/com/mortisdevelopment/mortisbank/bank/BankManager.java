@@ -1,31 +1,40 @@
 package com.mortisdevelopment.mortisbank.bank;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.accounts.Account;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortiscore.databases.Database;
+import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
+import com.mortisdevelopment.mortiscore.items.CustomItem;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
 import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
 import com.mortisdevelopment.mortiscore.placeholder.methods.PlayerPlaceholderMethod;
+import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
+import com.mortisdevelopment.mortiscore.utils.Reloadable;
 import lombok.Getter;
+import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Getter
-public class BankManager {
+@Getter @Setter
+public class BankManager implements Reloadable {
 
     public enum DepositType {
         ALL,
@@ -39,29 +48,73 @@ public class BankManager {
         SPECIFIC
     }
 
-    private final JavaPlugin plugin;
+    private final MortisBank plugin;
     private final AccountManager accountManager;
     private final TransactionManager transactionManager;
     private final Database database;
     private final Economy economy;
-    private final BankSettings settings;
-    private final CustomMenu personalMenu;
     private final Messages depositMessages;
     private final Messages withdrawalMessages;
+    private BankSettings settings;
+    private CustomMenu personalMenu;
     private final HashMap<UUID, Double> balanceByPlayer = new HashMap<>();
 
-    public BankManager(JavaPlugin plugin, AccountManager accountManager, TransactionManager transactionManager, Database database, Economy economy, BankSettings settings, CustomMenu personalMenu, MessageManager messageManager) {
+    public BankManager(MortisBank plugin, AccountManager accountManager, TransactionManager transactionManager, Database database, Economy economy, MessageManager messageManager) {
         this.plugin = plugin;
         this.accountManager = accountManager;
         this.transactionManager = transactionManager;
         this.database = database;
         this.economy = economy;
-        this.settings = settings;
-        this.personalMenu = personalMenu;
         this.depositMessages = messageManager.getMessages("deposit-messages");
         this.withdrawalMessages = messageManager.getMessages("withdrawal-messages");
-        Bukkit.getServer().getPluginManager().registerEvents(new BankListener(this), plugin);
+        reload(false);
         initialize();
+        Bukkit.getServer().getPluginManager().registerEvents(new BankListener(this), plugin);
+    }
+
+    public void onStart() {
+        File file = ConfigUtils.getFile(plugin, "config.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        try {
+            this.personalMenu = plugin.getCore().getMenuManager().getObject(plugin, config.getConfigurationSection("personal-menu"));
+        } catch (ConfigException e) {
+            e.setFile(file);
+            e.setPath(config);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void reload(boolean personalMenu) {
+        File file = ConfigUtils.getFile(plugin, "config.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        try {
+            this.settings = getBankSettings(config);
+            if (personalMenu) {
+                onStart();
+            }
+        } catch (ConfigException e) {
+            e.setFile(file);
+            e.setPath(config);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void reload() {
+       reload(true);
+    }
+
+    private BankSettings getBankSettings(ConfigurationSection section) throws ConfigException {
+        boolean leaderboard = section.getBoolean("leaderboard");
+        BankSettings.InputMode mode;
+        try {
+            mode = BankSettings.InputMode.valueOf(section.getString("input-mode"));
+        }catch (IllegalArgumentException exp) {
+            throw new ConfigException(section);
+        }
+        int inputSlot = section.getInt("sign-input-slot");
+        CustomItem customItem = plugin.getCore().getItemManager().getObject(plugin, section.getConfigurationSection("anvil-item"));
+        return new BankSettings(leaderboard, mode, inputSlot, customItem);
     }
 
     private void initialize() {
