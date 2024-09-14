@@ -16,7 +16,7 @@ public class AccountListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        if (accountManager.getAccountPriorityByPlayer().containsKey(player.getUniqueId())) {
+        if (accountManager.getPriorityByPlayer().containsKey(player.getUniqueId())) {
             return;
         }
         Account defaultAccount = accountManager.getDefaultAccount();
