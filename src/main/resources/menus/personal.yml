@@ -54,8 +54,8 @@ items:
       - "%mortisbank_transaction_8%"
       - "%mortisbank_transaction_9%"
       - "%mortisbank_transaction_10%"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         has-transactions:
           type: string
           input: "%mortisbank_has_transactions%"

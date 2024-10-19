@@ -29,8 +29,8 @@ items:
       - "&7Cost: &aComplimentary"
       - " "
       - "&cYou have a better account!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: ">"
@@ -66,8 +66,8 @@ items:
       - "&65,000,000 Coins"
       - " "
       - "&cYou have a better account!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: ">"
@@ -88,8 +88,8 @@ items:
       - "&65,000,000 Coins"
       - " "
       - "&cYou do not have the requirements for this!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -110,8 +110,8 @@ items:
       - "&65,000,000 Coins"
       - " "
       - "&eClick to upgrade your account to &fCopper"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -165,8 +165,8 @@ items:
       - "&610,000,000 Coins"
       - " "
       - "&cYou have a better account!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: ">"
@@ -187,8 +187,8 @@ items:
       - "&610,000,000 Coins"
       - " "
       - "&cYou do not have the requirements for this!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -209,8 +209,8 @@ items:
       - "&610,000,000 Coins"
       - " "
       - "&eClick to upgrade your account to &dLapis Lazuli"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -249,8 +249,8 @@ items:
       - "&610,000,000 Coins"
       - " "
       - "&cNeed previous upgrade"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -286,8 +286,8 @@ items:
       - "&625,000,000 Coins"
       - " "
       - "&cYou have a better account!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: ">"
@@ -308,8 +308,8 @@ items:
       - "&625,000,000 Coins"
       - " "
       - "&cYou do not have the requirements for this!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -330,8 +330,8 @@ items:
       - "&625,000,000 Coins"
       - " "
       - "&eClick to upgrade your account to &5Iron"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -370,8 +370,8 @@ items:
       - "&625,000,000 Coins"
       - " "
       - "&cNeed previous upgrade"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -407,15 +407,15 @@ items:
       - "&650,000,000 Coins"
       - " "
       - "&cYou have a better account!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: ">"
           input: "%mortisbank_account_priority%"
           output: 50
 
-  not-has-requirement-redstone-account:
+  not-has-conditions-redstone-account:
     material: REDSTONE
     slot: 15
     priority: 2
@@ -429,8 +429,8 @@ items:
       - "&650,000,000 Coins"
       - " "
       - "&cYou do not have the requirements for this!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -451,8 +451,8 @@ items:
       - "&650,000,000 Coins"
       - " "
       - "&eClick to upgrade your account to &cRedstone"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -491,8 +491,8 @@ items:
       - "&650,000,000 Coins"
       - " "
       - "&cNeed previous upgrade"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -528,8 +528,8 @@ items:
       - "&6100,000,000 Coins"
       - " "
       - "&cYou have a better account!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: ">"
@@ -550,8 +550,8 @@ items:
       - "&6100,000,000 Coins"
       - " "
       - "&cYou do not have the requirements for this!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -572,8 +572,8 @@ items:
       - "&6100,000,000 Coins"
       - " "
       - "&eClick to upgrade your account to &3Emerald"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -612,8 +612,8 @@ items:
       - "&6100,000,000 Coins"
       - " "
       - "&cNeed previous upgrade"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -651,8 +651,8 @@ items:
       - "&bDiamond &8x10"
       - " "
       - "&cYou do not have the requirements for this!"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -674,8 +674,8 @@ items:
       - "&bDiamond &8x10"
       - " "
       - "&eClick to upgrade your account to &bDiamond"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"
@@ -728,8 +728,8 @@ items:
       - "&bDiamond &8x10"
       - " "
       - "&cNeed previous upgrade"
-    view-requirement:
-      requirements:
+    view-conditions:
+      conditions:
         priority:
           type: number
           comparator: "<"

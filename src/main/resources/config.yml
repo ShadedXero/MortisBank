@@ -27,6 +27,7 @@ database:
 #               SETTINGS                               #
 #======================================================#
 
+currency: VAULT
 input-mode: SIGN # SIGN | ANVIL
 sign-input-slot: 1
 anvil-item:

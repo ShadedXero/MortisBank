@@ -1,6 +1,8 @@
 package com.mortisdevelopment.mortisbank;
 
+import com.mortisdevelopment.mortisbank.accounts.AccountListener;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
+import com.mortisdevelopment.mortisbank.bank.BankListener;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.commands.BankCommand;
 import com.mortisdevelopment.mortisbank.actions.types.DepositActionType;
@@ -34,17 +36,30 @@ public final class MortisBank extends CorePlugin {
 
     @Override
     public void onEnable() {
-        this.core = (MortisCore) Objects.requireNonNull(getServer().getPluginManager().getPlugin("MortisCore"));
+        core = (MortisCore) Objects.requireNonNull(getServer().getPluginManager().getPlugin("MortisCore"));
         core.register(this);
+
         core.getActionContainerManager().getActionManager().getRegistry().register("[bank] deposit", DepositActionType.class);
         core.getActionContainerManager().getActionManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
+
         messageManager = new BankMessageManager();
+
         database = getDatabase();
+
         accountManager = new AccountManager(database);
+        accountManager.reload(this);
+        getServer().getPluginManager().registerEvents(new AccountListener(this, accountManager), this);
+
         transactionManager = new TransactionManager(database, messageManager.getMessages("transaction-messages"));
+        transactionManager.reload(this);
+
         bankManager = new BankManager(accountManager, transactionManager, database, messageManager);
+        bankManager.reload(this);
+        getServer().getPluginManager().registerEvents(new BankListener(this, bankManager), this);
+
         placeholderManager = new PlaceholderManager(this, accountManager, transactionManager, bankManager, messageManager.getMessages("placeholder-messages"));
         placeholderManager.register();
+
         command = new BankCommand(messageManager.getMessages("command-messages"), this, bankManager, accountManager, transactionManager);
         command.register(this);
     }
