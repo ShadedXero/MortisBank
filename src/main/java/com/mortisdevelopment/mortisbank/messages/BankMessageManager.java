@@ -10,17 +10,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-public class BankMessageManager extends MessageManager implements Reloadable {
-
-    private final MortisBank plugin;
-
-    public BankMessageManager(MortisBank plugin) {
-        this.plugin = plugin;
-        reload();
-    }
+public class BankMessageManager extends MessageManager implements Reloadable<MortisBank> {
 
     @Override
-    public void reload() {
+    public void reload(MortisBank plugin) {
         File file = ConfigUtils.getFile(plugin, "messages.yml");
         FileConfiguration messages = YamlConfiguration.loadConfiguration(file);
         try {

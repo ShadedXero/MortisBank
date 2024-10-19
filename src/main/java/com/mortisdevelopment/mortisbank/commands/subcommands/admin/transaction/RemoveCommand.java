@@ -6,15 +6,18 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class RemoveCommand extends PermissionCommand {
 
+    private final JavaPlugin plugin;
     private final TransactionManager transactionManager;
 
-    public RemoveCommand(Messages messages, TransactionManager transactionManager) {
+    public RemoveCommand(Messages messages, JavaPlugin plugin, TransactionManager transactionManager) {
         super("remove", "mortisbank.admin.transaction.remove", messages);
+        this.plugin = plugin;
         this.transactionManager = transactionManager;
     }
 
@@ -36,7 +39,7 @@ public class RemoveCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_number");
             return false;
         }
-        if (!transactionManager.removeTransaction(target, position)) {
+        if (!transactionManager.removeTransaction(plugin, target, position)) {
             getMessages().sendMessage(sender, "could_not_process");
             return false;
         }

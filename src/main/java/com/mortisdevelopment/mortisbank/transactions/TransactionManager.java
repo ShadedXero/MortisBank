@@ -2,9 +2,9 @@ package com.mortisdevelopment.mortisbank.transactions;
 
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortiscore.databases.Database;
+import com.mortisdevelopment.mortiscore.managers.Manager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
-import com.mortisdevelopment.mortiscore.utils.Reloadable;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -20,34 +21,31 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Getter @Setter
-public class TransactionManager implements Reloadable {
+public class TransactionManager extends Manager<MortisBank> {
 
-    private final MortisBank plugin;
     private final Database database;
     private final Messages messages;
     private TransactionSettings settings;
     private final HashMap<UUID, List<Transaction>> transactionsByPlayer = new HashMap<>();
 
-    public TransactionManager(MortisBank plugin, Database database, Messages messages) {
-        this.plugin = plugin;
+    public TransactionManager(Database database, Messages messages) {
         this.database = database;
         this.messages = messages;
-        reload();
-        initialize();
     }
 
     @Override
-    public void reload() {
+    public void reload(MortisBank plugin) {
         File file = ConfigUtils.getFile(plugin, "config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         this.settings = getTransactionSettings(config);
+        initialize(plugin);
     }
 
     private TransactionSettings getTransactionSettings(ConfigurationSection section) {
         return new TransactionSettings(section.getInt("transaction-limit"));
     }
 
-    private void initialize() {
+    private void initialize(JavaPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankTransactions(id varchar(36), uniqueId varchar(36), transaction mediumtext)");
             ResultSet result = database.query("SELECT * FROM BankTransactions");
@@ -74,7 +72,7 @@ public class TransactionManager implements Reloadable {
         transactions.sort(Comparator.comparing(Transaction::getTime).reversed());
     }
 
-    public void addTransaction(Transaction transaction) {
+    public void addTransaction(JavaPlugin plugin, Transaction transaction) {
         List<Transaction> transactions = transactionsByPlayer.computeIfAbsent(transaction.getUniqueId(), k -> new ArrayList<>());
         transactions.add(transaction);
         if (transactions.size() > 1) {
@@ -84,22 +82,22 @@ public class TransactionManager implements Reloadable {
                 transactionsToRemove.add(transactions.remove(transactions.size() - 1));
             }
             for (Transaction toRemove : transactionsToRemove) {
-                removeTransaction(toRemove, false);
+                removeTransaction(plugin, toRemove, false);
             }
         }
         transactionsByPlayer.put(transaction.getUniqueId(), transactions);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("INSERT INTO BankTransactions(id, uniqueId, transaction) VALUES (?, ?, ?)", transaction.getId(), transaction.getUniqueId(), transaction.getRawTransaction()));
     }
 
-    public void removeTransaction(Transaction transaction, boolean modifyCache) {
+    public void removeTransaction(JavaPlugin plugin, Transaction transaction, boolean modifyCache) {
         if (modifyCache) {
             transactionsByPlayer.computeIfAbsent(transaction.getUniqueId(), k -> new ArrayList<>()).remove(transaction);
         }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("DELETE FROM BankTransactions WHERE id = ?", transaction.getId()));
     }
 
-    public void removeTransaction(Transaction transaction) {
-        removeTransaction(transaction, true);
+    public void removeTransaction(JavaPlugin plugin, Transaction transaction) {
+        removeTransaction(plugin, transaction, true);
     }
 
     public List<Transaction> getTransactions(@NotNull UUID uuid) {
@@ -118,11 +116,11 @@ public class TransactionManager implements Reloadable {
         return transactions.get(position);
     }
 
-    public void addTransaction(@NotNull OfflinePlayer offlinePlayer, @NotNull Transaction.TransactionType type, double amount, @NotNull String transactor) {
-        addTransaction(new Transaction(offlinePlayer.getUniqueId(), messages, type, amount, transactor));
+    public void addTransaction(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, @NotNull Transaction.TransactionType type, double amount, @NotNull String transactor) {
+        addTransaction(plugin, new Transaction(offlinePlayer.getUniqueId(), messages, type, amount, transactor));
     }
 
-    public boolean removeTransaction(@NotNull OfflinePlayer offlinePlayer, int position) {
+    public boolean removeTransaction(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, int position) {
         if (position < 1 || position > settings.getTransactionLimit()) {
             return false;
         }
@@ -135,12 +133,12 @@ public class TransactionManager implements Reloadable {
         if (transaction == null) {
             return false;
         }
-        removeTransaction(transaction, false);
+        removeTransaction(plugin, transaction, false);
         transactionsByPlayer.put(transaction.getUniqueId(), transactions);
         return true;
     }
 
-    public boolean clearTransactions(@NotNull UUID uuid) {
+    public boolean clearTransactions(JavaPlugin plugin, @NotNull UUID uuid) {
         if (transactionsByPlayer.remove(uuid) == null) {
             return false;
         }

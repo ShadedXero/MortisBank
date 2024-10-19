@@ -4,7 +4,7 @@ import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.actions.types.WithdrawActionType;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.PlayerExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

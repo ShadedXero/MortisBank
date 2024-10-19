@@ -17,9 +17,9 @@ public class AdminCommand extends PermissionCommand {
         super("admin", "mortisbank.admin", messages);
         addSubCommand(new DepositCommand(messages, plugin));
         addSubCommand(new WithdrawCommand(messages, plugin));
-        addSubCommand(new BalanceCommand(messages, bankManager));
-        addSubCommand(new AccountCommand(messages, accountManager));
-        addSubCommand(new TransactionCommand(messages, transactionManager));
+        addSubCommand(new BalanceCommand(messages, plugin, bankManager));
+        addSubCommand(new AccountCommand(messages, plugin, accountManager));
+        addSubCommand(new TransactionCommand(messages, plugin, transactionManager));
         addSubCommand(new ReloadCommand(messages, plugin));
     }
 

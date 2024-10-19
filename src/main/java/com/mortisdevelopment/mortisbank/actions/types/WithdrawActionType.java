@@ -4,8 +4,8 @@ import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortiscore.MortisCore;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
-import com.mortisdevelopment.mortiscore.placeholder.objects.PlaceholderEnum;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.objects.PlaceholderEnum;
 import com.mortisdevelopment.mortiscore.utils.Executor;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,9 +44,9 @@ public class WithdrawActionType extends AmountActionType {
             return;
         }
         if (getPlaceholderAmount() != null) {
-            plugin.getBankManager().withdraw(offlinePlayer, getPlaceholderAmount().getObject(placeholder));
+            plugin.getBankManager().withdraw(plugin, offlinePlayer, getPlaceholderAmount().getObject(placeholder));
         }else {
-            plugin.getBankManager().withdraw(offlinePlayer, getPlaceholderType().getObject(placeholder));
+            plugin.getBankManager().withdraw(plugin, offlinePlayer, getPlaceholderType().getObject(placeholder));
         }
     }
 

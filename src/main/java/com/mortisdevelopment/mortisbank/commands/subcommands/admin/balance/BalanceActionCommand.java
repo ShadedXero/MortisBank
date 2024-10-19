@@ -6,19 +6,23 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class BalanceActionCommand extends PermissionCommand {
 
     public enum Action{SET,ADD,SUBTRACT}
-    private final Action action;
-    private final BankManager bankManager;
 
-    public BalanceActionCommand(String name, String permission, Messages messages, Action action, BankManager bankManager) {
+    private final JavaPlugin plugin;
+    private final BankManager bankManager;
+    private final Action action;
+
+    public BalanceActionCommand(String name, String permission, Messages messages, JavaPlugin plugin, BankManager bankManager, Action action) {
         super(name, permission, messages);
-        this.action = action;
+        this.plugin = plugin;
         this.bankManager = bankManager;
+        this.action = action;
     }
 
     @Override
@@ -40,9 +44,9 @@ public class BalanceActionCommand extends PermissionCommand {
             return false;
         }
         boolean success = switch (action) {
-            case SET -> bankManager.setBalance(target, amount);
-            case ADD -> bankManager.addBalance(target, amount);
-            case SUBTRACT -> bankManager.subtractBalance(target, amount);
+            case SET -> bankManager.setBalance(plugin, target, amount);
+            case ADD -> bankManager.addBalance(plugin, target, amount);
+            case SUBTRACT -> bankManager.subtractBalance(plugin, target, amount);
         };
         if (!success) {
             getMessages().sendMessage(sender, "could_not_process");

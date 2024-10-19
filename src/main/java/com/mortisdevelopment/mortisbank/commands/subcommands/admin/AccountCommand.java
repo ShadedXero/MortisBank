@@ -8,16 +8,17 @@ import com.mortisdevelopment.mortisbank.commands.subcommands.admin.account.Upgra
 import com.mortisdevelopment.mortiscore.commands.BaseCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class AccountCommand extends BaseCommand {
 
-    public AccountCommand(Messages messages, AccountManager accountManager) {
+    public AccountCommand(Messages messages, JavaPlugin plugin, AccountManager accountManager) {
         super("account");
-        addSubCommand(new SetCommand(messages, accountManager));
-        addSubCommand(new UpgradeCommand(messages, accountManager));
-        addSubCommand(new DowngradeCommand(messages, accountManager));
+        addSubCommand(new SetCommand(messages, plugin, accountManager));
+        addSubCommand(new UpgradeCommand(messages, plugin, accountManager));
+        addSubCommand(new DowngradeCommand(messages, plugin, accountManager));
         addSubCommand(new GetCommand(messages));
     }
 

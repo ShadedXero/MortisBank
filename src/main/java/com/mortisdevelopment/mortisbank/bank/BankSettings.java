@@ -1,9 +1,10 @@
 package com.mortisdevelopment.mortisbank.bank;
 
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
+import com.mortisdevelopment.mortiscore.currencies.Currency;
 import com.mortisdevelopment.mortiscore.items.CustomItem;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
 import de.rapha149.signgui.SignGUI;
 import lombok.Getter;
@@ -21,12 +22,14 @@ public class BankSettings {
         ANVIL,
         SIGN
     }
+    private final Currency currency;
     private final boolean leaderboard;
     private final InputMode mode;
     private final int inputSlot;
     private final CustomItem anvilItem;
 
-    public BankSettings(boolean leaderboard, @NotNull InputMode mode, int inputSlot, CustomItem anvilItem) {
+    public BankSettings(Currency currency, boolean leaderboard, @NotNull InputMode mode, int inputSlot, CustomItem anvilItem) {
+        this.currency = currency;
         this.leaderboard = leaderboard;
         this.mode = mode;
         this.inputSlot = inputSlot - 1;
@@ -59,8 +62,8 @@ public class BankSettings {
                         return null;
                     }
                     switch (type) {
-                        case DEPOSIT -> bankManager.deposit(player, amount);
-                        case WITHDRAW -> bankManager.withdraw(player, amount);
+                        case DEPOSIT -> bankManager.deposit(plugin, player, amount);
+                        case WITHDRAW -> bankManager.withdraw(plugin, player, amount);
                     }
                     bankManager.getPersonalMenu().open(player, placeholder);
                     return null;
@@ -78,8 +81,8 @@ public class BankSettings {
                         return;
                     }
                     switch (type) {
-                        case DEPOSIT -> bankManager.deposit(player, amount);
-                        case WITHDRAW -> bankManager.withdraw(player, amount);
+                        case DEPOSIT -> bankManager.deposit(plugin, player, amount);
+                        case WITHDRAW -> bankManager.withdraw(plugin, player, amount);
                     }
                     bankManager.getPersonalMenu().open(player, placeholder);
                 })
@@ -92,8 +95,8 @@ public class BankSettings {
                         return Collections.emptyList();
                     }
                     switch (type) {
-                        case DEPOSIT -> bankManager.deposit(player, amount);
-                        case WITHDRAW -> bankManager.withdraw(player, amount);
+                        case DEPOSIT -> bankManager.deposit(plugin, player, amount);
+                        case WITHDRAW -> bankManager.withdraw(plugin, player, amount);
                     }
                     bankManager.getPersonalMenu().open(player, placeholder);
                     return Collections.singletonList(AnvilGUI.ResponseAction.close());

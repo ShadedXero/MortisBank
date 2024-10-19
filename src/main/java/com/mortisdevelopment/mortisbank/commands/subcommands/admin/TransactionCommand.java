@@ -8,16 +8,17 @@ import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortiscore.commands.BaseCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class TransactionCommand extends BaseCommand {
 
-    public TransactionCommand(Messages messages, TransactionManager transactionManager) {
+    public TransactionCommand(Messages messages, JavaPlugin plugin, TransactionManager transactionManager) {
         super("transaction");
-        addSubCommand(new AddCommand(messages, transactionManager));
-        addSubCommand(new RemoveCommand(messages, transactionManager));
-        addSubCommand(new ClearCommand(messages, transactionManager));
+        addSubCommand(new AddCommand(messages, plugin, transactionManager));
+        addSubCommand(new RemoveCommand(messages, plugin, transactionManager));
+        addSubCommand(new ClearCommand(messages, plugin, transactionManager));
         addSubCommand(new GetCommand(messages));
     }
 

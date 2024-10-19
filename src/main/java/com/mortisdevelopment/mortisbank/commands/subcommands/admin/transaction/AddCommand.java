@@ -7,15 +7,18 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class AddCommand extends PermissionCommand {
 
+    private final JavaPlugin plugin;
     private final TransactionManager transactionManager;
 
-    public AddCommand(Messages messages, TransactionManager transactionManager) {
+    public AddCommand(Messages messages, JavaPlugin plugin, TransactionManager transactionManager) {
         super("add", "mortisbank.admin.transaction.add", messages);
+        this.plugin = plugin;
         this.transactionManager = transactionManager;
     }
 
@@ -45,7 +48,7 @@ public class AddCommand extends PermissionCommand {
             return false;
         }
         String transactor = args[3];
-        transactionManager.addTransaction(target, type, amount, transactor);
+        transactionManager.addTransaction(plugin, target, type, amount, transactor);
         getMessages().sendMessage(sender, "command_success");
         return true;
     }

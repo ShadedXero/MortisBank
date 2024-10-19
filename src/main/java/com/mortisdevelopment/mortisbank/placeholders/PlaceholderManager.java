@@ -1,12 +1,13 @@
 package com.mortisdevelopment.mortisbank.placeholders;
 
+import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortisbank.accounts.Account;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
 import lombok.Getter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -21,12 +22,14 @@ import java.util.UUID;
 @Getter
 public class PlaceholderManager extends PlaceholderExpansion {
 
+    private final MortisBank bankPlugin;
     private final AccountManager accountManager;
     private final TransactionManager transactionManager;
     private final BankManager bankManager;
     private final Messages messages;
 
-    public PlaceholderManager(AccountManager accountManager, TransactionManager transactionManager, BankManager bankManager, Messages messages) {
+    public PlaceholderManager(MortisBank bankPlugin, AccountManager accountManager, TransactionManager transactionManager, BankManager bankManager, Messages messages) {
+        this.bankPlugin = bankPlugin;
         this.accountManager = accountManager;
         this.transactionManager = transactionManager;
         this.bankManager = bankManager;
@@ -58,7 +61,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
     public String getReplacement(OfflinePlayer player, String params) {
         if (params.contains("max_balance")) {
-            Account account = accountManager.getAccount(player);
+            Account account = accountManager.getAccount(bankPlugin, player);
             if (account == null) {
                 return null;
             }
@@ -68,24 +71,24 @@ public class PlaceholderManager extends PlaceholderExpansion {
             return checkDouble(params.replace("balance", ""), bankManager.getBalance(player.getUniqueId()));
         }
         if (params.contains("account_priority")) {
-            Account account = accountManager.getAccount(player);
+            Account account = accountManager.getAccount(bankPlugin, player);
             if (account == null) {
                 return null;
             }
             return String.valueOf(account.getPriority());
         }
         if (params.contains("account")) {
-            Account account = accountManager.getAccount(player);
+            Account account = accountManager.getAccount(bankPlugin, player);
             if (account == null) {
                 return null;
             }
             return account.getName();
         }
         if (params.contains("deposit_whole")) {
-            return checkDouble(params.replace("deposit_whole", ""), bankManager.getDepositWhole(player));
+            return checkDouble(params.replace("deposit_whole", ""), bankManager.getDepositWhole(bankPlugin, player));
         }
         if (params.contains("deposit_half")) {
-            return checkDouble(params.replace("deposit_half", ""), bankManager.getDepositHalf(player));
+            return checkDouble(params.replace("deposit_half", ""), bankManager.getDepositHalf(bankPlugin, player));
         }
         if (params.contains("withdraw_everything")) {
             return checkDouble(params.replace("withdraw_everything", ""), bankManager.getWithdrawEverything(player));

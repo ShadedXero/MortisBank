@@ -3,9 +3,9 @@ package com.mortisdevelopment.mortisbank.accounts;
 import com.mortisdevelopment.mortisbank.MortisBank;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
+import com.mortisdevelopment.mortiscore.managers.Manager;
 import com.mortisdevelopment.mortiscore.utils.ColorUtils;
 import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
-import com.mortisdevelopment.mortiscore.utils.Reloadable;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -13,6 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -24,24 +25,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter @Setter
-public class AccountManager implements Reloadable {
+public class AccountManager extends Manager<MortisBank> {
 
-    private final MortisBank plugin;
     private final Database database;
     private AccountSettings settings;
     private final HashMap<UUID, Short> priorityByPlayer = new HashMap<>();
     private final HashMap<String, Account> accountById = new HashMap<>();
 
-    public AccountManager(MortisBank plugin, Database database) {
-        this.plugin = plugin;
+    public AccountManager(Database database) {
         this.database = database;
-        reload();
-        initialize();
-        Bukkit.getServer().getPluginManager().registerEvents(new AccountListener(this), plugin);
     }
 
     @Override
-    public void reload() {
+    public void reload(MortisBank plugin) {
         accountById.clear();
         File file = ConfigUtils.getFile(plugin, "accounts.yml");
         FileConfiguration accountsConfig = YamlConfiguration.loadConfiguration(file);
@@ -53,6 +49,7 @@ public class AccountManager implements Reloadable {
             e.setPath(accountsConfig);
             throw new RuntimeException(e);
         }
+        initialize(plugin);
     }
 
     private AccountSettings getSettings(ConfigurationSection section) {
@@ -70,7 +67,7 @@ public class AccountManager implements Reloadable {
         }
     }
 
-    private void initialize() {
+    private void initialize(JavaPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankAccounts(uniqueId varchar(36) primary key, priority smallint)");
             ResultSet result = database.query("SELECT * FROM BankAccounts");
@@ -88,7 +85,7 @@ public class AccountManager implements Reloadable {
         });
     }
 
-    public void setAccount(@NotNull UUID uuid, short priority) {
+    public void setAccount(JavaPlugin plugin, @NotNull UUID uuid, short priority) {
         boolean contains = priorityByPlayer.containsKey(uuid);
         priorityByPlayer.put(uuid, priority);
         if (contains) {
@@ -110,7 +107,7 @@ public class AccountManager implements Reloadable {
         return new ArrayList<>(accountById.values());
     }
 
-    public Account getAccount(@NotNull OfflinePlayer player) {
+    public Account getAccount(JavaPlugin plugin, @NotNull OfflinePlayer player) {
         short accountPriority = getAccount(player.getUniqueId());
         Account account = getAccount(accountPriority);
         if (account != null) {
@@ -118,12 +115,12 @@ public class AccountManager implements Reloadable {
         }
         account = getPreviousAccount(accountPriority);
         if (account != null) {
-            setAccount(player.getUniqueId(), account.getPriority());
+            setAccount(plugin, player.getUniqueId(), account.getPriority());
             return account;
         }
         account = getDefaultAccount();
         if (account != null) {
-            setAccount(player.getUniqueId(), account.getPriority());
+            setAccount(plugin, player.getUniqueId(), account.getPriority());
             return account;
         }
         return null;
@@ -196,7 +193,7 @@ public class AccountManager implements Reloadable {
         return firstAccount;
     }
 
-    public boolean setAccount(@NotNull OfflinePlayer player, short priority) {
+    public boolean setAccount(JavaPlugin plugin, @NotNull OfflinePlayer player, short priority) {
         Account account = getAccount(priority);
         if (account == null) {
             account = getPreviousAccount(priority);
@@ -204,27 +201,27 @@ public class AccountManager implements Reloadable {
                 return false;
             }
         }
-        setAccount(player.getUniqueId(), account.getPriority());
+        setAccount(plugin, player.getUniqueId(), account.getPriority());
         return true;
     }
 
-    public boolean upgradeAccount(@NotNull OfflinePlayer player) {
+    public boolean upgradeAccount(JavaPlugin plugin, @NotNull OfflinePlayer player) {
         short priority = getAccount(player.getUniqueId());
         Account account = getNextAccount(priority);
         if (account == null) {
             return false;
         }
-        setAccount(player.getUniqueId(), account.getPriority());
+        setAccount(plugin, player.getUniqueId(), account.getPriority());
         return true;
     }
 
-    public boolean downgradeAccount(@NotNull OfflinePlayer player) {
+    public boolean downgradeAccount(JavaPlugin plugin, @NotNull OfflinePlayer player) {
         short priority = getAccount(player.getUniqueId());
         Account account = getPreviousAccount(priority);
         if (account == null) {
             return false;
         }
-        setAccount(player.getUniqueId(), account.getPriority());
+        setAccount(plugin, player.getUniqueId(), account.getPriority());
         return true;
     }
 }

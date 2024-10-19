@@ -4,12 +4,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class AccountListener implements Listener {
 
+    private final JavaPlugin plugin;
     private final AccountManager accountManager;
 
-    public AccountListener(AccountManager accountManager) {
+    public AccountListener(JavaPlugin plugin, AccountManager accountManager) {
+        this.plugin = plugin;
         this.accountManager = accountManager;
     }
 
@@ -20,6 +23,6 @@ public class AccountListener implements Listener {
             return;
         }
         Account defaultAccount = accountManager.getDefaultAccount();
-        accountManager.setAccount(player.getUniqueId(), defaultAccount != null ? defaultAccount.getPriority() : 0);
+        accountManager.setAccount(plugin, player.getUniqueId(), defaultAccount != null ? defaultAccount.getPriority() : 0);
     }
 }

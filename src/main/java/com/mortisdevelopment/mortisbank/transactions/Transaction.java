@@ -6,8 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
-import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.ColorUtils;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
 import com.mortisdevelopment.mortiscore.utils.TimeUtils;
@@ -47,11 +46,11 @@ public class Transaction {
             case DEPOSIT -> messages.getSimpleMessage("deposit_transaction");
             case WITHDRAW -> messages.getSimpleMessage("withdraw_transaction");
         };
-        ClassicPlaceholderMethod method = new ClassicPlaceholderMethod();
-        method.addReplacement("%amount%", NumberUtils.format(amount));
-        method.addReplacement("%transactor%", transactor);
-        method.addReplacement("%time%", "%time%" + time + "%time%");
-        return new Placeholder(method).setPlaceholders(message);
+        Placeholder placeholder = new Placeholder();
+        placeholder.addReplacement("%amount%", NumberUtils.format(amount));
+        placeholder.addReplacement("%transactor%", transactor);
+        placeholder.addReplacement("%time%", "%time%" + time + "%time%");
+        return placeholder.setPlaceholders(message);
     }
 
     public LocalDateTime getTime() {
@@ -71,7 +70,7 @@ public class Transaction {
     public String getTransactionMessage(Messages messages) {
         LocalDateTime time = getTime();
         String duration = getDuration(time, messages);
-        return ColorUtils.color(new Placeholder(new ClassicPlaceholderMethod("%time%" + time.toString() + "%time%", duration)).setPlaceholders(rawTransaction));
+        return ColorUtils.color(new Placeholder("%time%" + time.toString() + "%time%", duration).setPlaceholders(rawTransaction));
     }
 
     public static Transaction deserialize(String id, UUID uniqueId, String rawTransaction) {

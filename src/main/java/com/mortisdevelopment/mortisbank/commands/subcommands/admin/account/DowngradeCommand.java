@@ -6,15 +6,18 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class DowngradeCommand extends PermissionCommand {
 
+    private final JavaPlugin plugin;
     private final AccountManager accountManager;
 
-    public DowngradeCommand(Messages messages, AccountManager accountManager) {
+    public DowngradeCommand(Messages messages, JavaPlugin plugin, AccountManager accountManager) {
         super("downgrade", "mortisbank.admin.account.downgrade", messages);
+        this.plugin = plugin;
         this.accountManager = accountManager;
     }
 
@@ -29,7 +32,7 @@ public class DowngradeCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        if (!accountManager.downgradeAccount(target)) {
+        if (!accountManager.downgradeAccount(plugin, target)) {
             getMessages().sendMessage(sender, "could_not_process");
             return false;
         }

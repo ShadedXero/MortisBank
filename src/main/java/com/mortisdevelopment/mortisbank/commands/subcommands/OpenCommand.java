@@ -3,7 +3,7 @@ package com.mortisdevelopment.mortisbank.commands.subcommands;
 import com.mortisdevelopment.mortisbank.bank.BankManager;
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

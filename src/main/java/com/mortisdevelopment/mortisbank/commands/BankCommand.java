@@ -9,7 +9,7 @@ import com.mortisdevelopment.mortisbank.commands.subcommands.OpenCommand;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
 import com.mortisdevelopment.mortiscore.commands.BaseCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

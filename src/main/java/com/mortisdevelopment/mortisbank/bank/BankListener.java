@@ -4,12 +4,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class BankListener implements Listener {
 
+    private final JavaPlugin plugin;
     private final BankManager bankManager;
 
-    public BankListener(BankManager bankManager) {
+    public BankListener(JavaPlugin plugin, BankManager bankManager) {
+        this.plugin = plugin;
         this.bankManager = bankManager;
     }
 
@@ -19,6 +22,6 @@ public class BankListener implements Listener {
         if (bankManager.getBalanceByPlayer().containsKey(player.getUniqueId())) {
             return;
         }
-        bankManager.setBalance(player.getUniqueId(), 0);
+        bankManager.setBalance(plugin, player.getUniqueId(), 0);
     }
 }

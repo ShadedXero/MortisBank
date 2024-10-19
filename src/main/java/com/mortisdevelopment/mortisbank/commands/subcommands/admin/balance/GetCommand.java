@@ -2,7 +2,7 @@ package com.mortisdevelopment.mortisbank.commands.subcommands.admin.balance;
 
 import com.mortisdevelopment.mortiscore.commands.PermissionCommand;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

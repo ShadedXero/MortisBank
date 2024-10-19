@@ -1,17 +1,17 @@
 package com.mortisdevelopment.mortisbank.actions.types;
 
 import com.mortisdevelopment.mortiscore.MortisCore;
-import com.mortisdevelopment.mortiscore.actions.types.ActionType;
+import com.mortisdevelopment.mortiscore.actioncontainers.actions.Action;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
-import com.mortisdevelopment.mortiscore.placeholder.objects.PlaceholderDouble;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
+import com.mortisdevelopment.mortiscore.placeholders.objects.PlaceholderDouble;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter @Setter
-public abstract class AmountActionType extends ActionType {
+public abstract class AmountActionType extends Action {
 
     private PlaceholderDouble placeholderAmount;
 

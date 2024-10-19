@@ -7,16 +7,19 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SetCommand extends PermissionCommand {
 
+    private final JavaPlugin plugin;
     private final AccountManager accountManager;
 
-    public SetCommand(Messages messages, AccountManager accountManager) {
+    public SetCommand(Messages messages, JavaPlugin plugin, AccountManager accountManager) {
         super("set", "mortisbank.admin.account.set", messages);
+        this.plugin = plugin;
         this.accountManager = accountManager;
     }
 
@@ -34,7 +37,7 @@ public class SetCommand extends PermissionCommand {
         boolean success = true;
         try {
             short priority = Short.parseShort(args[1]);
-            if (!accountManager.setAccount(target, priority)) {
+            if (!accountManager.setAccount(plugin, target, priority)) {
                 success = false;
             }
         } catch (NumberFormatException e) {
@@ -43,7 +46,7 @@ public class SetCommand extends PermissionCommand {
                 getMessages().sendMessage(sender, "invalid_account");
                 return false;
             }
-            if (!accountManager.setAccount(target, account.getPriority())) {
+            if (!accountManager.setAccount(plugin, target, account.getPriority())) {
                 success = false;
             }
         }

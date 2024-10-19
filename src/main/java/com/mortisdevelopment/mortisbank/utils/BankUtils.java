@@ -1,24 +1,22 @@
 package com.mortisdevelopment.mortisbank.utils;
 
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
-import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
-import com.mortisdevelopment.mortiscore.placeholder.methods.PlayerPlaceholderMethod;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
 import org.bukkit.OfflinePlayer;
 
 public class BankUtils {
 
     public static Placeholder getPlaceholder(double amount) {
-        ClassicPlaceholderMethod method = new ClassicPlaceholderMethod();
-        method.addReplacement("%amount%", NumberUtils.format(amount));
-        method.addReplacement("%amount_raw%", String.valueOf(amount));
-        method.addReplacement("%amount_formatted%", NumberUtils.getMoney(amount));
-        return new Placeholder(method);
+        Placeholder placeholder = new Placeholder();
+        placeholder.addReplacement("%amount%", NumberUtils.format(amount));
+        placeholder.addReplacement("%amount_raw%", String.valueOf(amount));
+        placeholder.addReplacement("%amount_formatted%", NumberUtils.getMoney(amount));
+        return placeholder;
     }
 
     public static Placeholder getPlaceholder(OfflinePlayer offlinePlayer, double amount) {
-        Placeholder placeholder = new Placeholder(new PlayerPlaceholderMethod(offlinePlayer));
-        placeholder.merge(getPlaceholder(amount));
+        Placeholder placeholder = new Placeholder(offlinePlayer);
+        placeholder.addPlaceholder(getPlaceholder(amount));
         return placeholder;
     }
 }

@@ -5,27 +5,26 @@ import com.mortisdevelopment.mortisbank.accounts.Account;
 import com.mortisdevelopment.mortisbank.accounts.AccountManager;
 import com.mortisdevelopment.mortisbank.transactions.Transaction;
 import com.mortisdevelopment.mortisbank.transactions.TransactionManager;
+import com.mortisdevelopment.mortiscore.currencies.Currency;
 import com.mortisdevelopment.mortiscore.databases.Database;
 import com.mortisdevelopment.mortiscore.exceptions.ConfigException;
 import com.mortisdevelopment.mortiscore.items.CustomItem;
+import com.mortisdevelopment.mortiscore.managers.Manager;
 import com.mortisdevelopment.mortiscore.menus.CustomMenu;
 import com.mortisdevelopment.mortiscore.messages.MessageManager;
 import com.mortisdevelopment.mortiscore.messages.Messages;
-import com.mortisdevelopment.mortiscore.placeholder.Placeholder;
-import com.mortisdevelopment.mortiscore.placeholder.methods.ClassicPlaceholderMethod;
-import com.mortisdevelopment.mortiscore.placeholder.methods.PlayerPlaceholderMethod;
+import com.mortisdevelopment.mortiscore.placeholders.Placeholder;
 import com.mortisdevelopment.mortiscore.utils.ConfigUtils;
 import com.mortisdevelopment.mortiscore.utils.NumberUtils;
-import com.mortisdevelopment.mortiscore.utils.Reloadable;
 import lombok.Getter;
 import lombok.Setter;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -34,7 +33,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Getter @Setter
-public class BankManager implements Reloadable {
+public class BankManager extends Manager<MortisBank> {
 
     public enum DepositType {
         ALL,
@@ -48,31 +47,24 @@ public class BankManager implements Reloadable {
         SPECIFIC
     }
 
-    private final MortisBank plugin;
     private final AccountManager accountManager;
     private final TransactionManager transactionManager;
     private final Database database;
-    private final Economy economy;
     private final Messages depositMessages;
     private final Messages withdrawalMessages;
     private BankSettings settings;
     private CustomMenu personalMenu;
     private final HashMap<UUID, Double> balanceByPlayer = new HashMap<>();
 
-    public BankManager(MortisBank plugin, AccountManager accountManager, TransactionManager transactionManager, Database database, Economy economy, MessageManager messageManager) {
-        this.plugin = plugin;
+    public BankManager(AccountManager accountManager, TransactionManager transactionManager, Database database, MessageManager messageManager) {
         this.accountManager = accountManager;
         this.transactionManager = transactionManager;
         this.database = database;
-        this.economy = economy;
         this.depositMessages = messageManager.getMessages("deposit-messages");
         this.withdrawalMessages = messageManager.getMessages("withdrawal-messages");
-        reload(false);
-        initialize();
-        Bukkit.getServer().getPluginManager().registerEvents(new BankListener(this), plugin);
     }
 
-    public void onStart() {
+    public void onStart(MortisBank plugin) {
         File file = ConfigUtils.getFile(plugin, "config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         try {
@@ -84,27 +76,29 @@ public class BankManager implements Reloadable {
         }
     }
 
-    private void reload(boolean personalMenu) {
+    private void reload(MortisBank plugin, boolean personalMenu) {
         File file = ConfigUtils.getFile(plugin, "config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         try {
-            this.settings = getBankSettings(config);
+            this.settings = getBankSettings(plugin, config);
             if (personalMenu) {
-                onStart();
+                onStart(plugin);
             }
         } catch (ConfigException e) {
             e.setFile(file);
             e.setPath(config);
             throw new RuntimeException(e);
         }
+        initialize(plugin);
     }
 
     @Override
-    public void reload() {
-       reload(true);
+    public void reload(MortisBank plugin) {
+       reload(plugin, true);
     }
 
-    private BankSettings getBankSettings(ConfigurationSection section) throws ConfigException {
+    private BankSettings getBankSettings(MortisBank plugin, ConfigurationSection section) throws ConfigException {
+        Currency currency = plugin.getCore().getCurrencyManager().getCurrency(section.getString("currency"));
         boolean leaderboard = section.getBoolean("leaderboard");
         BankSettings.InputMode mode;
         try {
@@ -114,10 +108,10 @@ public class BankManager implements Reloadable {
         }
         int inputSlot = section.getInt("sign-input-slot");
         CustomItem customItem = plugin.getCore().getItemManager().getObject(plugin, section.getConfigurationSection("anvil-item"));
-        return new BankSettings(leaderboard, mode, inputSlot, customItem);
+        return new BankSettings(currency, leaderboard, mode, inputSlot, customItem);
     }
 
-    private void initialize() {
+    private void initialize(JavaPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uniqueId varchar(36) primary key, balance double)");
             ResultSet result = database.query("SELECT * FROM MortisBank");
@@ -147,7 +141,7 @@ public class BankManager implements Reloadable {
         return uuids.get(position);
     }
 
-    public void setBalance(@NotNull UUID uuid, double balance) {
+    public void setBalance(JavaPlugin plugin, @NotNull UUID uuid, double balance) {
         boolean contains = balanceByPlayer.containsKey(uuid);
         balanceByPlayer.put(uuid, Math.max(balance, 0));
         if (contains) {
@@ -161,16 +155,16 @@ public class BankManager implements Reloadable {
         return balanceByPlayer.get(uuid);
     }
 
-    private void addTransaction(@NotNull OfflinePlayer offlinePlayer, double amount, Transaction.TransactionType type) {
-        transactionManager.addTransaction(offlinePlayer, type, amount, Objects.requireNonNullElse(offlinePlayer.getName(), "Unknown"));
+    private void addTransaction(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, double amount, Transaction.TransactionType type) {
+        transactionManager.addTransaction(plugin, offlinePlayer, type, amount, Objects.requireNonNullElse(offlinePlayer.getName(), "Unknown"));
     }
 
     private Placeholder getTransactionPlaceholder(double purse) {
-        ClassicPlaceholderMethod method = new ClassicPlaceholderMethod();
-        method.addReplacement("%amount%", NumberUtils.format(purse));
-        method.addReplacement("%amount_raw%", String.valueOf(purse));
-        method.addReplacement("%amount_formatted%", NumberUtils.getMoney(purse));
-        return new Placeholder(method);
+        Placeholder placeholder = new Placeholder();
+        placeholder.addReplacement("%amount%", NumberUtils.format(purse));
+        placeholder.addReplacement("%amount_raw%", String.valueOf(purse));
+        placeholder.addReplacement("%amount_formatted%", NumberUtils.getMoney(purse));
+        return placeholder;
     }
 
     public Messages getMessages(Transaction.TransactionType type) {
@@ -185,28 +179,28 @@ public class BankManager implements Reloadable {
             return;
         }
         Placeholder placeholder = getTransactionPlaceholder(purse);
-        placeholder.addMethod(new PlayerPlaceholderMethod(player));
+        placeholder.addPlaceholder(new Placeholder(player));
         getMessages(type).sendPlaceholderMessage(player, type.name().toLowerCase(Locale.ROOT), placeholder);
     }
 
-    public boolean deposit(@NotNull OfflinePlayer offlinePlayer, @NotNull DepositType type) {
+    public boolean deposit(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, @NotNull DepositType type) {
         Player player = offlinePlayer.getPlayer();
         if (type.equals(DepositType.SPECIFIC)) {
             settings.open(plugin, this, player, Transaction.TransactionType.DEPOSIT, new Placeholder(player));
             return true;
         }
-        double purse = economy.getBalance(offlinePlayer);
+        double purse = settings.getCurrency().getBalance(offlinePlayer);
         if (type.equals(DepositType.HALF)) {
             purse = purse / 2;
         }
-        return deposit(purse, offlinePlayer, purse);
+        return deposit(plugin, purse, offlinePlayer, purse);
     }
 
-    public boolean deposit(@NotNull OfflinePlayer offlinePlayer, double amount) {
-        return deposit(economy.getBalance(offlinePlayer), offlinePlayer, amount);
+    public boolean deposit(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, double amount) {
+        return deposit(plugin, settings.getCurrency().getBalance(offlinePlayer), offlinePlayer, amount);
     }
 
-    private boolean deposit(double purse, OfflinePlayer offlinePlayer, double amount) {
+    private boolean deposit(JavaPlugin plugin, double purse, OfflinePlayer offlinePlayer, double amount) {
         Player player = offlinePlayer.getPlayer();
         if (amount <= 0) {
             depositMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
@@ -217,7 +211,7 @@ public class BankManager implements Reloadable {
             depositMessages.sendPlaceholderMessage(player, "little", new Placeholder(player));
             return false;
         }
-        Account account = accountManager.getAccount(offlinePlayer);
+        Account account = accountManager.getAccount(plugin, offlinePlayer);
         if (account == null) {
             return false;
         }
@@ -231,23 +225,23 @@ public class BankManager implements Reloadable {
             amount = account.getSpace(balance);
             newBalance = balance + amount;
         }
-        economy.withdrawPlayer(offlinePlayer, amount);
-        setBalance(offlinePlayer.getUniqueId(), newBalance);
-        addTransaction(offlinePlayer, amount, Transaction.TransactionType.DEPOSIT);
+        settings.getCurrency().withdraw(offlinePlayer, amount);
+        setBalance(plugin, offlinePlayer.getUniqueId(), newBalance);
+        addTransaction(plugin, offlinePlayer, amount, Transaction.TransactionType.DEPOSIT);
         sendTransactionMessage(player, amount, Transaction.TransactionType.DEPOSIT);
         return true;
     }
 
-    public double getDepositWhole(@NotNull OfflinePlayer offlinePlayer) {
-        return getDeposit(economy.getBalance(offlinePlayer), offlinePlayer);
+    public double getDepositWhole(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer) {
+        return getDeposit(plugin, settings.getCurrency().getBalance(offlinePlayer), offlinePlayer);
     }
 
-    public double getDepositHalf(@NotNull OfflinePlayer offlinePlayer) {
-        return getDeposit(economy.getBalance(offlinePlayer) / 2, offlinePlayer);
+    public double getDepositHalf(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer) {
+        return getDeposit(plugin, settings.getCurrency().getBalance(offlinePlayer) / 2, offlinePlayer);
     }
 
-    private double getDeposit(double purse, OfflinePlayer offlinePlayer) {
-        Account account = accountManager.getAccount(offlinePlayer);
+    private double getDeposit(JavaPlugin plugin, double purse, OfflinePlayer offlinePlayer) {
+        Account account = accountManager.getAccount(plugin, offlinePlayer);
         if (account == null) {
             return 0;
         }
@@ -261,7 +255,7 @@ public class BankManager implements Reloadable {
         return Math.min(purse, account.getSpace(balance));
     }
 
-    public boolean withdraw(@NotNull OfflinePlayer offlinePlayer, @NotNull WithdrawalType type) {
+    public boolean withdraw(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, @NotNull WithdrawalType type) {
         Player player = offlinePlayer.getPlayer();
         if (type.equals(WithdrawalType.SPECIFIC)) {
             return settings.open(plugin, this, player, Transaction.TransactionType.WITHDRAW, new Placeholder(player));
@@ -277,20 +271,20 @@ public class BankManager implements Reloadable {
             case HALF -> amount = balance / 2;
             case TWENTY -> amount = balance * 0.20;
         }
-        return withdraw(balance, offlinePlayer, amount);
+        return withdraw(plugin, balance, offlinePlayer, amount);
     }
 
-    public boolean withdraw(@NotNull OfflinePlayer offlinePlayer, double amount) {
+    public boolean withdraw(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, double amount) {
         Player player = offlinePlayer.getPlayer();
         double balance = getBalance(offlinePlayer.getUniqueId());
         if (balance <= 0) {
             withdrawalMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
             return false;
         }
-        return withdraw(balance, offlinePlayer, amount);
+        return withdraw(plugin, balance, offlinePlayer, amount);
     }
 
-    private boolean withdraw(double balance, OfflinePlayer offlinePlayer, double amount) {
+    private boolean withdraw(JavaPlugin plugin, double balance, OfflinePlayer offlinePlayer, double amount) {
         Player player = offlinePlayer.getPlayer();
         if (amount <= 0) {
             withdrawalMessages.sendPlaceholderMessage(player, "greater_than_zero", new Placeholder(player));
@@ -300,9 +294,9 @@ public class BankManager implements Reloadable {
             withdrawalMessages.sendPlaceholderMessage(player, "no_money", new Placeholder(player));
             return false;
         }
-        economy.depositPlayer(offlinePlayer, amount);
-        setBalance(offlinePlayer.getUniqueId(), balance - amount);
-        addTransaction(offlinePlayer, amount, Transaction.TransactionType.WITHDRAW);
+        settings.getCurrency().deposit(offlinePlayer, amount);
+        setBalance(plugin, offlinePlayer.getUniqueId(), balance - amount);
+        addTransaction(plugin, offlinePlayer, amount, Transaction.TransactionType.WITHDRAW);
         sendTransactionMessage(player, amount, Transaction.TransactionType.WITHDRAW);
         return true;
     }
@@ -319,21 +313,21 @@ public class BankManager implements Reloadable {
         return getBalance(offlinePlayer.getUniqueId()) * 0.20;
     }
 
-    private void setBalance(Account account, OfflinePlayer offlinePlayer, double amount) {
-        setBalance(offlinePlayer.getUniqueId(), Math.min(amount, account.getMaxBalance()));
+    private void setBalance(JavaPlugin plugin, Account account, OfflinePlayer offlinePlayer, double amount) {
+        setBalance(plugin, offlinePlayer.getUniqueId(), Math.min(amount, account.getMaxBalance()));
     }
 
-    public boolean setBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
-        Account account = accountManager.getAccount(offlinePlayer);
+    public boolean setBalance(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, double amount) {
+        Account account = accountManager.getAccount(plugin, offlinePlayer);
         if (account == null) {
             return false;
         }
-        setBalance(account, offlinePlayer, amount);
+        setBalance(plugin, account, offlinePlayer, amount);
         return true;
     }
 
-    public boolean addBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
-        Account account = accountManager.getAccount(offlinePlayer);
+    public boolean addBalance(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, double amount) {
+        Account account = accountManager.getAccount(plugin, offlinePlayer);
         if (account == null) {
             return false;
         }
@@ -341,12 +335,12 @@ public class BankManager implements Reloadable {
         if (account.isFull(balance)) {
             return false;
         }
-        setBalance(account, offlinePlayer, balance + amount);
+        setBalance(plugin, account, offlinePlayer, balance + amount);
         return true;
     }
 
-    public boolean subtractBalance(@NotNull OfflinePlayer offlinePlayer, double amount) {
-        Account account = accountManager.getAccount(offlinePlayer);
+    public boolean subtractBalance(JavaPlugin plugin, @NotNull OfflinePlayer offlinePlayer, double amount) {
+        Account account = accountManager.getAccount(plugin, offlinePlayer);
         if (account == null) {
             return false;
         }
@@ -354,7 +348,7 @@ public class BankManager implements Reloadable {
         if (balance <= 0) {
             return false;
         }
-        setBalance(account, offlinePlayer, balance - amount);
+        setBalance(plugin, account, offlinePlayer, balance - amount);
         return true;
     }
 }

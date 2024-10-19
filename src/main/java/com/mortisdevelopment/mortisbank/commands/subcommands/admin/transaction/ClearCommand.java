@@ -6,15 +6,18 @@ import com.mortisdevelopment.mortiscore.messages.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class ClearCommand extends PermissionCommand {
 
+    private final JavaPlugin plugin;
     private final TransactionManager transactionManager;
 
-    public ClearCommand(Messages messages, TransactionManager transactionManager) {
+    public ClearCommand(Messages messages, JavaPlugin plugin, TransactionManager transactionManager) {
         super("clear", "mortisbank.admin.transaction.clear", messages);
+        this.plugin = plugin;
         this.transactionManager = transactionManager;
     }
 
@@ -29,7 +32,7 @@ public class ClearCommand extends PermissionCommand {
             getMessages().sendMessage(sender, "invalid_target");
             return false;
         }
-        if (!transactionManager.clearTransactions(target.getUniqueId())) {
+        if (!transactionManager.clearTransactions(plugin, target.getUniqueId())) {
             getMessages().sendMessage(sender, "could_not_process");
             return false;
         }
