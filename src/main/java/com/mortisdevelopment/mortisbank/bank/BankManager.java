@@ -28,7 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -118,16 +117,17 @@ public class BankManager extends Manager<MortisBank> {
     private void initialize(JavaPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS MortisBank(uniqueId varchar(36) primary key, balance double)");
-            ResultSet result = database.query("SELECT * FROM MortisBank");
-            try {
-                while (result.next()) {
-                    UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
-                    double balance = result.getDouble("balance");
-                    balanceByPlayer.put(uniqueId, balance);
+            database.query("SELECT * FROM MortisBank", result -> {
+                try {
+                    while (result.next()) {
+                        UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
+                        double balance = result.getDouble("balance");
+                        balanceByPlayer.put(uniqueId, balance);
+                    }
+                }catch (SQLException exp) {
+                    throw new RuntimeException(exp);
                 }
-            }catch (SQLException exp) {
-                throw new RuntimeException(exp);
-            }
+            });
         });
     }
 

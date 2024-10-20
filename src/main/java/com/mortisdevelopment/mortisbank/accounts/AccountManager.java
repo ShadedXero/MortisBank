@@ -17,7 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,18 +73,19 @@ public class AccountManager extends Manager<MortisBank> {
     private void initialize(JavaPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankAccounts(uniqueId varchar(36) primary key, priority smallint)");
-            ResultSet result = database.query("SELECT * FROM BankAccounts");
-            HashMap<UUID, Short> cache = new HashMap<>();
-            try {
-                while (result.next()) {
-                    UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
-                    short priority = result.getShort("priority");
-                    cache.put(uniqueId, priority);
+            database.query("SELECT * FROM BankAccounts", result -> {
+                HashMap<UUID, Short> cache = new HashMap<>();
+                try {
+                    while (result.next()) {
+                        UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
+                        short priority = result.getShort("priority");
+                        cache.put(uniqueId, priority);
+                    }
+                } catch (SQLException exp) {
+                    throw new RuntimeException(exp);
                 }
-            } catch (SQLException exp) {
-                throw new RuntimeException(exp);
-            }
-            Bukkit.getScheduler().runTask(plugin, () -> priorityByPlayer.putAll(cache));
+                Bukkit.getScheduler().runTask(plugin, () -> priorityByPlayer.putAll(cache));
+            });
         });
     }
 

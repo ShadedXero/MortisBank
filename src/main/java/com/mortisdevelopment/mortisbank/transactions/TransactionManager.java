@@ -16,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -52,23 +51,24 @@ public class TransactionManager extends Manager<MortisBank> {
     private void initialize(JavaPlugin plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             database.execute("CREATE TABLE IF NOT EXISTS BankTransactions(id varchar(36), uniqueId varchar(36), transaction mediumtext)");
-            ResultSet result = database.query("SELECT * FROM BankTransactions");
-            try {
-                while (result.next()) {
-                    String id = result.getString("id");
-                    UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
-                    String rawTransaction = result.getString("transaction");
-                    transactionsByPlayer.computeIfAbsent(uniqueId, k -> new ArrayList<>()).add(Transaction.deserialize(id, uniqueId, rawTransaction));
-                }
-            }catch (SQLException exp) {
-                throw new RuntimeException(exp);
-            }finally {
-                for (List<Transaction> transactions : transactionsByPlayer.values()) {
-                    if (transactions.size() > 1) {
-                        sort(transactions);
+            database.query("SELECT * FROM BankTransactions", result -> {
+                try {
+                    while (result.next()) {
+                        String id = result.getString("id");
+                        UUID uniqueId = UUID.fromString(result.getString("uniqueId"));
+                        String rawTransaction = result.getString("transaction");
+                        transactionsByPlayer.computeIfAbsent(uniqueId, k -> new ArrayList<>()).add(Transaction.deserialize(id, uniqueId, rawTransaction));
+                    }
+                }catch (SQLException exp) {
+                    throw new RuntimeException(exp);
+                }finally {
+                    for (List<Transaction> transactions : transactionsByPlayer.values()) {
+                        if (transactions.size() > 1) {
+                            sort(transactions);
+                        }
                     }
                 }
-            }
+            });
         });
     }
 
