@@ -27,6 +27,7 @@ public class TransactionManager extends Manager<MortisBank> {
     private final Messages messages;
     private TransactionSettings settings;
     private final HashMap<UUID, List<Transaction>> transactionsByPlayer = new HashMap<>();
+    private boolean initialized;
 
     public TransactionManager(Database database, Messages messages) {
         this.database = database;
@@ -38,7 +39,10 @@ public class TransactionManager extends Manager<MortisBank> {
         File file = ConfigUtils.getFile(plugin, "config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         this.settings = getTransactionSettings(config);
-        initialize(plugin);
+        if (!initialized) {
+            initialize(plugin);
+            initialized = true;
+        }
     }
 
     private TransactionSettings getTransactionSettings(ConfigurationSection section) {

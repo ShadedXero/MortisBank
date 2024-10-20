@@ -19,7 +19,6 @@ import lombok.Setter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
 import java.util.Objects;
 
 @Getter @Setter
@@ -43,6 +42,7 @@ public final class MortisBank extends CorePlugin {
         core.getActionContainerManager().getActionManager().getRegistry().register("[bank] withdraw", WithdrawActionType.class);
 
         messageManager = new BankMessageManager();
+        messageManager.reload(this);
 
         database = getDatabase();
 
@@ -54,7 +54,7 @@ public final class MortisBank extends CorePlugin {
         transactionManager.reload(this);
 
         bankManager = new BankManager(accountManager, transactionManager, database, messageManager);
-        bankManager.reload(this);
+        bankManager.reload(this, false);
         getServer().getPluginManager().registerEvents(new BankListener(this, bankManager), this);
 
         placeholderManager = new PlaceholderManager(this, accountManager, transactionManager, bankManager, messageManager.getMessages("placeholder-messages"));
@@ -65,20 +65,20 @@ public final class MortisBank extends CorePlugin {
     }
 
     private Database getDatabase() {
-        File configFile = ConfigUtils.getFile(this, "config.yml");
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(ConfigUtils.getFile(this, "config.yml"));
         return core.getDatabaseManager().getDatabase(this, config.getConfigurationSection("database"));
     }
 
     @Override
     public void onStart() {
-        core.getMenuManager().saveAndLoad(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
+        core.getMenuManager().saveAndLoad(this, "menus", "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
         bankManager.onStart(this);
     }
 
     public void reload() {
         core.getMenuManager().save(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
-        core.reload(this);
+        core.getMenuManager().getRegistry().unregister(this);
+        core.getMenuManager().load(this, "menus");
         messageManager.reload(this);
         accountManager.reload(this);
         transactionManager.reload(this);

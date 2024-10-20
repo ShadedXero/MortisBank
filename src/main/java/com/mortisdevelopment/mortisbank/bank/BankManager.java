@@ -55,6 +55,7 @@ public class BankManager extends Manager<MortisBank> {
     private BankSettings settings;
     private CustomMenu personalMenu;
     private final HashMap<UUID, Double> balanceByPlayer = new HashMap<>();
+    private boolean initialized;
 
     public BankManager(AccountManager accountManager, TransactionManager transactionManager, Database database, MessageManager messageManager) {
         this.accountManager = accountManager;
@@ -76,7 +77,7 @@ public class BankManager extends Manager<MortisBank> {
         }
     }
 
-    private void reload(MortisBank plugin, boolean personalMenu) {
+    public void reload(MortisBank plugin, boolean personalMenu) {
         File file = ConfigUtils.getFile(plugin, "config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         try {
@@ -89,7 +90,10 @@ public class BankManager extends Manager<MortisBank> {
             e.setPath(config);
             throw new RuntimeException(e);
         }
-        initialize(plugin);
+        if (!initialized) {
+            initialize(plugin);
+            initialized = true;
+        }
     }
 
     @Override
@@ -98,7 +102,7 @@ public class BankManager extends Manager<MortisBank> {
     }
 
     private BankSettings getBankSettings(MortisBank plugin, ConfigurationSection section) throws ConfigException {
-        Currency currency = plugin.getCore().getCurrencyManager().getCurrency(section.getString("currency"));
+        Currency currency = plugin.getCore().getCurrencyManager().getCurrency(plugin, section.getConfigurationSection("currency"));
         boolean leaderboard = section.getBoolean("leaderboard");
         BankSettings.InputMode mode;
         try {

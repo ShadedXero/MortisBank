@@ -31,6 +31,7 @@ public class AccountManager extends Manager<MortisBank> {
     private AccountSettings settings;
     private final HashMap<UUID, Short> priorityByPlayer = new HashMap<>();
     private final HashMap<String, Account> accountById = new HashMap<>();
+    private boolean initialized;
 
     public AccountManager(Database database) {
         this.database = database;
@@ -49,7 +50,10 @@ public class AccountManager extends Manager<MortisBank> {
             e.setPath(accountsConfig);
             throw new RuntimeException(e);
         }
-        initialize(plugin);
+        if (!initialized) {
+            initialize(plugin);
+            initialized = true;
+        }
     }
 
     private AccountSettings getSettings(ConfigurationSection section) {

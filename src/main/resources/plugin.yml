@@ -6,5 +6,4 @@ softdepend:
   - Essentials
 depend:
   - MortisCore
-  - Vault
   - PlaceholderAPI
