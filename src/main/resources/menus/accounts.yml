@@ -1,6 +1,9 @@
 id: accounts
+
 title: "&8Bank Account Upgrades"
+
 rows: 4
+
 items:
   coal-account:
     material: COAL
@@ -415,7 +418,7 @@ items:
           input: "%mortisbank_account_priority%"
           output: 50
 
-  not-has-conditions-redstone-account:
+  not-has-requirement-redstone-account:
     material: REDSTONE
     slot: 15
     priority: 2
@@ -698,9 +701,9 @@ items:
         message: "&aRemoved &6200,000,000 &acoins from your balance"
       take-item:
         type: take item
+        amount: 10
         item:
           material: DIAMOND
-          amount: 10
       item-message:
         type: message
         message: "&aRemoved &bDiamond &8x10 from your inventory"

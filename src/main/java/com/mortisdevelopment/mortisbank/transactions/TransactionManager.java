@@ -90,7 +90,7 @@ public class TransactionManager extends Manager<MortisBank> {
             }
         }
         transactionsByPlayer.put(transaction.getUniqueId(), transactions);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("INSERT INTO BankTransactions(id, uniqueId, transaction) VALUES (?, ?, ?)", transaction.getId(), transaction.getUniqueId(), transaction.getRawTransaction()));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> database.update("INSERT INTO BankTransactions(id, uniqueId, transaction) VALUES (?, ?, ?)", transaction.getId(), transaction.getUniqueId().toString(), transaction.getRawTransaction()));
     }
 
     public void removeTransaction(JavaPlugin plugin, Transaction transaction, boolean modifyCache) {

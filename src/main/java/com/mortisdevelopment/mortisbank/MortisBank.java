@@ -76,7 +76,7 @@ public final class MortisBank extends CorePlugin {
     }
 
     public void reload() {
-        core.getMenuManager().save(this, "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
+        core.getMenuManager().save(this, "menus", "personal.yml", "deposit.yml", "withdrawal.yml", "accounts.yml");
         core.getMenuManager().getRegistry().unregister(this);
         core.getMenuManager().load(this, "menus");
         messageManager.reload(this);
